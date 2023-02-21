@@ -95,14 +95,19 @@
 }
 
 ::ng-deep .mat-menu-panel.myMenu {
-  height: 100vh !important;
-  min-width: 303px!important;
-  margin-right:-90px !important;
+ height: 70vh !important;
+  max-width: 20rem!important;
+  margin-left: -12rem !important;
   /* top: 140px !important; */
   border-radius: 0% !important;
   background-color: white;
   font-size: 13px;
   padding-bottom: 12px;
+  
+}
+::ng-deep .profileMenu{
+  margin-left: -12rem !important;
+
 }
 
 /* .each-notification{
@@ -117,7 +122,10 @@
 ::ng-deep .mat-menu-panel.myMenu > .mat-menu-content {
   width: 300px !important;
   height: auto !important;
+  display: contents;
+  
 }
+
 .dot{
   height: 10px;
   width: 10px;
