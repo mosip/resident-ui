@@ -15,6 +15,7 @@ on:
       - 1.1.*
       - MOSIP-11719
       - 1.2.*
+      - MOSIP*
 
 jobs:
   build-resident-ui:
