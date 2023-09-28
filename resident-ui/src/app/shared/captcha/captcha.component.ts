@@ -15,17 +15,11 @@ export class CaptchaComponent implements OnInit {
   captchaLangCode:any;
   constructor(private activatedRoute: ActivatedRoute,private translateService: TranslateService,) {}
 
-  ngOnInit() {
-    this.translateService
-    .getTranslation('default')
-      .subscribe(response => {
-          this.captchaLangCode = response.keyboardMapping[this.langCode]
-      })
-    
-    setTimeout(() => {
+  changeCaptchLang(){
+    if(this.captchaLangCode){
       const iframeGoogleCaptcha = document.getElementById("recaptcha-container").querySelector('iframe');
-      // const currentLang = iframeGoogleCaptcha.getAttribute("src").match(/hl=(.*?)&/).pop();
-      // if (currentLang !== lang) {
+      const currentLang = iframeGoogleCaptcha.getAttribute("src").match(/hl=(.*?)&/).pop();
+      if (currentLang !== this.captchaLangCode) {
           iframeGoogleCaptcha.setAttribute(
               "src",
               iframeGoogleCaptcha.getAttribute("src").replace(
@@ -33,8 +27,24 @@ export class CaptchaComponent implements OnInit {
                   'hl=' + this.captchaLangCode + '&'
               )
           );
-      // }
-    }, 200);
+      }
+      return
+    }else{
+      setTimeout(() => {
+        this.changeCaptchLang()
+      },100)
+      
+    }
+  }
+
+  ngOnInit() {
+    this.translateService
+    .getTranslation('default')
+      .subscribe(response => {
+          this.captchaLangCode = response.keyboardMapping[this.langCode]
+      })
+    let count = 0;
+    this.changeCaptchLang()
   }
 
   ngOnChanges(): void {

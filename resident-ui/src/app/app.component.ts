@@ -57,7 +57,9 @@ export class AppComponent {
           if(window.location.href.includes('error=invalid_transaction')){
             this.router.navigate(['error']);
           }else{
-            this.router.navigate(['dashboard']);
+            if (window.location.href.includes('uinservices')) {
+              this.router.navigate(['dashboard']);
+            }
           };
         }
       }else{

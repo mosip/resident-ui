@@ -44,9 +44,10 @@ export class GetuinComponent implements OnInit {
     "FAILURE":"failure-position-icon position-icon",
     "IN-PROGRESS":"inactive-position-icon position-icon"
   }
-  vidLength:string = "0";
-  uinLength:string = "0";
-  aidLength:string = "0";
+  vidLength:string;
+  uinLength:string;
+  aidLength:string;
+  isLoading:boolean = true;
 
   constructor(
     private router: Router,
@@ -80,12 +81,24 @@ export class GetuinComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.siteKey = this.appConfigService.getConfig()["mosip.resident.captcha.sitekey"];
-    this.captchaEnable = this.appConfigService.getConfig()["mosip.resident.captcha.enable"];
-    this.vidLength = this.appConfigService.getConfig()["mosip.kernel.vid.length"];
-    this.uinLength = this.appConfigService.getConfig()["mosip.kernel.uin.length"];
-    this.aidLength = this.appConfigService.getConfig()["mosip.kernel.rid.length"];
+  getConfigData(){
+    if(localStorage.getItem('isDataLoaded') === 'true'){
+      this.siteKey = this.appConfigService.getConfig()["mosip.resident.captcha.sitekey"];
+      this.captchaEnable = this.appConfigService.getConfig()["mosip.resident.captcha.enable"];
+      this.vidLength = this.appConfigService.getConfig()["mosip.kernel.vid.length"];
+      this.uinLength = this.appConfigService.getConfig()["mosip.kernel.uin.length"];
+      this.aidLength = this.appConfigService.getConfig()["mosip.kernel.rid.length"];
+      this.getLangData()
+      this.isLoading = false;
+      return
+    }else{
+      setTimeout(()=>{ 
+      this.getConfigData()
+      },500)
+    }
+  }
+
+  getLangData(){
     this.translateService.use(localStorage.getItem("langCode"));    
     this.translateService
     .getTranslation(this.userPreferredLangCode)
@@ -96,6 +109,10 @@ export class GetuinComponent implements OnInit {
         this.getStatusData = response.uinStatus
         this.stageKeys =  Object.keys(this.getStatusData.statusStages)
     });
+  }
+
+  ngOnInit() {
+    this.getConfigData()
   }
 
   onItemSelected(item: any) {

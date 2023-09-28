@@ -28,7 +28,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   textDir = localStorage.getItem("dir");
   defaultJsonValue: any;
   selectedLanguage: any;
-  supportedLanguages: Array<string>;
   selectLanguagesArr: any = [];
   zoomLevel:any = [{"fontSize":"12", "label":"Small"},{"fontSize":"14", "label":"Normal"},{"fontSize":"16", "label":"Large"},{"fontSize":"18", "label":"Huge"}];
   fullName: string;
@@ -66,46 +65,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }) 
   }
 
-  onScroll() {
-    console.log("scroll down>>>");
-    /*this.dataStorageService
-    .getNotificationData(this.langCode)
-    .subscribe((response) => {
-      if(response["response"])     
-        this.notificationList = response["response"]["data"];
-        console.log(this.notificationList)
-    });*/
-  }
-
-  onScrollUp() {
-    console.log("scroll up>>>");
-    /*this.dataStorageService
-    .getNotificationData(this.langCode)
-    .subscribe((response) => {
-      if(response["response"])     
-        this.notificationList = response["response"]["data"];
-        console.log(this.notificationList)
-    });*/
-  }
-
- async ngOnInit() {
-    this.defaultJsonValue = defaultJson;
-    let self = this;       
-    setTimeout(()=>{        
-      if(!localStorage.getItem("langCode")){
-        localStorage.setItem("langCode", "eng");
-        self.selectedLanguage = defaultJson["languages"][0].nativeName;
-      }else{
-        Object.keys(defaultJson["languages"]).forEach(function(key) {
-          if(localStorage.getItem("langCode") === key){
-            self.selectedLanguage = defaultJson["languages"][key].nativeName;
-          }
-        });                
-      }
-
+  getConfigData(){
+    if(localStorage.getItem('isDataLoaded') === 'true'){
       let supportedLanguages = this.appConfigService.getConfig()['supportedLanguages'].split(','); 
       if(supportedLanguages.length > 1){
-        supportedLanguages.map((language) => {
+        supportedLanguages.forEach((language) => {
           this.selectLanguagesArr.push({
            code: language.trim(),
            value: defaultJson.languages[language.trim()].nativeName,
@@ -113,10 +77,29 @@ export class HeaderComponent implements OnInit, OnDestroy {
         });
       }
       
-      self.translateService.use(localStorage.getItem("langCode")); 
-      self.textDir = localStorage.getItem("dir");
-    }, 1000);    
+      this.translateService.use(localStorage.getItem("langCode")); 
+      this.textDir = localStorage.getItem("dir");
+      return
+    }else{
+      setTimeout(()=>{ 
+      this.getConfigData()
+      },400)
+    }
+  }
 
+
+ async ngOnInit() {
+    this.defaultJsonValue = defaultJson;
+    let self = this;
+    this.getConfigData();
+
+    if(!localStorage.getItem("langCode")){
+      localStorage.setItem("langCode", "eng");
+      this.selectedLanguage =  defaultJson["languages"]['eng'].nativeName;
+    }else{
+      let key = localStorage.getItem("langCode")
+      this.selectedLanguage =  defaultJson["languages"][key].nativeName;              
+    }
     self.getProfileInfo();
 
     await  this.translateService
@@ -143,11 +126,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       localStorage.removeItem('logOut');
     }
     this.activeUrl = window.location.hash
-    // if(localStorage.getItem("zoomLevel")){
-    //   document.body.style["zoom"] = localStorage.getItem("zoomLevel");
-    // }
-    
-    //window.addEventListener('scroll', this.scroll, true); //third parameter
   }
 
   getNotificationInfo(){
