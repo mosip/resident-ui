@@ -672,6 +672,7 @@
         "RES-SER-514": "Invalid UIN/VID entered. Please enter a valid UIN/VID and try again.",
         "IDA-MLC-019": "otp-email Auth Type is Locked for the UIN.",
         "RES-SER-522": "Invalid UIN/VID entered. Please enter a valid UIN/VID and try again.",
-        "RES_SER_509": "The card is not ready for download."
+        "RES_SER_509": "The card is not ready for download.",
+        "RES-SER-418": "Invalid UIN/ AID/ VID entered. Please enter a valid UIN/ AID/ VID and try again."
     }
 }

@@ -665,6 +665,7 @@
         "RES-SER-514": "UIN/VID invalide saisi. Veuillez saisir un UIN/VID valide et réessayer.",
         "IDA-MLC-019": "Le type d'authentification par OTP par e-mail est verrouillé pour le UIN.",
         "RES-SER-522": "UIN/VID invalide saisi. Veuillez saisir un UIN/VID valide et réessayer.",
-        "RES-SER-509": "La carte n'est pas prête à être téléchargée."
+        "RES-SER-509": "La carte n'est pas prête à être téléchargée.",
+        "RES-SER-418": "UIN/AID/VID invalide saisi. Veuillez saisir un UIN/AID/VID valide et réessayer."
     }
 }

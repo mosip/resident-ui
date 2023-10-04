@@ -293,7 +293,8 @@ export class DataStorageService {
   }
 
   getImmediateChildren(locationCode: string, langCode: string) {
-    return this.httpClient.get(this.BASE_URL + '/proxy/masterdata/locations/immediatechildren/' + locationCode + '/' + langCode);
+    // return this.httpClient.get(this.BASE_URL + '/proxy/masterdata/locations/immediatechildren/' + locationCode + '/' + langCode);
+    return this.httpClient.get(this.BASE_URL + '/auth-proxy/masterdata/locations/immediatechildren/' + locationCode + '?languageCodes=' + langCode)
   }
 
 

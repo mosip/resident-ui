@@ -665,6 +665,7 @@
         "RES-SER-514": "UIN/VID ingresado inválido. Por favor, ingresa un UIN/VID válido y vuelve a intentarlo.",
         "IDA-MLC-019": "El tipo de autenticación de OTP por correo electrónico está bloqueado para el UIN",
         "RES-SER-522": "UIN/VID ingresado inválido. Por favor, ingresa un UIN/VID válido y vuelve a intentarlo.",
-        "RES_SER_509": "La tarjeta no está lista para su descarga."
+        "RES_SER_509": "La tarjeta no está lista para su descarga.",
+        "RES-SER-418": "UIN/AID/VID ingresado inválido. Por favor, ingresa un UIN/AID/VID válido y vuelve a intentarlo."
     }
 }

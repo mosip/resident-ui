@@ -122,16 +122,6 @@
 					<td style="width:25%">{{eidStatus.info.purpose}}</td>
 				</tr>
 			</table>
-			<div *ngIf="eidStatus.info.eventTypeEnum === 'GENERATE_VID'"
-				style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 1rem;">
-				<button id="downloadVIDCardBtn" style="cursor: pointer;" class="download-btn"><img class="save-icon"
-						src="./assets/images/save.png" />{{'trackservicerequest.downloadVIDCard' | translate}}</button>
-
-				<button id="downloadAcknowledgementbtn" style="cursor: pointer;" class="download-btn"
-					(click)="downloadAcknowledgement()"><img class="save-icon"
-						src="./assets/images/save.png" />{{'trackservicerequest.downloadbuttonLabel' |
-					translate}}</button>
-			</div>
 			<div *ngIf="eidStatus.info.eventTypeEnum === 'UPDATE_MY_UIN'"
 				style="display: flex; justify-content: space-between; width: 100%; margin-top: 1rem;">
 				<div>
@@ -158,7 +148,7 @@
 						src="./assets/images/save.png" />{{'trackservicerequest.downloadbuttonLabel' |
 					translate}}</button>
 			</div>
-			<div *ngIf="eidStatus.info.eventTypeEnum !== 'UPDATE_MY_UIN' && eidStatus.info.eventTypeEnum !== 'GENERATE_VID' && eidStatus.info.eventTypeEnum !== 'VID_CARD_DOWNLOAD' "
+			<div *ngIf="eidStatus.info.eventTypeEnum !== 'UPDATE_MY_UIN' && eidStatus.info.eventTypeEnum !== 'VID_CARD_DOWNLOAD' "
 				style="display: flex; justify-content: flex-end; width: 100%; margin-top: 1rem;">
 				<button id="downloadAcknowledgementbtn" style="cursor: pointer;" class="download-btn"
 					(click)="downloadAcknowledgement()"><img class="save-icon"

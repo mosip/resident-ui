@@ -133,10 +133,10 @@
                                 <mat-select disableOptionCentering class="enable-dropdown" id="{{field.attributeName}}"
                                   placeholder="{{field.placeHolder[item.language]}}"
                                   [(value)]="userInputValues[field.attributeName][item.language]"
-                                  [disabled]="attributeUpdateCountRemainLimit[field.attributeName] === 0">
+                                  [disabled]="attributeUpdateCountRemainLimit[field.attributeName] === 0"
+                                  (selectionChange)="captureDropDownValue($event, field.attributeName, item.language)">
                                   <mat-option *ngFor="let data of dropDownValues[field.attributeName][item.language]"
-                                    (onSelectionChange)="captureDropDownValue($event, field.attributeName, item.language, data.code, buildJSONData[field.attributeName][langCode])"
-                                    [value]="data.value">{{ data.value }}</mat-option>
+                                    [value]="data.code">{{ data.value }}</mat-option>
                                 </mat-select>
                               </span>
                               <span
@@ -182,7 +182,7 @@
                                 id="{{field.attributeName}}">
                                 <mat-option style="min-width: 25.2rem;"
                                   *ngFor="let data of dropDownValues[field.attributeName]"
-                                  (onSelectionChange)="captureDropDownValue($event, field.attributeName, supportedLanguages[0], field.dataType, '')"
+                                  (onSelectionChange)="captureDropDownValue($event, field.attributeName, supportedLanguages[0], field.dataType)"
                                   [value]="data.code">{{ data.name }}</mat-option>
                               </mat-select>
                             </td>
@@ -332,7 +332,7 @@
                                 <div class="search-input-card">
                                   <input class="input" matInput #{{field.attributeName}}
                                     id="{{field.attributeName}}{{item.language}}"
-                                    (blur)="captureAddressValue($event, field.attributeName, item.language, item.value)"
+                                    (blur)="captureAddressValue($event, field.attributeName, item.language)"
                                     [(value)]="userInputValues[field.attributeName][item.language]"
                                     [placeholder]="field.placeHolder[item.language]"
                                     (focus)="captureVirtualKeyboard(field.attributeName+item.language, item.index)"
@@ -353,34 +353,35 @@
                               <td width="3%"></td>
                               <td class="width-of-input"><label>{{field.labelName[langCode][1]}}</label></td>
                             </tr>
-                            <ng-container *ngIf="field.attributeName !== 'postalCode'">
+                            <ng-container *ngIf="typeOf(userInfo[field.attributeName]) !== 'string'">
                               <tr *ngFor="let item of buildJSONData[field.attributeName], let i = index">
                                 <td class="sub-table-row each-Hierarchy-td width-of-input">
-                                  <input *ngIf="buildJSONData[field.attributeName] " type="text" class="readonly"
+                                  <input *ngIf="buildJSONData[field.attributeName]"  type="text" class="readonly"
                                     readonly="true" disabled="true" [value]="item.value">
                                 </td>
                                 <td class="sub-table-row" width="3%"></td>
-                                <td class="sub-table-row each-Hierarchy-td width-of-input"
-                                  *ngIf="dynamicDropDown[field.name]">
+                                <td  class="sub-table-row each-Hierarchy-td width-of-input"
+                                *ngIf="dynamicDropDown[field.name]">
+                                <span [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'">
                                   <mat-select disableOptionCentering
-                                    placeholder="{{langJson.select}} {{field.labelName[langCode][1]}}"
+                                    placeholder="{{field.placeHolder[item.language]}}"
                                     [ngClass]="dynamicDropDown[field.name]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
-                                    [(value)]="userInputValues[field.attributeName][item.value]"
+                                    [(value)]="userInputValues[field.attributeName][item.language]"
                                     id="{{field.name}}{{item.language}}"
-                                    (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,item.language);">
-                                    <mat-option *ngFor="let data of dynamicDropDown[field.name]" [value]="data">
+                                    (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))">
+                                    <mat-option *ngFor="let data of dynamicDropDown[field.name][item.language]" [value]="data.code">
                                       {{ data.name }}
                                     </mat-option>
                                   </mat-select>
-                                  <span
-                                    *ngIf="dynamicDropDown[field.name][0] && i === (buildJSONData[field.attributeName]?.length -1)">
-                                    <p *ngIf="dynamicDropDown[field.name][0].hierarchyName === fieldName"
+                                </span>
+                                  <span *ngIf="locationFieldNameList?.length">
+                                    <p *ngIf="locationFieldNameList[field.locationHierarchyLevel-1] === fieldName && i === (buildJSONData[field.attributeName]?.length -1)"
                                       class="warning-message">{{langJson.EnterAllAddress}} {{fieldName}}</p>
                                   </span>
                                 </td>
                               </tr>
                             </ng-container>
-                            <tr *ngIf="field.attributeName === 'postalCode'">
+                            <tr *ngIf="typeOf(userInfo[field.attributeName]) === 'string'">
                               <td *ngIf="buildJSONData[field.attributeName]" class="width-of-input">
                                 <input type="text" class="readonly" readonly="true" disabled="true"
                                   [value]="buildJSONData[field.attributeName].value">
@@ -392,13 +393,13 @@
                                   placeholder="{{langJson.select}} {{field.labelName[langCode][1]}}"
                                   [ngClass]="dynamicDropDown[field.name]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
                                   [(value)]="userInputValues[field.attributeName]" id="{{field.name}}"
-                                  (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,'')">
-                                  <mat-option *ngFor="let data of dynamicDropDown[field.name]" [value]="data">
+                                  (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))">
+                                  <mat-option *ngFor="let data of dynamicDropDown[field.name].eng" [value]="data.code">
                                     {{ data.name }}
                                   </mat-option>
                                 </mat-select>
-                                <span *ngIf="dynamicDropDown[field.name][0]">
-                                  <p *ngIf="dynamicDropDown[field.name][0].hierarchyName === fieldName"
+                                <span *ngIf="locationFieldNameList?.length">
+                                  <p *ngIf="locationFieldNameList[field.locationHierarchyLevel-1] === fieldName"
                                     class="warning-message">{{langJson.EnterAllAddress}} {{fieldName}}</p>
                                 </span>
                               </td>
@@ -425,7 +426,7 @@
                                   id="{{field.attributeName}}">
                                   <mat-option style="min-width: 25.2rem;"
                                     *ngFor="let data of dropDownValues[field.attributeName]"
-                                    (onSelectionChange)="captureAddressDropDownValue($event, field.attributeName, langCode, field.dataType, '')"
+                                    (onSelectionChange)="captureAddressDropDownValue($event, field.attributeName)"
                                     [value]="data.code">{{
                                     data.name }}</mat-option>
                                 </mat-select>
@@ -436,7 +437,7 @@
                                   <input class="input"
                                     [value]="proofOfAddress['documentreferenceId'] ? proofOfAddress['documentreferenceId'] : '' "
                                     matInput #{{field.attributeName}} id="{{field.attributeName}}value"
-                                    (blur)="captureAddressValue($event, field.attributeName, '', '')"
+                                    (blur)="captureAddressValue($event, field.attributeName, '')"
                                     (focus)="captureVirtualKeyboard(field.attributeName, buildJSONData.proofOfAddress)"
                                     #keyboardRef />
                                   <i matSuffix class="material-icons mat-keyboard-icon"
@@ -651,7 +652,7 @@
                   <mat-select [placeholder]="field.placeHolder[langCode]" disableOptionCentering class="enable-dropdown"
                     [(ngModel)]="selected2" id="{{field.attributeName}}">
                     <mat-option *ngFor="let data of newNotificationLanguages"
-                      (onSelectionChange)="capturePerfLang($event, field.attributeName, langCode, field.dataType)"
+                      (onSelectionChange)="capturePerfLang($event, field.attributeName)"
                       [value]="data.code">{{ data.name }}</mat-option>
                   </mat-select>
                 </div>

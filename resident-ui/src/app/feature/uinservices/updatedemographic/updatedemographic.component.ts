@@ -110,9 +110,12 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
   isSelectedAllAddress:boolean = true;
   fieldName:string;
   oldKeyBoradIndex:number;
-  getUserPerfLang = new Set([]);
+  getUserPerfLang = [];
+  getUserPerfLangString:string = "";
   attributeUpdateCountMaxLimit:any;
   attributeUpdateCountRemainLimit:any = {};
+  selectedOptionData:any;
+  oldSelectedIndex:any;
   
   private keyboardRef: MatKeyboardRef<MatKeyboardComponent>;
   @ViewChildren('keyboardRef', { read: ElementRef })
@@ -234,7 +237,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
         if (response["response"]) {
           this.userInfo = response["response"];
           this.userInfo['fullName'].forEach(item=>{
-            this.getUserPerfLang.add(item.language)
+            this.getUserPerfLang.indexOf(item.language) === -1 ? this.getUserPerfLang.push(item.language) : ''
           }) 
           UpdatedemographicComponent.actualData = response["response"];
           if (this.schema && this.userInfo) {
@@ -316,6 +319,10 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
     } catch (ex) {
       console.log("Exception>>>" + ex.message);
     }
+    this.getUserPerfLang.forEach(item =>{
+      this.getUserPerfLangString = this.getUserPerfLangString + item + ","
+    })
+    this.getUserPerfLangString = this.getUserPerfLangString.replace(/,\s*$/, "");
   }
 
   changedBuildData(finaluserInfoClone: any) {
@@ -333,28 +340,27 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
     }
   }
 
-  addingAddessData(event:any, formControlName:string, language:string) {
-    if(event !==''){
-      if(formControlName !== 'postalCode'){
-        if(this.userInputValues[formControlName][language] === ''){
-          let newData = { "language": language, "value": event.value.name };
-          if( this.userInfoAddressClone[formControlName]){
-            this.userInfoAddressClone[formControlName].push(newData)
-          }else{
-            this.userInfoAddressClone[formControlName] = [].concat(newData)
+  addingAddessData(event:any, formControlName:string, fieldType:string, fieldName:string) {
+    let locationCode = event.value
+    if(fieldType !== 'string'){
+      this.userInfoAddressClone[formControlName] = []
+      this.getUserPerfLang.forEach(langCode =>{
+        let newData
+        this.dynamicDropDown[fieldName][langCode].forEach(eachLocation =>{
+          if(eachLocation.code === locationCode){
+            newData = { "language": langCode, "value": eachLocation.name }
+            this.userInputValues[formControlName][langCode] = eachLocation.code;
           }
-        }else{
-          this.userInfoAddressClone[formControlName].forEach(item =>{
-            if(item.language === language){
-              item.value = event.value.name
-            }
-          })
+        })
+        this.userInfoAddressClone[formControlName].push(newData)
+      })
+    }else{
+      this.dynamicDropDown[fieldName]['eng'].forEach(eachLocation =>{
+        if(eachLocation.code === locationCode){
+          this.userInfoAddressClone[formControlName] = eachLocation.name;
+          this.userInfoAddressClone[formControlName] = eachLocation.code;
         }
-        this.userInputValues[formControlName][language] = event.value.name;
-      }else{
-        // this.userInputValues[formControlName] = event.value.name;
-        this.userInfoAddressClone[formControlName] = event.value.name;
-      }
+      })
     }
     
   }
@@ -409,7 +415,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadLocationDataDynamically(event: any, index: any, schemaFieldName:string, language:string) {  
+  loadLocationDataDynamically(event: any, index: any, schemaFieldName:string, fieldType:string) {
     let unSelectedItems = this.locationFieldNameList.slice(index, this.locationFieldNameList.length)
     let locationCode = "";
     let fieldName = "";
@@ -419,19 +425,33 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
       locationCode = this.initialLocationCode;
     } else {
       fieldName = this.locationFieldNameList[parseInt(index)];
-      locationCode = event.value.code;
+      locationCode = event.value;
       this.isSelectedAllAddress = unSelectedItems.length ? false : true;
-      this.fieldName = fieldName;
     }
-    this.dataStorageService.getImmediateChildren(locationCode, this.langCode)
+    
+    this.fieldName = fieldName
+    if(fieldName){
+      this.dataStorageService.getImmediateChildren(locationCode, this.getUserPerfLangString)
       .subscribe(response => {
         if (response['response'])
           self.dynamicDropDown[fieldName] = response['response']['locations'];
       });
+    }
+  
+    if(event !==''){
+        this.addingAddessData(event, schemaFieldName, fieldType, this.locationFieldNameList[parseInt(index) -1]);
+    }
     
-    this.addingAddessData(event, schemaFieldName, language);
     unSelectedItems.forEach(item =>{
       this.dynamicDropDown[item] = [];
+      let filedNameForuserInput = (item.charAt(0).toLocaleLowerCase() + item.slice(1)).replace(" ","")
+      if(typeof this.userInputValues[filedNameForuserInput] !== 'string'){
+        this.getUserPerfLang.forEach(lang =>{
+          this.userInputValues[filedNameForuserInput][lang] = ''
+        })
+      }else{
+        this.userInputValues[filedNameForuserInput] = ''
+      }
     });
   }
 
@@ -593,27 +613,20 @@ captureValue(event: any, formControlName: string, language: string, currentValue
     this.userInputValues[formControlName] = formattedDate;
   }
 
-  captureDropDownValue(event: any, formControlName: string, language: string, code: string, currentValue: any) {
+  captureDropDownValue(event: any, formControlName: string, language: string, currentValue: any) {
     let genders =this.dropDownValues.gender
     let self = this;
-    if (event.source.selected && event.source.viewValue !== currentValue) {
       if (formControlName !== "proofOfIdentity") {
         this.userInfoClone[formControlName] = []
         this.getUserPerfLang.forEach(item =>{
           let newData
-          if(item === language){
-            newData = { "language": language, "value": event.source.viewValue }
-            this.userInfoClone[formControlName].push(newData)
-            this.userInputValues[formControlName][language] = event.source.viewValue;
-          }else{
-            genders[item].forEach(eachGender =>{
-              if(eachGender.code === code){
-                newData = { "language": item, "value": eachGender.value }
-                this.userInputValues[formControlName][item] = eachGender.value;
-              }
-            })
-            this.userInfoClone[formControlName].push(newData)
-          }
+          genders[item].forEach(eachGender =>{
+            if(eachGender.code === event.value){
+              newData = { "language": item, "value": eachGender.value }
+              this.userInputValues[formControlName][item] = eachGender.code;
+            }
+          })
+          this.userInfoClone[formControlName].push(newData)
         })
       } else {
         if (formControlName === "proofOfIdentity") {
@@ -623,11 +636,9 @@ captureValue(event: any, formControlName: string, language: string, currentValue
         }
         self[formControlName]["documenttype"] = event.source.value;
       }
-    }
-    
   }
 
-  captureAddressValue(event: any, formControlName: string, language: string, currentValue: any) {
+  captureAddressValue(event: any, formControlName: string, language: string) {
     let self = this;
     if (event.target.value.trim() === "") {
       if(this.userInfoClone[formControlName]){
@@ -657,7 +668,7 @@ captureValue(event: any, formControlName: string, language: string, currentValue
   }
 
 
-  captureAddressDropDownValue(event: any, formControlName: string, language: string, dataType: string, currentValue: any) {
+  captureAddressDropDownValue(event: any, formControlName: string) {
     let self = this;
     if (event.source.selected) {
       if (formControlName === "proofOfIdentity") {
@@ -670,7 +681,7 @@ captureValue(event: any, formControlName: string, language: string, currentValue
     this.userInputValues[formControlName] = event.source.viewValue;
   }
 
-  captureContactValue(event: any, formControlName) {
+  captureContactValue(event: any, formControlName:any) {
     this.userId = event.target.value;
     this.contactTye = formControlName;
 
@@ -706,7 +717,7 @@ captureValue(event: any, formControlName: string, language: string, currentValue
     }
   }
 
-  capturePerfLang(event: any, formControlName: string, language: string) {
+  capturePerfLang(event: any, formControlName: string) {
     this.userInputValues[formControlName] = event.source.viewValue;
     this.userPrefLang[formControlName] = event.source.viewValue;
   }
