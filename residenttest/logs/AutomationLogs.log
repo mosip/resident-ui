@@ -31727,3 +31727,20 @@
 2023-05-23 12:16:48,813 INFO [main] i.m.t.r.u.Commons : Entering By.xpath: //*[@class="pincode-input-text"][6]1
 2023-05-23 12:16:52,904 INFO [main] i.m.t.r.u.Commons : Clicking By.xpath: //button[text()='Verify']
 2023-05-23 12:16:53,973 INFO [main] i.m.t.r.u.Commons : Clicking By.id: Manage-Identity-Data
+2023-11-27 17:18:16,298 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText
+2023-11-27 17:18:21,819 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText
+2023-11-27 17:18:28,314 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText
+2023-11-27 17:19:10,686 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText
+2023-11-27 17:19:14,292 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText
+2023-11-27 17:19:18,608 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText
+2023-11-27 17:19:22,461 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText
+2023-11-27 17:19:26,720 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText
+2023-11-27 17:19:29,740 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText
+2023-11-27 17:19:33,188 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText
+2023-11-27 17:19:36,815 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText
+2023-11-27 17:21:15,446 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText
+2023-11-27 17:21:20,184 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText
+2023-11-27 17:21:25,846 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText
+2023-11-27 17:21:29,609 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText
+2023-11-27 17:21:33,824 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText
+2023-11-27 17:21:37,811 INFO [main] i.m.t.r.u.JsonUtil : readJsonFileText

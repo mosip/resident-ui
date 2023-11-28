@@ -13,7 +13,7 @@
 		"9VerifyPhoneNumberEmailID":"VPNEEI",
 		"10viewMyHistory":"VMH",
 		"BELOW_ARE_STATIC_KEYWORDS": "We are using this setExcludedGroups to exclude scenarios",
-		"setExcludedGroups": "GMU,VPNEEI",
+		"setExcludedGroups": "GMU,VPNEEI,UMD,GI,MMV,SMI,TMR,VMH,GPC",
 		"perpetualvid":"6534906793542960",
 		 "temporaryvid":"3048902169863853",
 		 "UIN":"2359064162",
