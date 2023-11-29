@@ -98,6 +98,30 @@ td {
   display: flex; 
   align-items: center;
 }
+
+.mat-card{
+  padding: 16px;
+  width: 100% !important;
+}
+
+@media screen and (max-width:600px){
+  .mat-card{
+    padding: 8px;
+  }
+  .event-id-search-main-card{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .event-id-search-card{
+    width: 100%;
+  }
+  input{
+    width: 94%;
+  }
+}
+
+
+
 ::ng-deep .mat-tooltip {
   background-color: #ffffff !important;
   color: black !important;

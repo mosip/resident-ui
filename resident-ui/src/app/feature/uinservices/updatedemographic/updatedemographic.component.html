@@ -83,7 +83,8 @@
                                     [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-ara-number-of-attems-arrow-shape':'ara-number-of-attems-arrow-shape'">
                                   </div>
                                 </div>
-                                <div style="padding: 4px;" *ngIf="langJson && attributeUpdateCountMaxLimit" [ngClass]="langCode === 'ara' ? 'dir-rtl' :'dir-ltl'">
+                                <div style="padding: 4px;" *ngIf="langJson && attributeUpdateCountMaxLimit"
+                                  [ngClass]="langCode === 'ara' ? 'dir-rtl' :'dir-ltl'">
                                   <span
                                     style="display: block; font-weight: 600;">{{langJson.remainingAttems.replace("$remainingAttems",
                                     attributeUpdateCountRemainLimit[field.attributeName])}}</span>
@@ -200,7 +201,8 @@
                                     [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-ara-number-of-attems-arrow-shape':'ara-number-of-attems-arrow-shape'">
                                   </div>
                                 </div>
-                                <div style="padding: 4px;" *ngIf="langJson" [ngClass]="langCode === 'ara' ? 'dir-rtl' :'dir-ltl'">
+                                <div style="padding: 4px;" *ngIf="langJson"
+                                  [ngClass]="langCode === 'ara' ? 'dir-rtl' :'dir-ltl'">
                                   <span
                                     style="display: block; font-weight: 600;">{{langJson.remainingAttems.replace("$remainingAttems",attributeUpdateCountRemainLimit[field.attributeName])}}</span>
                                   <span *ngIf="attributeUpdateCountMaxLimit"
@@ -323,7 +325,8 @@
                                     [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-ara-number-of-attems-arrow-shape':'ara-number-of-attems-arrow-shape'">
                                   </div>
                                 </div>
-                                <div style="padding: 4px;" *ngIf="langJson && attributeUpdateCountMaxLimit" [ngClass]="langCode === 'ara' ? 'dir-rtl' :'dir-ltl'">
+                                <div style="padding: 4px;" *ngIf="langJson && attributeUpdateCountMaxLimit"
+                                  [ngClass]="langCode === 'ara' ? 'dir-rtl' :'dir-ltl'">
                                   <span
                                     style="display: block; font-weight: 600;">{{langJson.remainingAttems.replace("$remainingAttems",
                                     attributeUpdateCountRemainLimit[field.attributeName])}}</span>
@@ -494,8 +497,9 @@
                                   </div>
 
                                   <div class="preview">
-                                    <img (click)="previewFile(i, 'POI', file.name)" mat-card-xs-image style="margin: 0 0 -5px 0;"
-                                      src='./assets/icons/iconfont/visibility_on.svg' alt="" />
+                                    <img (click)="previewFile(i, 'POI', file.name)" mat-card-xs-image
+                                      style="margin: 0 0 -5px 0;" src='./assets/icons/iconfont/visibility_on.svg'
+                                      alt="" />
                                   </div>
 
                                   <div class="delete" (click)="deleteFile(i, 'POI')">
@@ -616,7 +620,7 @@
                         <td class="main-table-data" width="100%" *ngIf="userInfo[field.attributeName]">
                           <table width="100%">
                             <tr *ngIf="typeOf(userInfo[field.attributeName]) !== 'string'">
-                              <td class="width-of-input" >
+                              <td class="width-of-input">
                                 <span *ngFor="let eachLang of getUserPerfLang; let langI = index">
                                   {{field.labelName[eachLang][0]}}
                                   <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
@@ -631,10 +635,10 @@
                               </td>
                             </tr>
                             <tr *ngIf="typeOf(userInfo[field.attributeName]) === 'string'">
-                              <td class="width-of-input" >
+                              <td class="width-of-input">
                                 <label>{{field.labelName[langCode][0]}}</label>
                               </td>
-                              
+
                               <td width="3%" class="ele-for-lap-tab-card"></td>
                               <td class="width-of-input ele-for-lap-tab-card">
                                 <label>{{field.labelName[langCode][1]}}</label>
@@ -642,8 +646,9 @@
                             </tr>
                             <ng-container *ngIf="typeOf(userInfo[field.attributeName]) !== 'string'">
                               <tr *ngFor="let item of buildJSONData[field.attributeName], let i = index">
-                                <td class="sub-table-row each-Hierarchy-td width-of-input" >
-                                  <input [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'" *ngIf="buildJSONData[field.attributeName]" type="text" class="readonly"
+                                <td class="sub-table-row each-Hierarchy-td width-of-input">
+                                  <input [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'"
+                                    *ngIf="buildJSONData[field.attributeName]" type="text" class="readonly"
                                     readonly="true" disabled="true" [value]="item.value">
                                 </td>
                                 <td class="sub-table-row ele-for-lap-tab-card" width="3%"></td>
@@ -772,8 +777,7 @@
                               <td class="width-of-input">
                                 <mat-select disableOptionCentering class="enable-dropdown"
                                   [value]="proofOfAddress['documenttype'] ? proofOfAddress['documenttype'] : '' "
-                                  placeholder="{{langJson.docTypePlaceholder}}"
-                                  id="{{field.attributeName}}">
+                                  placeholder="{{langJson.docTypePlaceholder}}" id="{{field.attributeName}}">
                                   <mat-option style="min-width: 25.2rem;"
                                     *ngFor="let data of dropDownValues[field.attributeName]"
                                     (onSelectionChange)="captureAddressDropDownValue($event, field.attributeName)"
@@ -870,8 +874,9 @@
                                       <app-progress [progress]="file?.progress"></app-progress>
                                     </div>
                                     <div class="preview">
-                                      <img (click)="previewFile(i, 'POA',file.name)" mat-card-xs-image style="margin: 0 0 -5px 0;"
-                                        src='./assets/icons/iconfont/visibility_on.svg' alt="" />
+                                      <img (click)="previewFile(i, 'POA',file.name)" mat-card-xs-image
+                                        style="margin: 0 0 -5px 0;" src='./assets/icons/iconfont/visibility_on.svg'
+                                        alt="" />
                                     </div>
                                     <div class="delete" (click)="deleteFile(i, 'POA')">
                                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="18"
@@ -899,6 +904,7 @@
             (click)="previewBtn('address')" color="primary" id="submit">{{langJson.preview}}</button>
         </div>
       </mat-tab>
+
       <mat-tab label="{{'updatedemographic.contact' | translate}}">
         <h3 class="tab-headings">{{'updatedemographic.contactHeading' | translate}}</h3>
         <div *ngFor="let field of schema['identity']; let i = index" dir="{{sitealignment}}">
@@ -912,7 +918,7 @@
               <div class="contact-update-each-sub-card">
                 <mat-card-subtitle class="contact-lable">{{field.labelName[langCode][1]}}</mat-card-subtitle>
                 <div class="search-input-card" *ngIf="field.attributeName === 'email'">
-                  <input class="input" [value]="userIdEmail" matInput type="password" #{{field.attributeName}}
+                  <input class="input" [value]="userIdEmail" matInput type="text" #{{field.attributeName}}
                     id="{{field.attributeName}}" (input)="captureContactValue($event, field.attributeName)"
                     [placeholder]="field.placeHolder[langCode]"
                     (blur)="captureContactValue($event, field.attributeName)"
@@ -922,7 +928,7 @@
                     (click)="openKeyboard(field.attributeName)">keyboard</i>
                 </div>
                 <div class="search-input-card" *ngIf="field.attributeName === 'phone'">
-                  <input class="input" [value]="userIdPhone" matInput type="password" #{{field.attributeName}}
+                  <input class="input" [value]="userIdPhone" matInput type="text" #{{field.attributeName}}
                     id="{{field.attributeName}}" (input)="captureContactValue($event, field.attributeName)"
                     [placeholder]="field.placeHolder[langCode]"
                     (blur)="captureContactValue($event, field.attributeName)"
@@ -932,48 +938,15 @@
                     (click)="openKeyboard(field.attributeName)">keyboard</i>
                 </div>
               </div>
-            </div>
-            <div class="contact-update-sub-card">
-              <div class="contact-update-each-sub-card">
-                <mat-card-subtitle class="contact-lable">{{field.labelName[langCode][2]}}</mat-card-subtitle>
-                <div style="display: flex;">
-                  <div class="search-input-card" *ngIf="field.attributeName === 'email'">
-                    <input class="input" [value]="confirmEmailContact"
-                      (input)="captureConfirmValue($event,field.attributeName)"
-                      (blur)="captureConfirmValue($event,field.attributeName)"
-                      [placeholder]="field.placeHolder[langCode]"
-                      (focus)="captureVirtualKeyboard('confirm' + field.attributeName, buildJSONData[field.attributeName].confIndex)"
-                      matInput #confirmemail #input id="confirm{{field.attributeName}}" #keyboardRef />
-                    <i matSuffix class="material-icons mat-keyboard-icon"
-                      (click)="openKeyboard('confirm' + field.attributeName)">keyboard</i>
-                  </div>
-                  <div class="search-input-card" *ngIf="field.attributeName === 'phone'">
-                    <input class="input" [value]="confirmPhoneContact"
-                      (input)="captureConfirmValue($event,field.attributeName)"
-                      [placeholder]="field.placeHolder[langCode]"
-                      (blur)="captureConfirmValue($event,field.attributeName)"
-                      (focus)="captureVirtualKeyboard('confirm' + field.attributeName, buildJSONData[field.attributeName].confIndex)"
-                      matInput #confirmphone id="confirm{{field.attributeName}}" #keyboardRef />
-                    <i matSuffix class="material-icons mat-keyboard-icon"
-                      (click)="openKeyboard('confirm' + field.attributeName)">keyboard</i>
-                  </div>
-                </div>
-                <span *ngIf="showNotMatchedMessageEmail && (field.attributeName === contactTye) && field.attributeName === 'email' "
-                class="warning-message-for-contact">
-                {{langJson.enteredValuesNotMatch}}</span>
-              <span *ngIf="showNotMatchedMessagePhone && (field.attributeName === contactTye) && field.attributeName === 'phone' "
-                class="warning-message-for-contact">
-                {{langJson.enteredValuesNotMatch}}</span>
-              </div>
-              <div class="contact-update-each-sub-card"
-                *ngIf="field.tabgroup === 'contact' && field.controlType === 'textbox'">
-                <mat-card-subtitle class="contact-lable"></mat-card-subtitle>
+              <div class="contact-update-each-btn-card">
+                <mat-card-subtitle class="contact-lable-dummy"></mat-card-subtitle>
                 <button class="contact-send-otp-btn"
                   [disabled]="sendOtpDisable || !(field.attributeName === contactTye)"
                   (click)="sendOTPBtn(field.attributeName)" mat-raised-button color="primary"
                   id="sendOTP{{field.attributeName}}">{{field.labelName[langCode][3]}}</button>
               </div>
             </div>
+
           </div>
         </div>
       </mat-tab>
@@ -999,7 +972,7 @@
                   <mat-select [placeholder]="field.placeHolder[langCode]" disableOptionCentering class="enable-dropdown"
                     [(ngModel)]="selected2" id="{{field.attributeName}}"
                     (selectionChange)="capturePerfLang($event, field.attributeName)">
-                    <mat-option *ngFor="let data of newNotificationLanguages" [value]="data.name">{{ data.name
+                    <mat-option *ngFor="let data of newNotificationLanguages" [value]="data.value">{{ data.value
                       }}</mat-option>
                   </mat-select>
                 </div>

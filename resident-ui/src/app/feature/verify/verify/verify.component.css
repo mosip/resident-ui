@@ -12,7 +12,7 @@
 }
 
 .button {
-  min-width: 225px;
+  width: 45%;
   height: 55px;
   background: #FFFFFF 0% 0% no-repeat padding-box;
   box-shadow: 0px 0px 10px #00000014;
@@ -21,20 +21,26 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font: normal normal medium 14px/16px Roboto;
-  letter-spacing: 0px;
   color: #909090;
   opacity: 1;
   cursor: pointer;
+  font-size: 15px;
 }
 
 .btn-card {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  row-gap: 5px;
+  column-gap: 10px;
+  width: 100%;
 }
 
-.btn-card-xs {
+/* .btn-card-xs {
   display: contents;
-}
+} */
 
 .main-container {
   padding: 0 6% 0 6%;
@@ -69,7 +75,7 @@ label {
 }
 
 input {
-  width: 70%;
+  width: 40%;
   height: 36px;
   background: #FFFFFF 0% 0% no-repeat padding-box;
   border: 1px solid #909090;
@@ -90,8 +96,7 @@ input {
 .button2 {
   min-width: 108px;
   height: 36px;
-  /* background: #909090 0% 0% no-repeat padding-box; */
-  border:none;
+    border:none;
   color: #ffffff;
   border-radius: 5px;
   cursor: pointer;
@@ -236,7 +241,7 @@ input{
      position: absolute;
      border-left: 0.5rem solid transparent;
      border-right: 0.5rem solid transparent;
-     border-bottom: 0.5rem solid #000 8c;
+     border-bottom: 0.5rem solid #000;
      border-color: transparent transparent #fff transparent;
      border-width: 10px;
 }
@@ -248,4 +253,37 @@ input{
      top: 15rem;
      right: calc(50% - 0.5rem);
      transform: rotate(0);
+}
+
+@media screen and (max-width:900px){
+  .main-container{
+    padding: 0 2% 0 2%;
+  }
+  .button{
+    width: 60%;
+  }
+  .verify-phnumb-email-card{
+    padding: 5px;
+  }
+  input{
+    width: 60%;
+  }
+}
+
+@media screen and (max-width:600px){
+  .button {
+    width: 80%;
+  }
+  input{
+    width: 80%;
+  }
+}
+
+@media screen and (max-width:420px){
+  .button {
+    width: 98%;
+  }
+  input{
+    width: 95%;
+  }
 }

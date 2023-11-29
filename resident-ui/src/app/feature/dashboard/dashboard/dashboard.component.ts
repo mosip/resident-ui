@@ -18,9 +18,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   menuItems:any;
   message:any;
   subscriptions: Subscription[] = [];
-  userPreferredLangCode = localStorage.getItem("langCode");
+  langCode = localStorage.getItem("langCode");
   cols : number;
   sitealignment:string = localStorage.getItem('direction');
+  rowHeight:any;
   
   constructor(
     private router: Router,
@@ -35,18 +36,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
       if (active) {
         if(active === "extraSmall"){
           this.cols = 1;
+          this.rowHeight = '235px'
         }
         if(active === "small"){
           this.cols = 1;
+          this.rowHeight = '195px'
         }
         if(active === "medium"){
           this.cols = 2;
+          this.rowHeight = '200px'
         }
         if(active === "large"){
           this.cols = 3;
+          this.rowHeight = '200px'
         }
         if(active === "ExtraLarge"){
           this.cols = 3;
+          this.rowHeight = '200px'
         }
       }
     });
@@ -55,7 +61,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.translateService.use(localStorage.getItem("langCode")); 
     this.translateService
-    .getTranslation(this.userPreferredLangCode)
+    .getTranslation(this.langCode)
     .subscribe(response => {
       this.menuItems = response.menuItems;
     });
@@ -67,7 +73,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }else if(item === "Get Information"){
       this.router.navigate(["regcenter"])
     }else if(item === "Booking an Appointment"){
-      this.auditService.audit('RP-043', 'Book an appointment', 'RP-Book an appointment', 'Book an appointment', 'User clicks on "book an appointment" card');
+      this.auditService.audit('RP-043', 'Book an appointment', 'RP-Book an appointment', 'Book an appointment', 'User clicks on "book an appointment" card','');
       window.open(this.appConfigService.getConfig()["mosip-prereg-ui-url"]+"#/"+localStorage.getItem("langCode"), "_blank");
     }else{
      this.router.navigate([item]); 

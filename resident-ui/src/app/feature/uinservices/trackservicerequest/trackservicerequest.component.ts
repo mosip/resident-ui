@@ -128,7 +128,7 @@ export class TrackservicerequestComponent implements OnInit, OnDestroy {
   }
 
   getEIDStatus(){
-    this.auditService.audit('RP-026', 'Track Service Request', 'RP-Track Service Request', 'Track Service Request', 'User clicks on "search" button');
+    this.auditService.audit('RP-026', 'Track Service Request', 'RP-Track Service Request', 'Track Service Request', 'User clicks on "search" button', '');
     if(this.eidVal){
     this.dataStorageService
     .getEIDStatus(this.eidVal)

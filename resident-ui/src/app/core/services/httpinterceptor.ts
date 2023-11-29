@@ -54,7 +54,7 @@ export class AuthInterceptor implements HttpInterceptor {
     request = request.clone({ withCredentials: true });
     if(localStorage.getItem("langCode")){
       request = request.clone({
-      setHeaders: { 'time-zone-offset': this.localTimeZoneOffset, 'locale': defaultJson['languages']['eng']['locale'] }
+      setHeaders: { 'time-zone-offset': this.localTimeZoneOffset, 'locale': defaultJson['languages'][localStorage.getItem("langCode")]['locale'] }
       });
     }else{
       request = request.clone({
@@ -96,6 +96,9 @@ export class AuthInterceptor implements HttpInterceptor {
           if (err instanceof HttpErrorResponse) {
             if (err.status === 401 && err.statusText === "Unauthorized") {
              this.router.navigate(['dashboard']);
+             if (window.location.href.includes('uinservices')) {
+               window.location.reload();
+             }
             }else if (err.status === 403 && err.statusText === "Forbidden") {
               this.showMessage()
             } else if (err.status === 413) {

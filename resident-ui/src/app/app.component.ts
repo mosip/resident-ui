@@ -2,7 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { AppConfigService } from './app-config.service';
 import { AutoLogoutService } from 'src/app/core/services/auto-logout.service';
 import { Subscription } from 'rxjs';
-import { Event as NavigationEvent, Router, NavigationStart, NavigationEnd } from '@angular/router';
+import { Event as NavigationEvent, Router, NavigationStart } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { LogoutService } from 'src/app/core/services/logout.service';
 import { AuditService } from 'src/app/core/services/audit.service';
@@ -61,60 +61,65 @@ export class AppComponent {
     this.currentRoute = "";
     router.events.subscribe((val) => {
         if (val instanceof NavigationStart) {
-          this.currentRoute = val.url;  
-          console.log("localStorage.getItem>>>"+localStorage.getItem("selectedfontsize"));
+          this.currentRoute = val.url;
           if(localStorage.getItem("selectedfontsize")){
             if(localStorage.getItem("selectedfontsize") === "12"){
-              if(this.agent.indexOf('firefox') > -1 || (this.currentRoute === "/getuin" || this.currentRoute === "/verify")){
-                document.body.style["zoom"] = "100%";
-                document.body.style["transform"] = "scale(1, .9)";
-                document.body.style["transformOrigin "] = "0 0";
-                document.body.style["margin-top"] = "-2.5%";
-              }else{
+              // if(this.currentRoute === "/getuin" || this.currentRoute === "/verify"){
+              //   document.body.style["zoom"] = "100%";
+              //   document.body.style["transform"] = "scale(1, .9)";
+              //   document.body.style["transformOrigin "] = "0 0";
+              //   document.body.style["margin-top"] = "-5.2em";
+              //   document.body.style["height"] = "100rem";
+              // }else{
                 document.body.style["zoom"] = "90%";
-                document.body.style.removeProperty('transform');
-                document.body.style.removeProperty('transformOrigin');
-                document.body.style.removeProperty('margin-top');
-                // document.body.style["transform"] = "scale(1, 1)";
-                // document.body.style["transformOrigin "] = "0 0";
-                // document.body.style["margin-top"] = "0";
-              }
+              //   document.body.style.removeProperty('transform');
+              //   document.body.style.removeProperty('transformOrigin');
+              //   document.body.style.removeProperty('margin-top');
+              //   document.body.style.removeProperty("height");
+              // }
             }else if(localStorage.getItem("selectedfontsize") === "14"){
-              if(this.agent.indexOf('firefox') > -1 || (this.currentRoute === "/getuin" || this.currentRoute === "/verify")){
+              // if(this.currentRoute === "/getuin" || this.currentRoute === "/verify"){
+              //   document.body.style["zoom"] = "100%";
+              //   document.body.style["transform"] = "scale(1, 1.0)";
+              //   document.body.style["transformOrigin "] = "0 0";
+              //   document.body.style["margin-top"] = "0%";
+              //   document.body.style["height"] = "100rem";
+              // }else{
                 document.body.style["zoom"] = "100%";
-                document.body.style["transform"] = "scale(1, 1.0)";
-                document.body.style["transformOrigin "] = "0 0";
-                document.body.style["margin-top"] = "0%";
-              }else{
-                document.body.style["zoom"] = "100%";
-                document.body.style.removeProperty('transform');
-                document.body.style.removeProperty('transformOrigin');
-                document.body.style.removeProperty('margin-top');
-              }
+              //   document.body.style.removeProperty('transform');
+              //   document.body.style.removeProperty('transformOrigin');
+              //   document.body.style.removeProperty('margin-top');
+              //   document.body.style.removeProperty("height");
+
+              // }
             }else if(localStorage.getItem("selectedfontsize") === "16"){
-              if(this.agent.indexOf('firefox') > -1 || (this.currentRoute === "/getuin" || this.currentRoute === "/verify")){
-                document.body.style["zoom"] = "100%";
-                document.body.style["transform"] = "scale(1, 1.1)";
-                document.body.style["transformOrigin "] = "0 0";
-                document.body.style["margin-top"] = "2.1%";
-              }else{
+              // if(this.currentRoute === "/getuin" || this.currentRoute === "/verify"){
+              //   document.body.style["zoom"] = "100%";
+              //   document.body.style["transform"] = "scale(1, 1.1)";
+              //   document.body.style["transformOrigin "] = "0 0";
+              //   document.body.style["margin-top"] = "5em";
+              //   document.body.style["height"] = "100rem";
+              // }else{
                 document.body.style["zoom"] = "110%";
-                document.body.style.removeProperty('transform');
-                document.body.style.removeProperty('transformOrigin');
-                document.body.style.removeProperty('margin-top');
-              }
+              //   document.body.style.removeProperty('transform');
+              //   document.body.style.removeProperty('transformOrigin');
+              //   document.body.style.removeProperty('margin-top');
+              //   document.body.style.removeProperty("height");
+              // }
             }else if(localStorage.getItem("selectedfontsize") === "18"){
-              if(this.agent.indexOf('firefox') > -1 || (this.currentRoute === "/getuin" || this.currentRoute === "/verify")){
-                document.body.style["zoom"] = "100%";
-                document.body.style["transform"] = "scale(1, 1.2)";
-                document.body.style["transformOrigin "] = "0 0";
-                document.body.style["margin-top"] = "4.5%";
-              }else{
+              // if(this.currentRoute === "/getuin" || this.currentRoute === "/verify"){
+              //   document.body.style["zoom"] = "100%";
+              //   document.body.style["transform"] = "scale(1, 1.2)";
+              //   document.body.style["transformOrigin "] = "0 0";
+              //   document.body.style["margin-top"] = "10em";
+              //   document.body.style["height"] = "100rem";
+              // }else{
                 document.body.style["zoom"] = "120%";
-                document.body.style.removeProperty('transform');
-                document.body.style.removeProperty('transformOrigin');
-                document.body.style.removeProperty('margin-top');
-              }
+              //   document.body.style.removeProperty('transform');
+              //   document.body.style.removeProperty('transformOrigin');
+              //   document.body.style.removeProperty('margin-top');
+              //   document.body.style.removeProperty("height");
+              // }
             }
           }
         }

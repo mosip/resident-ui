@@ -11,6 +11,7 @@ import { Icon, Style } from 'ol/style';
 
 import { fromLonLat, addCommon as addCommonProjections } from 'ol/proj';
 import { BookingService } from '../booking.service';
+import { AppConfigService } from 'src/app/app-config.service';
 
 @Component({
   selector: 'app-map',
@@ -31,13 +32,16 @@ export class MapComponent implements OnInit {
   url: string;
   centers: any;
   markers = [];
+  zoom:number = 14;
+  minZoom:number = 5;
+  maxZoom:number = 18;
 
   googleMapsUrl =
     'https://maps.google.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i375060738!3m9!2spl!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0';
 
   OSM_URL = 'https://tile.osm.org/{z}/{x}/{y}.png';
 
-  constructor(private service: BookingService) {}
+  constructor(private service: BookingService,private appConfigService: AppConfigService) {}
 
   ngOnInit() {
     if (this.mapProvider === 'OSM') {
@@ -61,6 +65,13 @@ export class MapComponent implements OnInit {
   }
 
   createMap() {
+    if (this.appConfigService.getConfig()["mosip.resident.zoom"] && this.appConfigService.getConfig()["mosip.resident.minZoom"] && this.appConfigService.getConfig()["mosip.resident.maxZoom"]) {
+      this.zoom = Number(this.appConfigService.getConfig()["mosip.resident.zoom"]);
+      this.minZoom = Number(this.appConfigService.getConfig()["mosip.resident.minZoom"]);
+      this.maxZoom = Number(this.appConfigService.getConfig()["mosip.resident.maxZoom"]);
+    }
+
+
     addCommonProjections();
     for (let i in this.centers) {
       this.marker = new OlFeature({
@@ -99,17 +110,21 @@ export class MapComponent implements OnInit {
     });
 
     /* View and map */
-
     this.view = new OlView({
       center: fromLonLat(this.lonLat),
-      zoom: 14
+      zoom: this.zoom,    // Set the zoom level manually
+      maxZoom: this.maxZoom,
+      minZoom: this.minZoom,
+      zoomControl: false,
+      scaleControl: false,
+      scrollwheel: false,
     });
 
     this.map = new OlMap({
       target: 'map',
       // Added both layers
       layers: [this.tileLayer, this.vectorLayer],
-      view: this.view
+      view: this.view,
     });
   }
 
