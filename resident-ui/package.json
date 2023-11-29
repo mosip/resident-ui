@@ -5,10 +5,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "sonar": "sonar-scanner"
+    "sonar": "sonar-scanner",
+    "test": "jest --coverage"
   },
   "private": true,
   "dependencies": {
@@ -78,6 +78,16 @@
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1",
     "typescript": "3.2.2",
-    "webpack-bundle-analyzer": "^3.9.0"
+    "webpack-bundle-analyzer": "^3.9.0",
+    "jest-sonar-reporter": "^2.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "testResultsProcessor": "jest-sonar-reporter",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ]
   }
 }
