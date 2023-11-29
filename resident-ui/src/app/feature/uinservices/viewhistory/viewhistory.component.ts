@@ -315,9 +315,9 @@ export class ViewhistoryComponent implements OnInit, OnDestroy {
       }
     }
     if(formControlName === "serviceType"){
-      this.auditService.audit('RP-009', 'View history', 'RP-View history', 'View history', 'User chooses the "history filter" from the drop-down');
+      this.auditService.audit('RP-009', 'View history', 'RP-View history', 'View history', 'User chooses the "history filter" from the drop-down', '');
     }else if(formControlName === "statusFilter"){
-      this.auditService.audit('RP-010', 'View history', 'RP-View history', 'View history', 'User chooses the "status filter" from the drop-down');
+      this.auditService.audit('RP-010', 'View history', 'RP-View history', 'View history', 'User chooses the "status filter" from the drop-down', '');
     }
     if(event){
       event.stopPropagation()
@@ -325,7 +325,7 @@ export class ViewhistoryComponent implements OnInit, OnDestroy {
   }
 
   pinData(data:any){
-    this.auditService.audit('RP-006', 'View history', 'RP-View history', 'View history', 'User clicks on "Pin to top"');
+    this.auditService.audit('RP-006', 'View history', 'RP-View history', 'View history', 'User clicks on "Pin to top"', '');
     this.dataStorageService
       .pinData(data.eventId)
       .subscribe((response) => {
@@ -344,12 +344,12 @@ export class ViewhistoryComponent implements OnInit, OnDestroy {
   }
 
   viewDetails(data: any) {
-    this.auditService.audit('RP-008', 'View history', 'RP-View history', 'View history', 'User clicks on "View Details"');
+    this.auditService.audit('RP-008', 'View history', 'RP-View history', 'View history', 'User clicks on "View Details"', '');
     this.router.navigateByUrl(`uinservices/trackservicerequest?source=ViewMyHistory&eid=` + data.eventId);
   }
 
   reportDetails(data: any) {
-    this.auditService.audit('RP-007', 'View history', 'RP-View history', 'View history', 'User clicks on "Report an issue"');
+    this.auditService.audit('RP-007', 'View history', 'RP-View history', 'View history', 'User clicks on "Report an issue"', '');
     this.router.navigateByUrl(`uinservices/grievanceRedressal?source1=viewMyHistory&eid=` + data.eventId);
   }
 
@@ -367,13 +367,19 @@ export class ViewhistoryComponent implements OnInit, OnDestroy {
       }
     });
     this.getServiceHistory("", searchParam, "search");
-    this.auditService.audit('RP-004', 'View history', 'RP-View history', 'View history', 'User clicks on "Go" button for applying "the chosen filter"');
+    this.auditService.audit('RP-004', 'View history', 'RP-View history', 'View history', 'User clicks on "Go" button for applying "the chosen filter"', '');
     this.paginator.pageIndex = 0;
   }
 
   capturePageValue(pageEvent: any) {
     let searchParam = "",
       self = this;
+    if(pageEvent.pageIndex > this.pageIndex) {
+      this.auditService.audit('RP-011', 'View history', 'RP-View history', 'View history', 'User clicks on next page in pagination', '');
+    }
+    if(pageEvent.pageSize != this.pageSize){
+      this.auditService.audit('RP-012', 'View history', 'RP-View history', 'View history', 'User chooses the number of items to be shown on each page from drop-down', '');
+    }
     this.controlTypes.forEach(controlType => {
       if (self[controlType]) {
         if (searchParam) {
@@ -389,7 +395,7 @@ export class ViewhistoryComponent implements OnInit, OnDestroy {
 
   downloadServiceHistory() {
     this.isLoading = true;
-    this.auditService.audit('RP-005', 'View history', 'RP-View history', 'View history', 'User clicks on "download" button');
+    this.auditService.audit('RP-005', 'View history', 'RP-View history', 'View history', 'User clicks on "download" button', '');
     let searchParam = "", self = this;
     this.controlTypes.forEach(controlType => {
       if (self[controlType]) {

@@ -293,6 +293,12 @@ ul li:last-child hr{
     border-radius: 10px;
 }
 
+/* ::ng-deep .cdk-global-overlay-wrapper {
+    align-items: baseline !important;
+    margin-top: 25em !important;
+} */
+  
+
 ::ng-deep .mat-tooltip {
     background-color: #ffffff !important;
     color: black !important;

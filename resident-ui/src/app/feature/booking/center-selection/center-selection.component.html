@@ -25,22 +25,22 @@
                 <mat-icon class="my-location-icon" matTooltip="{{ 'centerSelection.helpText' | translate }}"
                   [inline]="true">my_location</mat-icon>&nbsp;&nbsp;
                 {{ 'centerSelection.action_nearBy' | translate }}
-              </button>&nbsp;&nbsp;&nbsp;
+              </button>
               <span class="or-text">{{ 'centerSelection.or' | translate }}</span>
               <!-- </div> -->
-              &nbsp;&nbsp;&nbsp;
               <form class="search-form-card">
                 <div class="search-form">
-                  <mat-card class="select-card">
-                    <mat-select disableOptionCentering name="select" class="select-input" [(ngModel)]="locationType"
-                      value="locationType" (selectionChange)="onChangeLocationType()"
-                      placeholder="{{ 'centerSelection.text_select' | translate }}">
-                      <mat-option class="locationType-card" *ngFor="let locationType of locationTypes"
-                        [value]="locationType">
-                        {{ locationType.hierarchyLevelName }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-card>
+                  <div class="manual-loc-search-card">
+                    <mat-card class="select-card">
+                      <mat-select disableOptionCentering name="select" class="select-input" [(ngModel)]="locationType"
+                        value="locationType" (selectionChange)="onChangeLocationType()"
+                        placeholder="{{ 'centerSelection.text_select' | translate }}">
+                        <mat-option class="locationType-card" *ngFor="let locationType of locationTypes"
+                          [value]="locationType">
+                          {{ locationType.hierarchyLevelName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-card>
                     <mat-card class="search-card">
                       <input [disabled]="!locationType" mat-input #search
                         placeholder="{{ 'centerSelection.text_search' | translate }}" name="search" class="search-input"
@@ -49,14 +49,19 @@
                       <i *ngIf="locationType" style="float: right; color: grey; cursor: pointer;" matSuffix
                         class="material-icons" (click)="openKeyboard()">keyboard</i>
                     </mat-card>
-                    &nbsp;&nbsp;
+                  </div>
+                  <div class="manual-loc-search-btns" > 
                     <button [disabled]="isBlankSpace" mat-raised-button (click)="showResults()" class="search-btn">
                       <mat-icon>search</mat-icon>
                     </button>
-                    <button *ngIf="REGISTRATION_CENTRES.length >0" mat-raised-button (click)="downloadCentersPdf()">
+                    &nbsp;
+                    <button *ngIf="REGISTRATION_CENTRES.length >0" mat-raised-button (click)="downloadCentersPdf()" class="save-icon-btn">
                       <img alt="" class="save-icon" src="./assets/icons/iconfont/download-1.svg" />
                     </button>
+                    &nbsp;
+                    <button *ngIf="REGISTRATION_CENTRES?.length >0" class="show-map-btn" (click)="showAllCenters()">{{ popupMessages.centerSelection.showMapBtnLabel }}</button>
                   </div>
+                </div>
               </form>
             </div>
             <p *ngIf="showWarningMsg" class="warning-message">{{popupMessages.centerSelection.warnMessage}}</p>
@@ -65,13 +70,13 @@
           </ng-template>
           <div class="container">
             <h4 *ngIf="showMessage" class="show-message-text">{{showMesssageText}}</h4>
-            <div class="centers-details-card">
+            <div *ngIf="showLocationDetails" class="centers-details-card">
               <div class="centers-list">
                 <div *ngIf="REGISTRATION_CENTRES.length >0">
                   <ul>
                     <li *ngFor="let center of REGISTRATION_CENTRES; let i = index;">
                       <div [ngClass]="REGISTRATION_CENTRES.length === i+1 ? 'center-card item' :'center-card'">
-                        <div style="width: 40%;cursor:pointer;" (click)="selectedRow(center)">
+                        <div style="width: 40%;cursor:pointer;" (click)="selectedEachMap(center)">
                           <div class="inline-flex" [dir]="textDir">
                             <img alt="" src="assets\address.png" />
                             <div>
@@ -141,6 +146,8 @@
               </div>
             </div>
             <div class="map" *ngIf="showMap">
+              <button *ngIf="showBackBtn" mat-button-toggle id="getUinBackBtn" (click)="backBtn()" class="back-btn"><img src="./assets/images/arrow_back_black_24dp.png"
+                alt="" />{{ popupMessages.centerSelection.action_back }}</button>
               <app-map style="width:100%; height: auto;" [mapProvider]="mapProvider"></app-map>
             </div>
           </div>

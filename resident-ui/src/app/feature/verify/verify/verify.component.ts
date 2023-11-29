@@ -79,11 +79,11 @@ export class VerifyComponent implements OnInit, OnDestroy {
           this.deviceSize = "Small";
         }
         if (result.breakpoints[Breakpoints.Medium]) {
-          this.width = "60%";
+          this.width = "80%";
           this.deviceSize = "Medium";
         }
         if (result.breakpoints[Breakpoints.Large]) {
-          this.width = "55%";
+          this.width = "64%";
           this.deviceSize = "Large";
         }
         if (result.breakpoints[Breakpoints.XLarge]) {
@@ -222,12 +222,12 @@ export class VerifyComponent implements OnInit, OnDestroy {
   }
 
   sendOtpBtn() {
-    this.auditService.audit('RP-037', 'Verify phone number/email ID', 'RP-Verify phone number/email ID', 'Verify phone number/email ID', 'User clicks on "send OTP" button on verify phone number/email Id page');
+    this.auditService.audit('RP-037', 'Verify phone number/email ID', 'RP-Verify phone number/email ID', 'Verify phone number/email ID', 'User clicks on "send OTP" button on verify phone number/email Id page', this.individualId);
     this.isVerifiedPhoneNumEmailId()
   }
 
   resendOtp() {
-    this.auditService.audit('RP-039', 'Verify phone number/email ID', 'RP-Verify phone number/email ID', 'Verify phone number/email ID', 'User clicks on "resend OTP" button on verify phone number/email Id page');
+    this.auditService.audit('RP-039', 'Verify phone number/email ID', 'RP-Verify phone number/email ID', 'Verify phone number/email ID', 'User clicks on "resend OTP" button on verify phone number/email Id page', this.individualId);
     clearInterval(this.interval)
     this.otpTimeSeconds = "00"
     this.otpTimeMinutes = this.appConfigService['mosip.kernel.otp.expiry-time']/60
@@ -237,7 +237,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
   }
 
   submitOtp() {
-    this.auditService.audit('RP-038', 'Verify phone number/email ID', 'RP-Verify phone number/email ID', 'Verify phone number/email ID', 'User clicks on the "submit button" on verify phone number/email Id page');
+    this.auditService.audit('RP-038', 'Verify phone number/email ID', 'RP-Verify phone number/email ID', 'Verify phone number/email ID', 'User clicks on the "submit button" on verify phone number/email Id page', this.individualId);
     this.verifyOTP()
   
   }

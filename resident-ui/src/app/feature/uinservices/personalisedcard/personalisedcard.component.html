@@ -10,17 +10,19 @@
 		<h3 style="color: #505050;">{{'personalisedcard.title' | translate}}</h3>
 		<p class="intro-description">{{'personalisedcard.introDescription' | translate}}</p>
 		<p class="intro-description">{{'personalisedcard.mainlabel' | translate}}</p>
-		<table style="width:100%;">
-			<tr><mat-grid-list [cols]="cols" rowHeight="490px" gutterSize="10px"><mat-grid-tile>
+		<table style="width:100%;" dir="{{sitealignment}}">
+			<tr><mat-grid-list [cols]="cols" rowHeight="9rem" gutterSize="10px">
+			  <mat-grid-tile [colspan]="dataCols" [rowspan]="3">
 				<td [style.width] = "width">
 					<table class="fixed" *ngFor="let data of schema; let i = index" style="width:100%;">
 						<tr>
-							<td class="each-property"><mat-checkbox [checked]="data.checked" *ngIf="data.label[langCode] !== 'undefiend'" (click)="captureCheckboxValue($event, data,'datacheck')" >
+							<td class="each-property" style="width:40%;">
+							  <mat-checkbox [checked]="data.checked" *ngIf="data.label[langCode] !== 'undefiend'" (click)="captureCheckboxValue($event, data,'datacheck')" >
 								{{data.label[langCode]}}</mat-checkbox></td>
-							<td *ngIf="data.maskRequired" class="each-masked-property">
+							<td *ngIf="data.maskRequired" class="each-masked-property" style="width:60%;">
 								<mat-checkbox [disabled]="!data.checked"  id="{{data.maskRequiredLabel[langCode]}}{{i}}" (click)="captureCheckboxValue($event, data,data.maskAttributeName)">{{data.maskRequiredLabel[langCode]}}</mat-checkbox>
 							</td>
-							<td *ngIf="data.formatRequired" style="width:40%">
+							<td *ngIf="data.formatRequired" style="width:60%">
 								<button disabled [disabled]="!data.checked" mat-button [matMenuTriggerFor]="basic">{{data.formatOptionLabel[langCode]}}<mat-icon>keyboard_arrow_down</mat-icon></button>
 								<mat-menu #basic="matMenu" class="each-lang-card" >
 									<ng-container *ngFor="let data1 of data.formatOption[langCode];">
@@ -36,7 +38,9 @@
 							</td>
 						</tr>
 					</table>					
-				</td></mat-grid-tile><mat-grid-tile>
+				</td>
+			  </mat-grid-tile>
+			  <mat-grid-tile [colspan]="previewCols" [rowspan]="3">
 				<td style="vertical-align: top;" [style.width] = "previewWidth">
 					<div class="seleted-details-card" id="seleted-details-card" >
 					<table style="width: 100%; max-height: 217px;">

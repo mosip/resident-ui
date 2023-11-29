@@ -12,9 +12,9 @@
     <div class="otp-verify-container">
       <mat-card-subtitle *ngIf="resetBtnDisable" class="otp-time-heading">{{downloadUinData.subTitle}}<span class="otp-expire-time"> 0{{otpTimeMinutes}}:{{displaySeconds}}</span></mat-card-subtitle>
       <mat-card-subtitle *ngIf="!resetBtnDisable" class="otp-time-heading">{{downloadUinData.subTitle2}}</mat-card-subtitle>
-      <label for="otp-input">{{downloadUinData.inputLabel }}</label>
-      <br />
-      <input id="getUinOtpValue" #box (input)="captureValue(box.value)" [disabled]="inputDisabled" [placeholder]="downloadUinData.enterOtp" id="otp-input" class="enter-opt-input" type="text" />
+      <!-- <label for="otp-input">{{downloadUinData.inputLabel }}</label> -->
+      <!-- <br /> -->
+      <input id="getUinOtpValue" #box (input)="captureValue(box.value)" [placeholder]="downloadUinData.enterOtp" id="otp-input" class="enter-opt-input" type="text" />
       <div class="otp-infromation-card">
         <p class="otp-infromation-text">{{downloadUinData.otpDescription}} <span
             class="mobile-number"> {{phoneNumber}}</span> {{downloadUinData.otpDescriptionEmail}} <span

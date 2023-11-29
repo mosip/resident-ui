@@ -10,13 +10,13 @@
 }
 
 .details-card {
-  width: 100%;
+  width: 95%;
   height: 770px;
   background: #FFFFFF 0% 0% no-repeat padding-box;
   box-shadow: 0px 0px 5px #00000014;
   border-radius: 10px;
   opacity: 1;
-  margin: 1.5rem 1.5rem 1.5rem 3.4rem;
+  margin: 1.5rem;
   padding: .3rem 1rem .3rem 1rem;
 }
 
@@ -160,7 +160,7 @@ input[type="radio"] {
   font-family: 'Roboto', 'Helvetica Neue', sans-serif;
   opacity: 100%;
   font-size: 14px;
-  border: 2px solid #707070;
+  border: 2px solid #909090;
   border-radius: 5px;
   padding: 0 10px 0 10px;
   height: 40px;
@@ -204,13 +204,26 @@ input[type="radio"] {
 
 .save-icon{
   height: 40px;
+  margin-left: -5px;
+}
+
+.save-icon-btn{
+  width: 36px;
+  height: 40px;
+  background-color: #03A64A;
+  border: none;
+  border-radius: 5px;
+  
 }
 
 .center_selection-form-container {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   width: 100%;
-  height: 10%;
+  min-height: 10%;
+  row-gap: 10px;
+  column-gap: 5px;
 }
 
 .center-search-sub-card{
@@ -254,8 +267,9 @@ input[type="radio"] {
   opacity: 100%;
   background-color: white;
   appearance: none;
-  width: 100%;
+  width: 100% !important;
   font-size: 14px;
+  padding-top: 4.5px;
 }
 
 .mat-option:hover {
@@ -268,7 +282,7 @@ input[type="radio"] {
   box-shadow: 4px;
   border-radius: 4px !important;
   height: 40px;
-  width: 40%;
+  width: 200px !important;
   outline: none;
 }
 
@@ -292,8 +306,7 @@ input[type="radio"] {
   display: inline-flex;
   display: inline-flex;
   padding: 7px;
-  margin-left: 5px;
-  border: 2px solid #707070;
+  border: 2px solid #909090;
 }
 
 
@@ -301,19 +314,19 @@ input[type="radio"] {
   display: flex;
   align-items: center;
   justify-content: center;
+  row-gap: 10px;
+  column-gap: 8px;
 }
 
 .search-form-card{
   display: flex;
   align-items: center;
-  margin-top: 2px;
 }
 
 .warning-message{
-  margin: 0px; 
+  margin: 5px 0px; 
   color: red; 
   font-size: 10px;
-  margin-top: -8px;
 }
 ::ng-deep .mat-select-panel {
   margin-top: 38px !important;
@@ -362,25 +375,119 @@ input[type="radio"] {
   font-weight: 600;
 }
 
-@media (max-width: 500px) {
+.manual-loc-search-card{
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+}
 
+.manual-loc-search-btns{
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.show-map-btn{
+  min-height: 40px;
+  width: 59%;
+  border-radius: 5px;
+  border: 2px solid #909090;
+  color: #03A64A;
+  font-weight: 600;
+  background-color: transparent;
+  display: none;
+}
+
+.back-btn {
+  min-width: 90px;
+  max-width: 120px;
+  height: 50px;
+  border: 1px solid #909090;
+  border-radius: 5px;
+  background-color: transparent;
+  color: #909090;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+@media screen and ((min-width:601px) and (max-width: 780px)){
+  .map{
+    width: 100%;
+  }
+  .details-card{
+    height: 1100px;
+  }
+  .centers-list{
+    height: 70%;
+  }
+  .container{
+    flex-direction: column;
+  }
+  .center_selection-nearby-btn{
+    min-width: 51%;
+  }
+}
+
+@media screen and (max-width: 600px){
+  .center_selection-nearby-btn{
+    min-width: 100%;
+  }
+  .center_selection-form-container{
+    flex-direction: column;
+    row-gap: 4px;
+  }
+  .search-form{
+   flex-direction: column;
+   align-items: flex-start;
+  }
+  .manual-loc-search-card{
+    width: 100%;
+    
+  }
+  .search-form-card{
+    width: 100%;
+  }
+  .search-form{
+    width: 100%;
+  }
+  .mat-select{
+    width: 40%;
+  }
+  .search-card {
+    width: 58%;
+  }
+  .select-card {
+    width: 40% !important;
+  }
+  .search-btn {
+    width: 19%;
+  }
+  .save-icon-btn{
+    width: 19%;
+  }
+  .show-map-btn{
+    display: inline-block;
+  }
+  .details-card{
+    height: 900px;
+    padding: .3rem .5rem .3rem .5rem;
+  }
+  .map{
+    width: 100%;
+    flex-direction: column;
+  }
+
+}
+
+@media (max-width: 500px) {
   .user-back-btn,
   .user-book_later-btn,
   .user-continue-btn {
     font-size: 10px;
     padding: 0px 2px;
     margin-right: 20px;
-  }
-
-  .container {
-    display: flex;
-    padding: 0px 1rem 0px 2rem;
-    height: 100%;
-    width: 100%;
-  }
-
-  .centers-wrapper {
-    width: 90%;
   }
 
   .center_selection-center_recommendation-display {
@@ -395,9 +502,8 @@ input[type="radio"] {
 .mat-select {
   display: inline-block;
   height: 40px !important;
-  border: 1px solid black;
+  border: 2px solid #909090;
   width: 160px;
-  outline: #909090 solid 1px!important;
   border-radius: 5px;
   color: #fff!important;
 }

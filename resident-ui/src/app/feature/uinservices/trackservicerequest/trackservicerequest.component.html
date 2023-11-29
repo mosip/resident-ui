@@ -5,11 +5,10 @@
 </span>
 
 <div class="main-div" *ngIf="langJSON">
-	<mat-card>
+	<mat-card class="mat-card">
 		<table style="width: 100%;">
 			<tr>
-				<td style="padding: 10px; color:#505050; font-size: 22px;"><span>{{'trackservicerequest.title' |
-						translate}} </span></td>
+				<td style="padding: 10px; color:#505050; font-size: 22px;"><span>{{'trackservicerequest.title' | translate}}</span></td>
 			</tr>
 			<tr>
 				<td style="color: #909090;">
@@ -35,10 +34,7 @@
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<button [disabled]="disableTrackBtn" id="getEIDStatusbtn" mat-raised-button class="track-btn"
 						(click)="getEIDStatusByInput()">{{'trackservicerequest.searchButton' | translate}}</button>
-						
 					</div>
-				
-					
 					<p *ngIf="showWarningMessage" class="warning-message">{{'trackservicerequest.warningMsg' | translate}}</p>
 				</td>
 			</tr>
@@ -46,10 +42,10 @@
 		<div class="spinner spinner2" *ngIf="isLoading">
 			<mat-spinner></mat-spinner>
 	   </div>
-	   <div *ngIf="!isLoading">
+	   <div *ngIf="!isLoading" style="padding: 8px;">
 		<div *ngIf="eidStatus" class="trackDetails">
 			<table style="width: 100%; border-radius: 10px; border-collapse: collapse;">
-				<tr>
+				<tr colspan="1">
 					<td style="width:25%"><label>{{'trackservicerequest.eventId' | translate}}</label></td>
 					<td style="width:25%"><label>{{'trackservicerequest.eventType' | translate}}</label></td>
 					<!-- <td style="width:25%"><label>{{'trackservicerequest.description' | translate}}</label></td> -->

@@ -9,26 +9,31 @@ import { AppConfigService } from 'src/app/app-config.service';
   providedIn: 'root'
 })
 export class AuditService {
+  api:string;
   constructor(
     private headerService: HeaderService,
     private http: HttpClient,
     private appService: AppConfigService
   ) {}
 
-  audit(auditEventId: string, auditEventName: string, moduleId: string, moduleName: string, description: string) {
+  audit(auditEventId: string, auditEventName: string, moduleId: string, moduleName: string, description: string, id:string) {
     const auditObject = new AuditModel();
-    let temporaryId = '';
-    temporaryId = window.crypto.getRandomValues(new Uint32Array(1)).toString();
-    /*temporaryId = (Math.floor(Math.random() * 9000000000) + 1).toString();
-    if(parseInt(temporaryId) < 10){
-      let diffrence = 10 - temporaryId.length;
-      temporaryId = (Math.floor(Math.random() * 9000000000) + diffrence).toString()
-    }*/
+    
+    if(this.headerService.getUsername()){
+      auditObject.createdBy = this.headerService.getUsername();
+      auditObject.sessionUserId = this.headerService.getUsername();
+      auditObject.sessionUserName = this.headerService.getUsername();
+      this.api = '/auth-proxy/audit/log'
+    }else{
+      auditObject.createdBy = 'Unknown';
+      auditObject.sessionUserId = 'UnknownSessionId';
+      auditObject.sessionUserName = 'UnknownSessionName';
+      this.api = '/proxy/audit/log'
+    }
 
-    auditObject.id = temporaryId;
-    auditObject.createdBy = this.headerService.getUsername();
-    auditObject.sessionUserId = this.headerService.getUsername();
-    auditObject.sessionUserName = this.headerService.getUsername();
+    if(id){
+      auditObject.id = id;
+    }
 
     auditObject.auditEventId = auditEventId;
     auditObject.auditEventName = auditEventName;
@@ -40,8 +45,7 @@ export class AuditService {
   }
 
   private postAuditLog(auditObject: AuditModel) {
-    const request = new RequestModel('', null, auditObject);
-    this.http.post(this.appService.getConfig().baseUrl + '/proxy/audit/log', request).subscribe(
+    this.http.post(this.appService.getConfig().baseUrl + this.api, auditObject).subscribe(
       response => {
         console.log(response);
       },

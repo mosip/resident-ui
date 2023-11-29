@@ -84,6 +84,16 @@ mat-card-header,
   margin-bottom: 0px;
 }
 
+
+@media screen and (max-width:600px){
+  .mini-card {
+    width: 100%;
+  }
+  .mini-card-yellow {
+    width: 100%;
+  }
+}
+
 ::ng-deep .mat-tooltip {
   background-color: #ffffff !important;
   color: black !important;

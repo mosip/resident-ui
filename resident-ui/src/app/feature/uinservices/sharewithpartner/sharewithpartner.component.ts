@@ -45,10 +45,12 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
   eventId: any;
   shareBthDisabled: boolean = true;
   valuesSelected: any = [];
-  width: string;
   previewWidth:string;
-  attributeWidth: string;
   cols: number;
+  dataCols:number;
+  previewCols:number;
+  dataRow:number;
+  previewRow:number;
   message2: any;
   totalCommentCount: number;
   remainingChars: number;
@@ -57,6 +59,7 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
   formatLabels: any;
   isLoading: boolean = true;
   selectedOprionsFormOptions: object = {};
+  sitealignment:string = localStorage.getItem('direction');
 
   private keyboardRef: MatKeyboardRef<MatKeyboardComponent>;
   @ViewChildren('keyboardRef', { read: ElementRef })
@@ -73,34 +76,35 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
     this.breakPointService.isBreakpointActive().subscribe(active =>{
       if (active) {
         if(active === "ExtraLarge"){
-          this.cols = 2;
-          this.width = "40em";
-          this.previewWidth = "40em"
-          this.attributeWidth = "25em";
+          this.cols = 5;
+          this.dataCols = 2;
+          this.previewCols = 3;
+          this.dataRow = 4;
+          this.previewRow = 4;
+          this.previewWidth = "28em"
         }
-        if(active === "large"){
-          this.cols = 2;
-          this.width = "29em";
-          this.previewWidth = "29em"
-          this.attributeWidth = "18em";
+        if(active === "large" || active === "medium"){
+          this.cols = 5;
+          this.dataCols = 3;
+          this.previewCols = 2;
+          this.dataRow = 4;
+          this.previewRow = 4;
+        }
+        if(active === "small" || active === "extraSmall"){
+          this.cols = 1;
+          this.dataCols = 1;
+          this.previewCols = 1;
+          this.dataRow = 3;
+          this.previewRow = 4;
+        }
+        if(active === "large" || active === "small"){
+          this.previewWidth = "28em"
         }
         if(active === "medium"){
-          this.cols = 2;
-          this.width = "25em";
           this.previewWidth = "23em"
-          this.attributeWidth = "12em";
-        }
-        if(active === "small"){
-          this.cols = 1;
-          this.width = "35em";
-          this.previewWidth = "30em"
-          this.attributeWidth = "20em";
         }
         if(active === "extraSmall"){
-          this.cols = 1;
-          this.width = "25em";
-          this.previewWidth = "17.5em"
-          this.attributeWidth = "10em";
+          this.previewWidth = "88vw"
         }
       }
     });
@@ -435,13 +439,14 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
   }
 
   captureDropDownValue(event: any) {
+    console.log(event.source.value)
     if (event.source.selected) {
       this.partnerId = event.source.value;
     }
   }
 
   shareInfoBtn() {
-    this.auditService.audit('RP-033', 'Share credential with partner', 'RP-Share credential with partner', 'Share credential with partner', 'User clicks on "share" button on share credential page');
+    this.auditService.audit('RP-033', 'Share credential with partner', 'RP-Share credential with partner', 'Share credential with partner', 'User clicks on "share" button on share credential page','');
     if (!this.partnerId) {
       this.message = this.popupMessages.genericmessage.sharewithpartner.needPartner
       this.showValidateMessage(this.message);

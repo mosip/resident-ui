@@ -45,7 +45,7 @@ export class DocumentComponent implements OnInit, OnDestroy {
   }
 
   downloadSupportingDocument(){
-    this.auditService.audit('RP-042', 'Supporting document', 'RP-Supporting document', 'Supporting document', 'User clicks on "download" button on supporting document page');
+    this.auditService.audit('RP-042', 'Supporting document', 'RP-Supporting document', 'Supporting document', 'User clicks on "download" button on supporting document page', '');
     this.dataStorageService
     .downloadSupportingDocument()
     .subscribe(data => {

@@ -16,6 +16,7 @@ import {
   MatKeyboardService
 } from 'ngx7-material-keyboard';
 import defaultJson from "src/assets/i18n/default.json";
+import { BreakpointService } from "src/app/core/services/breakpoint.service";
 
 @Component({
   selector: "app-center-selection",
@@ -68,6 +69,10 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
   showWarningMsg:boolean = false;
   showMesssageText:string="";
   popupMessages: any;
+  isMobileView:boolean = false;
+  showLocationDetails:boolean = true;
+  showBackBtn:boolean = false;
+
 
   private keyboardRef: MatKeyboardRef<MatKeyboardComponent>;
   @ViewChildren('keyboardRef', { read: ElementRef })
@@ -82,9 +87,24 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private auditService: AuditService,
     private paginator: MatPaginatorIntl,
-    private keyboardService: MatKeyboardService
+    private keyboardService: MatKeyboardService,
+    private breakPointService: BreakpointService
   ) {
     this.translate.use(this.langCode); 
+    this.breakPointService.isBreakpointActive().subscribe(active => {
+      if (active) {
+        if (active === "extraSmall") {
+           this.isMobileView = true;
+           this.showBackBtn = true;
+           this.showMap = false;
+        }else{
+          this.showBackBtn = false;
+          this.isMobileView = false;
+          this.showMap = true;
+          this.showLocationDetails = true;
+        }
+      }
+    })
   }
 
   async ngOnInit() {
@@ -256,10 +276,13 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
   }
 
   showResults(pageEvent) {
+    this.showLocationDetails = true;
+    this.isMobileView = this.showBackBtn ?  true : false;
+    this.isWorkingDaysAvailable = false;
     if (this.keyboardService.isOpened) {
       this.keyboardService.dismiss();
     }
-    this.auditService.audit('RP-040', 'Locate registration center', 'RP-Locate registration center', 'Locate registration center', 'User clicks on "search" button on locate registration center page');
+    this.auditService.audit('RP-040', 'Locate registration center', 'RP-Locate registration center', 'Locate registration center', 'User clicks on "search" button on locate registration center page','');
     this.REGISTRATION_CENTRES = [];
     if (this.locationType !== null && this.searchText) {
       this.showMap = false;
@@ -276,7 +299,6 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
         )
         .subscribe(
           (response) => {
-            console.log(response)
             if (response[appConstants.RESPONSE]) {
               this.totalItems = response[appConstants.RESPONSE].totalItems;
               this.displayResults(response[appConstants.RESPONSE]);
@@ -286,6 +308,7 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
               this.showMessage = true;
               this.showMesssageText = this.popupMessages.centerSelection.noRegCenters;
               this.selectedCentre = null;
+              this.isWorkingDaysAvailable = true;
             }
           },
           (error) => {
@@ -306,6 +329,7 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
     this.totalItems = 0;
     this.searchText = "";
     this.selectedCentre = null;
+    this.isBlankSpace = true;
   }
 
   plotOnMap() {
@@ -320,9 +344,29 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
     this.selectedCentre = row;
     this.enableNextButton = true;
 
-    if (Object.keys(this.selectedCentre).length !== 0) {
+    if (Object.keys(this.selectedCentre).length !== 0 && !this.isMobileView) {
       this.plotOnMap();
     }
+  }
+
+  selectedEachMap(center:any){
+    if(this.isMobileView){
+      this.showLocationDetails = false;
+    }
+    this.isMobileView = false;
+    this.selectedRow(center)
+  }
+
+  showAllCenters(){
+    this.isMobileView = false;
+    this.showLocationDetails = false;
+    this.selectedRow(this.REGISTRATION_CENTRES[0]);
+  }
+
+  backBtn(){
+    this.showMap = false;
+    this.showLocationDetails = true;
+    this.isMobileView = true;
   }
 
   getLocation() {
@@ -448,6 +492,7 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
             resolve(true);
           },
             (error) => {
+              this.isWorkingDaysAvailable = true;
               this.showErrorMessage(error);
             });
       });
@@ -492,7 +537,7 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
   }
 
   downloadCentersPdf() {
-    this.auditService.audit('RP-041', 'Locate registration center', 'RP-Locate registration center', 'Locate registration center', 'User clicks on "download" button on locate registration center page');
+    this.auditService.audit('RP-041', 'Locate registration center', 'RP-Locate registration center', 'Locate registration center', 'User clicks on "download" button on locate registration center page','');
     if (this.locationType && this.searchText) {
       this.dataService.registrationCentersList(this.langCode, this.locationType.hierarchyLevel, this.searchText)
         .subscribe(response => {

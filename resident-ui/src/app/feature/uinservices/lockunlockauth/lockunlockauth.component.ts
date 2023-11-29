@@ -149,7 +149,7 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
   }
 
   updateAuthlockStatusBtn(){
-    this.auditService.audit('RP-025', 'Lock/unlock authentication type', 'RP-Lock/unlock authentication type', 'Lock/unlock authentication type', 'User clicks on "submit" button');
+    this.auditService.audit('RP-025', 'Lock/unlock authentication type', 'RP-Lock/unlock authentication type', 'Lock/unlock authentication type', 'User clicks on "submit" button', '');
     this.showWarningMessage("")
   }
 
