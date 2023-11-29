@@ -8,7 +8,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "sonar": "sonar-scanner",
-    "test": "jest --coverage"
+    "test": "jest"
   },
   "private": true,
   "dependencies": {
