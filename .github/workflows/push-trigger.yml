@@ -103,7 +103,7 @@ jobs:
       - name: Test and coverage
         run: |
           cd "./${{env.SERVICE_LOCATION}}"
-          npm install jest -g
+          npm install -g jest
           yarn jest --coverage
       - name: run sonar analysis
         run: |
