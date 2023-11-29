@@ -96,19 +96,14 @@ jobs:
           # Strip git ref prefix from version
           echo "GPG_TTY=$(tty)" >> $GITHUB_ENV
           echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: yarn
+      - name: Test and coverage
+        run: yarn jest --coverage
       - name: run sonar analysis
         run: |
           cd "./${{env.SERVICE_LOCATION}}"
-          echo "sonar.host.url=https://sonarcloud.io/
-               sonar.login=${{ secrets.SONAR_TOKEN }}
-               sonar.projectKey=mosip_resident-ui
-               sonar.organization=${{ secrets.ORG_KEY }}
-               sonar.sourceEncoding=UTF-8
-               sonar.sources=src
-               sonar.exclusions=**/node_modules/**
-               sonar.tests=src
-               sonar.test.inclusions=**/*.spec.ts
-               sonar.javascript.lcov.reportPaths=coverage/lcov.info" >> sonar-project.properties
           npm install sonar-scanner && npm run sonar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
