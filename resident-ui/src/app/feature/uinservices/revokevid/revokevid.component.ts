@@ -57,18 +57,18 @@ export class RevokevidComponent implements OnInit, OnDestroy {
         }
       }else if (id === "deleteVID"){
         this.revokeVID(this.newVidValue)
-        if(this.newVidValue === "Perpetual"){
+        if(this.newVidType === "Perpetual"){
           this.auditService.audit('RP-014', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "revoke perpetual VID" button','');
-        }else if(this.newVidValue === "Temporary"){
+        }else if(this.newVidType === "Temporary"){
           this.auditService.audit('RP-022', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "revoke temporary VID" button', '');
         }else{
           this.auditService.audit('RP-018', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "revoke one-time  VID" button', '');
         }
       }else if(id === "downloadVID"){
         this.vidDownloadStatus(this.newVidValue)
-        if(this.newVidValue === "Perpetual"){
+        if(this.newVidType === "Perpetual"){
           this.auditService.audit('RP-015', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "User clicks on "download perpetual VID" button', '');
-        }else if(this.newVidValue === "Temporary"){
+        }else if(this.newVidType === "Temporary"){
           this.auditService.audit('RP-023', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "download temporary VID" button', '');
         }else{
           this.auditService.audit('RP-019', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "download one-time  VID" button', '');
@@ -168,12 +168,14 @@ export class RevokevidComponent implements OnInit, OnDestroy {
   }
 
   displayVid(finalTypeList, policyType, policy, showvid) {
-    if(policyType === "Perpetual"){
-      this.auditService.audit('RP-016', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "User clicks on "eye" icon to unmask the perpetual VID', '');
-    }else if(policyType === "Temporary"){
-      this.auditService.audit('RP-024', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "eye" icon to unmask the temporary VID', '');
-    }else{
-      this.auditService.audit('RP-020', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "eye" icon to unmask the one-time VID', '');
+    if(showvid){
+      if(policyType === "Perpetual"){
+        this.auditService.audit('RP-016', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "User clicks on "eye" icon to unmask the perpetual VID', '');
+      }else if(policyType === "Temporary"){
+        this.auditService.audit('RP-024', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "eye" icon to unmask the temporary VID', '');
+      }else{
+        this.auditService.audit('RP-020', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "eye" icon to unmask the one-time VID', '');
+      }
     }
     let self = this;
     let results = [];
@@ -294,7 +296,7 @@ export class RevokevidComponent implements OnInit, OnDestroy {
   revokeVIDBtn(vidValue: any,vidType:any){
     this.showDeleteMessage(vidType)
     this.newVidValue = vidValue
-    this.newVidType - vidType
+    this.newVidType = vidType
   }
 
   revokeVID(vidValue: any) {
