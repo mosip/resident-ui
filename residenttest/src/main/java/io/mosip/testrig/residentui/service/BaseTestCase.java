@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.json.JSONArray;
 import org.json.simple.JSONObject;
 
 import io.mosip.testrig.residentui.authentication.fw.util.RestClient;
@@ -96,7 +97,28 @@ public class BaseTestCase {
 
 		return languageList;
 	}
-	
+	public static String GetPostalCode() {
+		String locationCode = null;
+		kernelAuthLib = new KernelAuthentication();
+		String token = kernelAuthLib.getTokenByRole("admin");
+		String url = ApplnURI + props.getProperty("postalCodeURL");
+		Response response = RestClient.getRequestWithCookie(url, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,"Authorization", token);
+		org.json.JSONObject responseJson = new org.json.JSONObject(response.asString());
+		org.json.JSONObject responseObj = responseJson.getJSONObject("response");
+		JSONArray responseArray = responseObj.getJSONArray("locations");
+		if (responseArray.length() > 0) {
+			org.json.JSONObject locationObject = responseArray.getJSONObject(0);
+			locationCode = locationObject.getString("code");
+
+			// Traverse on the "code" field
+			logger.info("Location Code: " + locationCode);
+			return locationCode;
+		} else {
+			logger.error("No location data found in the response.");
+		}
+		return locationCode;
+		
+	}
 	public static Properties getproperty(String path) {
 		Properties prop = new Properties();
 
