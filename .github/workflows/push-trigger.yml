@@ -7,12 +7,13 @@ on:
     types: [opened, reopened, synchronize]
   push:
     branches:
-      - MOSIP*
-      - 1*
       - '!release-branch'
-      - develop
+      - release-*
       - master
-      - release-1*
+      - develop
+      - develop-*
+      - 1*
+      - MOSIP*
 jobs:
   build-resident-ui:
     uses: mosip/kattu/.github/workflows/npm-build.yml@master
