@@ -13,7 +13,7 @@
     <mat-tab label="{{'dashboard.document' | translate}}"></mat-tab>
   </mat-tab-group>
   <div style="text-align: right;">
-    <button id="downloadAcknowledgementbtn" style="cursor: pointer;" class="download-btn" (click)="downloadSupportingDocument()"><img class="save-icon" src="./assets/images/save.png"/>{{'downloadDocument.downloadbutton' | translate}}</button>
+    <button id="downloadAcknowledgementbtn" style="cursor: pointer;" class="download-btn" (click)="downloadSupportingDocument()"><img alt="" class="save-icon" src="./assets/images/save.png"/>{{'downloadDocument.downloadbutton' | translate}}</button>
   </div>
   <embed *ngIf="pdfSrc" [src]="pdfSrc | sanitizepdf" height="90%" width="100%">
   </div>

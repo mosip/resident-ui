@@ -288,7 +288,7 @@ export class ViewhistoryComponent implements OnInit, OnDestroy {
       }
     } else if (controlType === "datepicker") {
       let dateFormat = new Date(event.target.value);
-      formControlName === "fromDate" ? this.toDateStartDate = dateFormat : "";
+      this.toDateStartDate = formControlName === "fromDate" ? dateFormat : "";
       let formattedDate = dateFormat.getFullYear() + "-" + ("0" + (dateFormat.getMonth() + 1)).slice(-2) + "-" + ("0" + dateFormat.getDate()).slice(-2);
       this[formControlName] = formattedDate;
 

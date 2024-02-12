@@ -13,7 +13,7 @@
 			<mat-grid-tile *ngFor="let authInfo of authlist; let i = index">
 				<mat-card (click)="setAuthlockStatus(authInfo)" id="setAuthlockStatus{{i}}"  [ngClass]="authInfo.recorddirty == false ? 'mini-card' : 'mini-card-yellow'" >
 				  <mat-card-header>			  	
-				    <mat-card-title><span><img src="assets\{{authInfo.label}}.png"></span>&nbsp;&nbsp;&nbsp;<span style="font-size: 14px;font-weight: 800;">{{authInfo.label}}</span></mat-card-title>	
+				    <mat-card-title><span><img alt="" src="assets\{{authInfo.label}}.png"></span>&nbsp;&nbsp;&nbsp;<span style="font-size: 14px;font-weight: 800;">{{authInfo.label}}</span></mat-card-title>	
 					<mat-icon [matTooltip]="openPopUp(authInfo.label)" class="info-icon">info</mat-icon> 
 					<div *ngIf="isPopupSHow && clickedId === (authInfo.label)" class="info-box">
 						<p style="margin-top: 0px;">{{infoMsg}}</p>
@@ -21,8 +21,8 @@
 					</div>
 				  </mat-card-header>
 				  <mat-card-content>
-				    <p *ngIf="authInfo.locked"><img mat-card-sm-image src="assets\images\lock.png" ></p>
-				    <p *ngIf="!authInfo.locked"><img mat-card-sm-image src="assets\images\unlock.png" ></p>
+				    <p *ngIf="authInfo.locked"><img alt="" mat-card-sm-image src="assets\images\lock.png" ></p>
+				    <p *ngIf="!authInfo.locked"><img alt="" mat-card-sm-image src="assets\images\unlock.png" ></p>
 				  </mat-card-content>
 				  <mat-card-actions>
 				    <button style="margin-left: 1.5rem;" *ngIf="authInfo.locked" mat-stroked-button color="primary">{{'lockunlockauth.unlockLabel' | translate}}</button>

@@ -18,9 +18,9 @@ on:
       - release-*
       - master
       - develop
+      - develop-*
       - 1*
       - MOSIP*
-
 jobs:
   build-resident-ui:
     uses: mosip/kattu/.github/workflows/npm-build.yml@master
