@@ -60,6 +60,7 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
   showWarningMsg:boolean = false;
   showMesssageText:string="";
   popupMessages: any;
+  positions: any;
 
   constructor(
     public dialog: MatDialog,
@@ -299,7 +300,7 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
     this.pageIndex = 0;
     this.getRecommendedCenters();
   }
-  
+
   searchInput(){
     if(this.searchText.length > 2 && this.searchText.match(/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/)){
       this.isBlankSpace = false;
@@ -387,9 +388,10 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
   getLocation() {
     this.REGISTRATION_CENTRES = [];
     this.nearbyClicked = true;
-    if (navigator.geolocation) {
+    if ("geolocation" in navigator) {
       this.showMap = false;
-      navigator.geolocation.getCurrentPosition((position) => {
+      this.positions = navigator.geolocation;
+      this.positions.getCurrentPosition((position) => {
         const subs = this.dataService
           .getNearbyRegistrationCenters(position.coords)
           .subscribe(
@@ -412,8 +414,7 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
               //this.showErrorMessage(error);
             });
         this.subscriptions.push(subs);
-      });
-    } else {
+      }) 
     }
   }
 
@@ -605,26 +606,26 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
         })
     } else {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
+        this.positions.getCurrentPosition((position) => {
           this.dataService.nearByRegistrationCentersList(this.langCode, position.coords)
-          .subscribe(response =>{
-            if (response.headers.get('Content-Type') === 'application/pdf') {
-              var fileName = "";
-            const contentDisposition = response.headers.get('Content-Disposition');
-            if (contentDisposition) {
-              const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-              const matches = fileNameRegex.exec(contentDisposition);
-              if (matches != null && matches[1]) {
-                fileName = matches[1].replace(/['"]/g, '');
+            .subscribe(response =>{
+              if (response.headers.get('Content-Type') === 'application/pdf') {
+                var fileName = "";
+                const contentDisposition = response.headers.get('Content-Disposition');
+                if (contentDisposition) {
+                  const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                  const matches = fileNameRegex.exec(contentDisposition);
+                  if (matches != null && matches[1]) {
+                    fileName = matches[1].replace(/['"]/g, '');
+                  }
+                }
+                saveAs(response.body, fileName);
+              } else {
+                console.log("");
               }
-            }
-            saveAs(response.body, fileName);
-          } else {
-            console.log("");
-            }
-          }, error =>{
+            }, error =>{
               console.log(error);
-          })
+            })
         })
       }
     }

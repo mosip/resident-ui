@@ -115,7 +115,6 @@ label{
    align-items: center;
    border: dashed 1px #03A64A;
    margin-bottom: 1rem;
-   display: flex;
    flex-grow: 1;
 }
 .files-list .single-file .preview {
@@ -162,7 +161,6 @@ label{
   align-items: center;
   border: solid 1px #000000;
   margin-bottom: 1rem;
-  display: flex;
   flex-grow: 1;
   border-radius: 4px;
 }

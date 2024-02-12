@@ -90,12 +90,12 @@ export class AppComponent {
     );
   }
 
-  preventBack() {
-    window.history.forward();
-    window.onunload = function() {
-      null;
-    };
-  }
+  // preventBack() {
+  //   window.history.forward();
+  //   window.onunload = function() {
+  //     null;
+  //   };
+  // }
 
   @HostListener('mouseover')
   @HostListener('document:mousemove', ['$event'])
