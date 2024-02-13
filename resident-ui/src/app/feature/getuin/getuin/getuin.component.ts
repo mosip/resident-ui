@@ -58,20 +58,20 @@ export class GetuinComponent implements OnInit {
       Breakpoints.XLarge,
     ]).subscribe(result => {
       if (result.matches) {
-        if (result.breakpoints[Breakpoints.XSmall]) {
-          this.width = "90%";
+        if (result.breakpoints[Breakpoints.XLarge]) {
+          this.width = "30%";
         }
-        if (result.breakpoints[Breakpoints.Small]) {
+        if (result.breakpoints[Breakpoints.XSmall]) {
           this.width = "90%";
         }
         if (result.breakpoints[Breakpoints.Medium]) {
           this.width = "90%";
         }
+        if (result.breakpoints[Breakpoints.Small]) {
+          this.width = "90%";
+        }
         if (result.breakpoints[Breakpoints.Large]) {
           this.width = "40%";
-        }
-        if (result.breakpoints[Breakpoints.XLarge]) {
-          this.width = "30%";
         }
       }
     });

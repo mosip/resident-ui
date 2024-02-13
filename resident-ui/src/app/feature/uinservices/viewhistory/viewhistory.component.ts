@@ -408,19 +408,6 @@ export class ViewhistoryComponent implements OnInit, OnDestroy {
         });
   }
 
-  showMessage(message: string) {
-    const dialogRef = this.dialog.open(DialogComponent, {
-      width: '650px',
-      data: {
-        case: 'MESSAGE',
-        title: this.popupMessages.genericmessage.successLabel,
-        message: message,
-        btnTxt: this.popupMessages.genericmessage.successButton
-      }
-    });
-    return dialogRef;
-  }
-
   showErrorPopup(message: string) {
     let errorCode = message[0]['errorCode']
     console.log(errorCode)
@@ -437,6 +424,19 @@ export class ViewhistoryComponent implements OnInit, OnDestroy {
             disableClose: true
           });
     }, 400)
+  }
+  
+  showMessage(message: string) {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '650px',
+      data: {
+        case: 'MESSAGE',
+        title: this.popupMessages.genericmessage.successLabel,
+        message: message,
+        btnTxt: this.popupMessages.genericmessage.successButton
+      }
+    });
+    return dialogRef;
   }
 
   ngOnDestroy(): void {

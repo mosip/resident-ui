@@ -55,25 +55,25 @@ export class PersonalisedcardComponent implements OnInit, OnDestroy {
       Breakpoints.XLarge,
     ]).subscribe(result => {
       if (result.matches) {
-        if (result.breakpoints[Breakpoints.XSmall]) {
-          this.cols = 1;
-          this.width = "19em";
-          this.attributeWidth = "10em";
+        if (result.breakpoints[Breakpoints.Medium]) {
+          this.cols = 2;
+          this.width = "25em";
+          this.attributeWidth = "12em";
         }
         if (result.breakpoints[Breakpoints.Small]) {
           this.cols = 1;
           this.width = "40em";
           this.attributeWidth = "20em";
         }
-        if (result.breakpoints[Breakpoints.Medium]) {
-          this.cols = 2;
-          this.width = "25em";
-          this.attributeWidth = "12em";
-        }
         if (result.breakpoints[Breakpoints.Large]) {
           this.cols = 2;
           this.width = "29em";
           this.attributeWidth = "12em";
+        }
+        if (result.breakpoints[Breakpoints.XSmall]) {
+          this.cols = 1;
+          this.width = "19em";
+          this.attributeWidth = "10em";
         }
         if (result.breakpoints[Breakpoints.XLarge]) {
           this.cols = 2;
@@ -250,7 +250,7 @@ captureCheckboxValue($event: any, data: any, type: any) {
               if (item.value === type['value']) {
                 return item['checked'] = !item['checked']
               } else {
-                return item['checked'] = item['checked']
+                return item['checked'];
               }
             })
           }

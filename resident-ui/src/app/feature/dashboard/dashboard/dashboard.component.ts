@@ -38,21 +38,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
       Breakpoints.XLarge,
     ]).subscribe(result => {
       if (result.matches) {
-        if (result.breakpoints[Breakpoints.XSmall]) {
-          this.cols = 1;
+        if (result.breakpoints[Breakpoints.Large]) {
+          this.cols = 3;
         }
         if (result.breakpoints[Breakpoints.Small]) {
+          this.cols = 1;
+        }
+        if (result.breakpoints[Breakpoints.XLarge]) {
+          this.cols = 3;
+        }
+        if (result.breakpoints[Breakpoints.XSmall]) {
           this.cols = 1;
         }
         if (result.breakpoints[Breakpoints.Medium]) {
           this.cols = 2;
         }
-        if (result.breakpoints[Breakpoints.Large]) {
-          this.cols = 3;
-        }
-        if (result.breakpoints[Breakpoints.XLarge]) {
-          this.cols = 3;
-        }
+     
       }
     });  
   }

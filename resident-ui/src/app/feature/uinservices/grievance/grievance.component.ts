@@ -26,7 +26,7 @@ export class GrievanceComponent implements OnInit {
   reportMsg: string = "";
   message: string;
   popupMessages: any;
-  errorCode: string;
+  errorMessageCode: string;
   userInfo: any;
   totalCommentCount: number;
   remainingChars: number;
@@ -165,12 +165,12 @@ export class GrievanceComponent implements OnInit {
   }
 
   showErrorPopup(message: string) {
-    this.errorCode = message[0]["errorCode"];
-    if (this.errorCode === "RES-SER-410") {
+    this.errorMessageCode = message[0]["errorCode"];
+    if (this.errorMessageCode === "RES-SER-410") {
       let messageType = message[0]["message"].split("-")[1].trim();
-      this.message = this.popupMessages.serverErrors[this.errorCode][messageType]
+      this.message = this.popupMessages.serverErrors[this.errorMessageCode][messageType]
     } else {
-      this.message = this.popupMessages.serverErrors[this.errorCode]
+      this.message = this.popupMessages.serverErrors[this.errorMessageCode]
     }
 
     this.dialog
