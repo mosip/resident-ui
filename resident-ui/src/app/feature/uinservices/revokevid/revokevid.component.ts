@@ -65,20 +65,20 @@ export class RevokevidComponent implements OnInit, OnDestroy {
       Breakpoints.XLarge,
     ]).subscribe(result => {
       if (result.matches) {
-        if (result.breakpoints[Breakpoints.XSmall]) {
-          this.cols = 1;
-        }
         if (result.breakpoints[Breakpoints.Small]) {
           this.cols = 1;
         }
-        if (result.breakpoints[Breakpoints.Medium]) {
-          this.cols = 2;
+        if (result.breakpoints[Breakpoints.XLarge]) {
+          this.cols = 4;
+        }
+        if (result.breakpoints[Breakpoints.XSmall]) {
+          this.cols = 1;
         }
         if (result.breakpoints[Breakpoints.Large]) {
           this.cols = 3;
         }
-        if (result.breakpoints[Breakpoints.XLarge]) {
-          this.cols = 4;
+        if (result.breakpoints[Breakpoints.Medium]) {
+          this.cols = 2;
         }
       }
     });
@@ -302,10 +302,10 @@ export class RevokevidComponent implements OnInit, OnDestroy {
     }else{
       this.auditService.audit('RP-018', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "revoke one-time  VID" button');
     }
-    this.showDeleteMessage(vidType)
-    this.newVidValue = vidValue
-    this.newVidType - vidType
-  }
+    this.showDeleteMessage(vidType);
+    this.newVidValue = vidValue;
+    this.newVidType = vidType;
+  };
 
   revokeVID(vidValue: any) {
     this.isLoading = true;

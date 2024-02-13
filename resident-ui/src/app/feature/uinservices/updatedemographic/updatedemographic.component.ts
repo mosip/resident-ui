@@ -112,14 +112,6 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
           this.cols = 1;
           this.width = "95%";
         }
-        if (result.breakpoints[Breakpoints.Small]) {
-          this.cols = 2;
-          this.width = "90%";
-        }
-        if (result.breakpoints[Breakpoints.Medium]) {
-          this.cols = 2;
-          this.width = "75%";
-        }
         if (result.breakpoints[Breakpoints.Large]) {
           this.cols = 4;
           this.width = "50%";
@@ -127,6 +119,10 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
         if (result.breakpoints[Breakpoints.XLarge]) {
           this.cols = 4;
           this.width = "40%";
+        }
+        if (result.breakpoints[Breakpoints.Medium]) {
+          this.cols = 2;
+          this.width = "75%";
         }
       }
     });
@@ -218,7 +214,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
               self.buildJSONData[schema.attributeName] = {};
              
               if (self.userInfo[schema.attributeName].length) {
-                self.supportedLanguages.map((language) => {
+                self.supportedLanguages.forEach((language) => {
                   let value = self.userInfo[schema.attributeName].filter(function (data) {
                     if (data.language.trim() === language.trim()) {
                       return data.value.trim()
@@ -261,7 +257,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
           self.buildCloneJsonData[schema.attributeName] = finaluserInfoClone[schema.attributeName];
         } else {
           self.buildCloneJsonData[schema.attributeName] = {};
-          self.supportedLanguages.map((language) => {
+          self.supportedLanguages.forEach((language) => {
             let value = finaluserInfoClone[schema.attributeName].filter(
               function (data) {
                 if (data.language) {
@@ -281,7 +277,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
 
   addingAddessData() {
     Object.keys(this.userInfo).forEach(data => {
-      Object.keys(this.dynamicFieldValue).filter(item => {
+      Object.keys(this.dynamicFieldValue).forEach(item => {
         let changedItem = item === "Postal Code" ? "postalCode" : item.split(" ").join("").toLowerCase();
         if (changedItem === data) {
           if (this.dynamicFieldValue[item] !== "") {

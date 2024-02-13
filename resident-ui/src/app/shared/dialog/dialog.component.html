@@ -6,7 +6,7 @@
       <mat-divider></mat-divider>
       <table class="mat-table">
         <tr class="mat-row sticky-header">
-          <th class="mat-header-cell table-header sticky-header" *ngFor="let col of input.columnNames;">
+          <th id="" class="mat-header-cell table-header sticky-header" *ngFor="let col of input.columnNames;">
             <span>{{col[primaryLangCode]}}</span>
           </th>
         </tr>
@@ -33,7 +33,7 @@
 
   <div class="pop-up" *ngIf="input.case === 'UNLOCKCONFIRMATION'">
     <div class="pop-up-header">
-      <b mat-dialog-title>{{ input.title }}</b>
+      <strong mat-dialog-title>{{ input.title }}</strong>
       <div mat-dialog-content>
         <p style="white-space: pre-line">
           <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group">
@@ -75,7 +75,7 @@
 
   <div class="pop-up" *ngIf="input.case === 'CONFIRMATION'">
     <div class="pop-up-header">
-      <b mat-dialog-title>{{ input.title }}</b>
+      <strong mat-dialog-title>{{ input.title }}</strong>
       <div mat-dialog-content>
         <p style="white-space: pre-line">{{ input.message }}</p>
       </div>
@@ -191,7 +191,7 @@
     <div class="infro-card">
       <img alt="" [src]="icon" height="35px" width="35px" class="success-img" />
       <div class="pop-up-header">
-        <b mat-dialog-title>{{ input.title }}</b>
+        <strong mat-dialog-title>{{ input.title }}</strong>
         <div mat-dialog-content>
           <p>{{ input.message }}</p>
           <div [innerText]="input.message"></div>
@@ -202,7 +202,7 @@
 
   <div class="pop-up" *ngIf="input.case === 'STEPS-MESSAGE'">
     <div class="pop-up-header">
-      <b mat-dialog-title>{{ createUpdateSteps.title }}</b>
+      <strong mat-dialog-title>{{ createUpdateSteps.title }}</strong>
       <div mat-dialog-content>
         <p>{{ input.message }}</p>
       </div>
@@ -216,7 +216,7 @@
 
   <div class="pop-up" *ngIf="input.case === 'NOZONE'">
     <div class="pop-up-header">
-      <b mat-dialog-title>{{ input.title }}</b>
+      <strong mat-dialog-title>{{ input.title }}</strong>
       <div mat-dialog-content>
         <div [innerText]="input.message"></div>
       </div>

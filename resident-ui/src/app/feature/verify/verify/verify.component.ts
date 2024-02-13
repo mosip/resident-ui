@@ -33,7 +33,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
   displaySeconds: any = this.otpTimeSeconds
   interval: any;
   message: string;
-  errorCode: any;
+  errorCodePopup: any;
   channelType: string;
   disableSendOtp: boolean = true;
   isPopUpShow:boolean = false;
@@ -364,14 +364,14 @@ export class VerifyComponent implements OnInit, OnDestroy {
     });
     return dialogRef;
   }
-
+   
   showErrorPopup(message: string) {
-    this.errorCode = message[0]["errorCode"]
-    if (this.errorCode === "RES-SER-410") {
+    this.errorCodePopup = message[0]["errorCode"]
+    if (this.errorCodePopup === "RES-SER-410") {
       let messageType = message[0]["message"].split("-")[1].trim();
-      this.message = this.popupMessages.serverErrors[this.errorCode][messageType]
+      this.message = this.popupMessages.serverErrors[this.errorCodePopup][messageType]
     } else {
-      this.message = this.popupMessages.serverErrors[this.errorCode]
+      this.message = this.popupMessages.serverErrors[this.errorCodePopup]
     }
     this.dialog
       .open(DialogComponent, {
