@@ -1,4 +1,4 @@
-name: Resident-ui build upon a push
+name: Resident-ui build upon a push 
 
 on:
   release:
