@@ -6,8 +6,7 @@
 	<test thread-count="5" name="RESIDENT-UI-AUTOMATION-RUN">
 	
 		<classes>
-		<class name="io.mosip.testrig.residentui.testcase.ManageMyVid" />
-			<!--<class name="io.mosip.testrig.residentui.testcase.GetInformation" />
+			<class name="io.mosip.testrig.residentui.testcase.GetInformation" />
 			<class name="io.mosip.testrig.residentui.testcase.GetPersonalisedCard" />
 			<class name="io.mosip.testrig.residentui.testcase.LoginTest" />
 			<class name="io.mosip.testrig.residentui.testcase.ManageMyVid" />
@@ -17,7 +16,7 @@
 			<class name="io.mosip.testrig.residentui.testcase.UpdateMyData" />
 			<class name="io.mosip.testrig.residentui.testcase.VerifyPhoneNumberEmailID" />
 			<class name="io.mosip.testrig.residentui.testcase.ViewMyHistory" />
-			<class name="io.mosip.testrig.residentui.testcase.GetMyUIN" /> -->
+			<class name="io.mosip.testrig.residentui.testcase.GetMyUIN" />
 		</classes>
 	</test>
 		<listeners>
