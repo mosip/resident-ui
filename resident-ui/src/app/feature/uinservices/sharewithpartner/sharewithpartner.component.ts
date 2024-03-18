@@ -17,7 +17,7 @@ import {
   MatKeyboardRef,
   MatKeyboardComponent,
   MatKeyboardService
-} from 'ngx7-material-keyboard';
+} from 'ngx7-material-keyboard-ios';
 import defaultJson from "src/assets/i18n/default.json";
 import { FontSizeService } from "src/app/core/services/font-size.service";
 

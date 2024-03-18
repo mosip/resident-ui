@@ -7,7 +7,7 @@ import { filter } from 'rxjs/operators';
 import { LogoutService } from 'src/app/core/services/logout.service';
 import { AuditService } from 'src/app/core/services/audit.service';
 import { DataStorageService } from 'src/app/core/services/data-storage.service';
-import { MatKeyboardService } from 'ngx7-material-keyboard';
+import { MatKeyboardService } from 'ngx7-material-keyboard-ios';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import defaultJson from "src/assets/i18n/default.json";
 

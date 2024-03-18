@@ -434,3 +434,79 @@ p{
   align-items: center;
   padding: 12px 4px 0 4px;
 }
+
+.data-inprogress-main-card{
+  padding: 12px;
+  max-height: 90vh;
+}
+.data-inprogress-heading{
+  padding: 0 0 10px 0;
+  color: #505050;
+}
+.data-inprogress-description{
+  border: 1px solid #D3D3D3;
+  border-radius: 7px;
+  padding: 7px;
+  /* font-size: 14px; */
+  color: #505050;
+}
+.data-inprogress-details-card{
+  border: 1px solid #909090;
+  border-radius: 5px;
+  height: auto;
+}
+.intro-details{
+  padding: 7px 7px 0 7px;
+}
+.eid-date-card{
+  /* font-size: 14px; */
+  display: flex;
+  justify-content: space-between;
+}
+.eid-number{
+  color: #008CED;
+  text-decoration: underline;
+  /* font-size: 14px; */
+  cursor: pointer;
+}
+.eid-date{
+  color: #000000;
+  /* font-size: 14px; */
+}
+.line{
+  margin: 6px 0px !important;
+}
+.button-card{
+  margin-top: 12px;
+  text-align: right;
+}
+.data-inprogress-btns{
+  margin: 5px;
+  width: 100px;
+  height: 33px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  color: #ffffff;
+}
+.cancel-btn{
+  background-color: #909090;
+}
+.confirm-btn{
+  background-color: #03A64A;
+}
+.event-details{
+  padding: 7px;
+}
+.event-details table tr td{
+  padding: 7px 0 7px 0 !important;
+  width: 33%;
+}
+.Confirmation-card{
+  padding: 7px;
+  border: 1px solid #89730B;
+  background-color: #FFF9DB;
+  border-radius: 5px;
+  color: #89730B;
+  margin-top: 8px;
+}

@@ -63,9 +63,9 @@
                                   [placeholder]="langJson.calendarPlaceHolder" [matDatepicker]="picker" readonly
                                   id="{{field.attributeName}}"
                                   (dateChange)="captureDatePickerValue($event, field.attributeName, buildJSONData[field.attributeName].value)"
-                                  [(ngModel)]="selectedDate" (click)="picker.open()" />
+                                  [(ngModel)]="selectedDate" (click)="isUpdatedataInProgress(picker, 'datePickerField')"/>
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                <mat-datepicker #picker></mat-datepicker>
+                                <mat-datepicker (opened)="isUpdatedataInProgress(picker, 'datePickerField')"  #picker></mat-datepicker>
                               </div>
                               <p class="warning-message"
                                 *ngIf="userInputValues[field.attributeName] === buildJSONData[field.attributeName]">
@@ -115,9 +115,9 @@
                                   [placeholder]="langJson.calendarPlaceHolder" [matDatepicker]="picker" readonly
                                   id="{{field.attributeName}}"
                                   (dateChange)="captureDatePickerValue($event, field.attributeName, buildJSONData[field.attributeName])"
-                                  [(ngModel)]="selectedDate" (click)="picker.open()" />
+                                  [(ngModel)]="selectedDate" (click)="isUpdatedataInProgress(picker, 'datePickerField')" />
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                <mat-datepicker #picker></mat-datepicker>
+                                <mat-datepicker (opened)="isUpdatedataInProgress(picker, 'datePickerField')" #picker></mat-datepicker>
                               </div>
                               <p class="warning-message"
                                 *ngIf="userInputValues[field.attributeName] === buildJSONData[field.attributeName]">
@@ -182,6 +182,7 @@
                                   placeholder="{{field.placeHolder[item.language]}}"
                                   [value]="userInputValues[field.attributeName][item.language]"
                                   (focus)="captureVirtualKeyboard(field.attributeName + item.language, item.index)"
+                                  (click)="isUpdatedataInProgress($event, 'textField')"
                                   [disabled]="attributeUpdateCountRemainLimit[field.attributeName] === 0"
                                   #keyboardRef />
                                 <i matSuffix class="material-icons mat-keyboard-icon"
@@ -238,6 +239,7 @@
                                   placeholder="{{field.placeHolder[item.language]}}"
                                   [value]="userInputValues[field.attributeName][item.language]"
                                   (focus)="captureVirtualKeyboard(field.attributeName + item.language+'Mobile', item.mobileIndex)"
+                                  (click)="isUpdatedataInProgress($event, 'textField')"
                                   [disabled]="attributeUpdateCountRemainLimit[field.attributeName] === 0"
                                   #keyboardRef />
                                 <i matSuffix class="material-icons mat-keyboard-icon"
@@ -297,11 +299,13 @@
                             <td width="3%" class="sub-table-row ele-for-lap-tab-card"></td>
                             <td class="sub-table-row width-of-input ele-for-lap-tab-card">
                               <span [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'">
-                                <mat-select [style.font-size]="fontSize.paragraph" disableOptionCentering class="enable-dropdown" id="{{field.attributeName}}"
+                                <mat-select #mySelect [style.font-size]="fontSize.paragraph" disableOptionCentering class="enable-dropdown" id="{{field.attributeName}}"
                                   placeholder="{{field.placeHolder[item.language]}}"
                                   [(value)]="userInputValues[field.attributeName][item.language]"
                                   [disabled]="attributeUpdateCountRemainLimit[field.attributeName] === 0"
-                                  (selectionChange)="captureDropDownValue($event, field.attributeName, item.language, item.value)">
+                                  (selectionChange)="captureDropDownValue($event, field.attributeName, item.language, item.value)"
+                                  (click)="isUpdatedataInProgress(mySelect, 'dropDownField')"
+                                  >
                                   <mat-option *ngFor="let data of dropDownValues[field.attributeName][item.language]"
                                     [value]="data.code">{{ data.value }}</mat-option>
                                 </mat-select>
@@ -356,11 +360,12 @@
                           <tr *ngFor="let item of buildJSONData[field.attributeName]">
                             <td class="sub-table-row ele-for-mob-card">
                               <span [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'">
-                                <mat-select [style.font-size]="fontSize.paragraph" disableOptionCentering class="enable-dropdown" id="{{field.attributeName}}"
+                                <mat-select #mySelect [style.font-size]="fontSize.paragraph" disableOptionCentering class="enable-dropdown" id="{{field.attributeName}}"
                                   placeholder="{{field.placeHolder[item.language]}}"
                                   [(value)]="userInputValues[field.attributeName][item.language]"
                                   [disabled]="attributeUpdateCountRemainLimit[field.attributeName] === 0"
-                                  (selectionChange)="captureDropDownValue($event, field.attributeName, item.language,item.value)">
+                                  (selectionChange)="captureDropDownValue($event, field.attributeName, item.language,item.value)"
+                                  (click)="isUpdatedataInProgress(mySelect, 'dropDownField')">
                                   <mat-option *ngFor="let data of dropDownValues[field.attributeName][item.language]"
                                     [value]="data.code">{{ data.value }}</mat-option>
                                 </mat-select>
@@ -567,6 +572,7 @@
                                     (blur)="captureAddressValue($event, field.attributeName, item.language, item.value)"
                                     [(value)]="userInputValues[field.attributeName][item.language]"
                                     [placeholder]="field.placeHolder[item.language]"
+                                    (click)="isUpdatedataInProgress($event, 'textField')"
                                     (focus)="captureVirtualKeyboard(field.attributeName+item.language, item.index)"
                                     #keyboardRef />
                                   <i matSuffix class="material-icons mat-keyboard-icon"
@@ -599,6 +605,7 @@
                                     (blur)="captureAddressValue($event, field.attributeName, item.language, item.value)"
                                     [(value)]="userInputValues[field.attributeName][item.language]"
                                     [placeholder]="field.placeHolder[item.language]"
+                                    (click)="isUpdatedataInProgress($event, 'textField')"
                                     (focus)="captureVirtualKeyboard(field.attributeName+item.language+'Mobile', item.mobileIndex)"
                                     #keyboardRef />
                                   <i matSuffix class="material-icons mat-keyboard-icon"
@@ -655,12 +662,13 @@
                                 <td class="sub-table-row each-Hierarchy-td width-of-input ele-for-lap-tab-card"
                                   *ngIf="dynamicDropDown[field.name]">
                                   <span [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'">
-                                    <mat-select [style.font-size]="fontSize.paragraph" disableOptionCentering
+                                    <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
                                       placeholder="{{field.placeHolder[item.language]}}"
                                       [ngClass]="dynamicDropDown[field.name]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
                                       [(value)]="userInputValues[field.attributeName][item.language]"
                                       id="{{field.name}}{{item.language}}"
-                                      (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))">
+                                      (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
+                                      (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
                                       <mat-option *ngFor="let data of dynamicDropDown[field.name][item.language]"
                                         [value]="data.code">
                                         {{ data.name }}
@@ -678,11 +686,12 @@
                               <td class="sub-table-row ele-for-lap-tab-card" width="3%"></td>
                               <td class="sub-table-row each-Hierarchy-td width-of-input ele-for-lap-tab-card"
                                 *ngIf="dynamicDropDown[field.name]">
-                                <mat-select [style.font-size]="fontSize.paragraph" disableOptionCentering
+                                <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
                                   placeholder="{{langJson.select}} {{field.labelName[langCode][1]}}"
                                   [ngClass]="dynamicDropDown[field.name]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
                                   [(value)]="userInputValues[field.attributeName]" id="{{field.name}}"
-                                  (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))">
+                                  (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
+                                  (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
                                   <mat-option *ngFor="let data of dynamicDropDown[field.name].eng" [value]="data.code">
                                     {{ data.name }}
                                   </mat-option>
@@ -718,12 +727,13 @@
                                 *ngFor="let item of buildJSONData[field.attributeName], let i = index">
                                 <span class="sub-table-row each-Hierarchy-td" *ngIf="dynamicDropDown[field.name]">
                                   <span [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'">
-                                    <mat-select [style.font-size]="fontSize.paragraph" disableOptionCentering
+                                    <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
                                       placeholder="{{field.placeHolder[item.language]}}"
                                       [ngClass]="dynamicDropDown[field.name]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
                                       [(value)]="userInputValues[field.attributeName][item.language]"
                                       id="{{field.name}}{{item.language}}"
-                                      (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))">
+                                      (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
+                                      (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
                                       <mat-option *ngFor="let data of dynamicDropDown[field.name][item.language]"
                                         [value]="data.code">
                                         {{ data.name }}
@@ -741,11 +751,12 @@
                             <tr *ngIf="typeOf(userInfo[field.attributeName]) === 'string'">
                               <td class="sub-table-row each-Hierarchy-td ele-for-mob-card"
                                 *ngIf="dynamicDropDown[field.name]">
-                                <mat-select [style.font-size]="fontSize.paragraph" disableOptionCentering
+                                <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
                                   placeholder="{{langJson.select}} {{field.labelName[langCode][1]}}"
                                   [ngClass]="dynamicDropDown[field.name]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
                                   [(value)]="userInputValues[field.attributeName]" id="{{field.name}}"
-                                  (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))">
+                                  (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
+                                  (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
                                   <mat-option *ngFor="let data of dynamicDropDown[field.name].eng" [value]="data.code">
                                     {{ data.name }}
                                   </mat-option>
@@ -923,6 +934,7 @@
                     [placeholder]="field.placeHolder[langCode]"
                     (blur)="captureContactValue($event, field.attributeName)"
                     (focus)="captureVirtualKeyboard(field.attributeName, buildJSONData[field.attributeName].index)"
+                    (click)="isUpdatedataInProgress($event, 'textField')"
                     #keyboardRef />
                   <i matSuffix class="material-icons mat-keyboard-icon"
                     (click)="openKeyboard(field.attributeName)">keyboard</i>
@@ -933,6 +945,7 @@
                     [placeholder]="field.placeHolder[langCode]"
                     (blur)="captureContactValue($event, field.attributeName)"
                     (focus)="captureVirtualKeyboard(field.attributeName, buildJSONData[field.attributeName].index)"
+                    (click)="isUpdatedataInProgress($event, 'textField')"
                     #keyboardRef />
                   <i matSuffix class="material-icons mat-keyboard-icon"
                     (click)="openKeyboard(field.attributeName)">keyboard</i>
@@ -969,9 +982,10 @@
                 <div class="mini-card"
                   *ngIf="field.tabgroup === 'notificationLanguage' && field.controlType === 'dropdown'">
                   <mat-card-title [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}</mat-card-title>
-                  <mat-select [style.font-size]="fontSize.paragraph" [placeholder]="field.placeHolder[langCode]" disableOptionCentering class="enable-dropdown"
+                  <mat-select #matSelect [style.font-size]="fontSize.paragraph" [placeholder]="field.placeHolder[langCode]" disableOptionCentering class="enable-dropdown"
                     [(ngModel)]="selected2" id="{{field.attributeName}}"
-                    (selectionChange)="capturePerfLang($event, field.attributeName)">
+                    (selectionChange)="capturePerfLang($event, field.attributeName)"
+                    (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
                     <mat-option *ngFor="let data of newNotificationLanguages" [value]="data.value">{{ data.value
                       }}</mat-option>
                   </mat-select>

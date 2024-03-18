@@ -296,6 +296,10 @@
             "FAILED": {
                 "statusType": "Échec",
                 "checked": false
+            },
+            "CANCELED":{
+                "statusType": "Annulé",
+                "checked": false
             }
         },
         "reportIssueLabel": "Signaler un problème",
@@ -426,7 +430,15 @@
         "addressLine1":"Adresse",
         "sameFileUploading":"Veuillez télécharger le fichier avec un nom de fichier différent.",
         "docTypePlaceholder": "Sélectionner le type de document",
-        "DocIDPlaceholder": "Entrer l'identifiant du document"
+        "DocIDPlaceholder": "Entrer l'identifiant du document",
+        "pendingDrafts":{
+            "heading": "Demande existante trouvée, action requise !",
+            "descriptionText": "Description : Données démographiques mises à jour",
+            "descriptionDetails": "Nous avons trouvé une demande de mise à jour des données existante qui est toujours en cours. Afin de soulever une nouvelle demande, vous devrez supprimer la demande existante.",
+            "viewMore":"Voir plus",
+            "viewLess":"Voir moins"
+        },
+        "draftCanceled":"Votre demande de mise à jour de données existante a été annulée avec succès. Vous pouvez maintenant procéder à une autre demande de mise à jour des données."
     },
     "trackservicerequest": {
         "title": "Suivre mes demandes",
@@ -690,6 +702,11 @@
         "RES-SER-509": "La carte n'est pas prête à être téléchargée.",
         "RES-SER-418": "UIN/AID/VID invalide saisi. Veuillez saisir un UIN/AID/VID valide et réessayer.",
         "RES-OTP-006": "OTP invalide saisi. Veuillez réessayer avec un OTP valide.",
-        "RES-SER-406": "Impossible d'accéder à la ressource API."
+        "RES-SER-406": "Impossible d'accéder à la ressource API.",
+        "RES-SER-523": "L'URL de rappel n'est pas disponible pour l'événement terminé le flux de travail Regproc",
+        "RES-SER-524": "Non autorisé à mettre à jour l'UIN car le paquet précédent est en attente. Pour continuer, veuillez le jeter.",
+        "RES-SER-525": "Non autorisé à mettre à jour l'UIN car le paquet précédent est en attente et il ne peut pas être annulé.",
+        "RES-SER-526": "Limite du nombre de mises à jour pour les attributs dépassée : - %s",
+        "RES-SER-470": "Aucun enregistrement trouvé"
     }
 }

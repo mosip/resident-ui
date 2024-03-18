@@ -296,6 +296,10 @@
             "FAILED": {
                 "statusType": "Fallido",
                 "checked": false
+            },
+            "CANCELED":{
+                "statusType": "Cancelada",
+                "checked": false
             }
         },
         "reportIssueLabel": "Reportar un problema",
@@ -426,7 +430,15 @@
         "addressLine1":"Dirección",
         "sameFileUploading":"Por favor, suba el archivo con un nombre de archivo diferente.",
         "docTypePlaceholder": "Seleccionar tipo de documento",
-        "DocIDPlaceholder": "Ingresar número de documento"
+        "DocIDPlaceholder": "Ingresar número de documento",
+        "pendingDrafts":{
+            "heading": "Se encontró una solicitud existente; se requiere acción.",
+            "descriptionText": "Descripción: Datos demográficos actualizados",
+            "descriptionDetails": "Hemos encontrado una solicitud de actualización de datos existente que aún está en curso. Para generar una nueva solicitud, deberá eliminar la solicitud existente.",
+            "viewMore":"Ver más",
+            "viewLess":"Ver menos"
+        },
+        "draftCanceled":"Su solicitud de actualización de datos existente se canceló exitosamente. Ahora puede proceder a generar otra solicitud de Actualización de datos."
     },
     "trackservicerequest": {
         "title": "Seguir mis solicitudes",
@@ -690,6 +702,11 @@
         "RES-SER-509": "La tarjeta no está lista para su descarga.",
         "RES-SER-418": "UIN/AID/VID ingresado inválido. Por favor, ingresa un UIN/AID/VID válido y vuelve a intentarlo.",
         "RES-OTP-006": "OTP ingresado inválido. Por favor, intenta nuevamente con un OTP válido.",
-        "RES-SER-406": "No se puede acceder al recurso API."
+        "RES-SER-406": "No se puede acceder al recurso API.",
+        "RES-SER-523": "La URL de devolución de llamada no está disponible para el evento completado del flujo de trabajo de Regproc",
+        "RES-SER-524": "No se permite actualizar UIN porque el paquete anterior está pendiente. Para continuar, deséchelo.",
+        "RES-SER-525": "No se permite actualizar UIN porque el paquete anterior está pendiente y no se puede cancelar.",
+        "RES-SER-526": "Límite de recuento de actualizaciones para los atributos excedidos: - %s",
+        "RES-SER-470": "No se encontraron registros"
     }
 }

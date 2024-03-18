@@ -3,7 +3,7 @@ import { ViewhistoryComponent } from './viewhistory.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatKeyboardService } from 'ngx7-material-keyboard';
+import { MatKeyboardService } from 'ngx7-material-keyboard-ios';
 
 describe('ViewhistoryComponent', () => {
   let component: ViewhistoryComponent;

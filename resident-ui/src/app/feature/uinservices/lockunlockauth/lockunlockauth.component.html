@@ -12,7 +12,7 @@
 		<mat-grid-list [cols]="cols" rowHeight="190px" gutterSize="10px" *ngIf="authlist" dir="{{sitealignment}}">
 			<mat-grid-tile *ngFor="let authInfo of authlist; let i = index">
 				<mat-card (click)="setAuthlockStatus(authInfo)" id="setAuthlockStatus{{i}}"  [ngClass]="authInfo.recorddirty == false ? 'mini-card' : 'mini-card-yellow'" >
-				  <mat-card-header>			  	
+				  <mat-card-header *ngIf="authInfo.label">			  	
 				    <mat-card-title><span>
 						<img src="assets\{{authInfo.label.icon}}.png" alt="">
 					</span>&nbsp;&nbsp;&nbsp;<span class="auth-type-text" [style.font-size]="fontSize.subHeading">{{authInfo.label.label}}</span></mat-card-title>	

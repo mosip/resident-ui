@@ -357,4 +357,12 @@ export class DataStorageService {
   getPreferredLangs(langCode:string){
     return this.httpClient.get(this.BASE_URL + '/auth-proxy/masterdata/dynamicfields/preferredLang/' + langCode + '?withValue=true' )
   }
+
+  getPendingDrafts(){
+    return this.httpClient.get(this.BASE_URL + '/identity/get-pending-drafts')
+  }
+
+  discardPendingDrafts(eid:string){
+    return this.httpClient.post(this.BASE_URL + '/identity/discardPendingDraft/' + eid, '')
+  }
 }

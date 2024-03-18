@@ -14,7 +14,7 @@ import { I18nModule } from 'src/app/i18n.module';
 import { CoreModule } from './core/core.module';
 import { DndDirective } from './dnd.directive';
 import { UserIdleModule } from 'angular-user-idle';
-import { MatKeyboardModule } from 'ngx7-material-keyboard';
+import { MatKeyboardModule } from 'ngx7-material-keyboard-ios';
 
 const appInitialization = (appConfig: AppConfigService) => {
   return () => {

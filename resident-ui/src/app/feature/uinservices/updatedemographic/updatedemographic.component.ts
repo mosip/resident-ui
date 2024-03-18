@@ -16,7 +16,7 @@ import {
   MatKeyboardRef,
   MatKeyboardComponent,
   MatKeyboardService
-} from 'ngx7-material-keyboard';
+} from 'ngx7-material-keyboard-ios';
 import { FontSizeService } from "src/app/core/services/font-size.service";
 
 @Component({
@@ -105,6 +105,10 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
   selectedOptionData:any;
   oldSelectedIndex:any;
   isSameData: any = {};
+  cancellable:boolean;
+  draftsDetails:any;
+  eidDetails:any;
+
 
   private keyboardRef: MatKeyboardRef<MatKeyboardComponent>;
   @ViewChildren('keyboardRef', { read: ElementRef })
@@ -186,11 +190,50 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
     } else {
       this.autoLogout.getValues(this.langCode);
       this.autoLogout.continueWatching();
-    }
+    }    
+    this.dataStorageService.getPendingDrafts().subscribe((response) =>{
+      if(response['response']){
+        this.cancellable = response['response'].cancellable;
+        this.draftsDetails = response['response'].drafts[0].eid;
 
+        if(this.cancellable){
+          this.dataStorageService
+            .getEIDStatus(this.draftsDetails)
+            .subscribe((response) => {
+            if(response["response"]){
+              this.eidDetails = response["response"];
+            }else if(response["errors"]){
+              this.eidDetails = ""
+            }   
+          });
+        }
+
+      }else{
+        this.showErrorPopup(response['errors']);
+      };
+    })
+  };
+ 
+  isUpdatedataInProgress(event, fieldType) {
+    if(this.cancellable){
+      this.popupForInprogressData();
+      if(fieldType === 'textField'){
+        document.getElementById(event.target.id).blur();
+      }else if(fieldType === 'datePickerField'){
+        event.close()
+      }else if(fieldType === 'dropDownField'){
+        event.close()
+      }else if(fieldType === 'virtualKeyBoard'){
+        document.getElementById(event).blur();
+      }
+    }else{
+      if(fieldType === 'datePickerField'){
+        event.open()
+      }
+    }
   }
 
-  createTransactionIds(){
+  createTransactionIds() {
     let transactionID = window.crypto.getRandomValues(new Uint32Array(1)).toString();
     if (transactionID.length < 10) {
       let diffrence = 10 - transactionID.length;
@@ -224,7 +267,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
           this.userInfo = response["response"];
           this.userInfo['fullName'].forEach(item=>{
             this.getUserPerfLang.indexOf(item.language) === -1 ? this.getUserPerfLang.push(item.language) : ''
-          }) 
+          })
           UpdatedemographicComponent.actualData = response["response"];
           this.buildData()
           this.getSupportingLanguages()
@@ -379,7 +422,9 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
 
   getDocumentType(type: string, id: string) {
     this.dataStorageService.getDataForDropDown("/proxy/masterdata/documenttypes/" + type + "/" + localStorage.getItem("langCode")).subscribe(response => {
-      this.dropDownValues[id] = response["response"]["documents"];
+      if(response["response"]){
+        this.dropDownValues[id] = response["response"]["documents"];
+      }
     });
   }
 
@@ -558,7 +603,8 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
         this[userInfoType][formControlName].push({ "language": toLang, "value": value })
         this.userInputValues[formControlName][toLang] = value;
       } else {
-        this.userInputValues[formControlName][toLang] = '';
+        this[userInfoType][formControlName].push({ "language": toLang, "value": input })
+        this.userInputValues[formControlName][toLang] = input;
       }
     })
   }
@@ -743,6 +789,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
       this.oldKeyBoradIndex = inputId;
       this.keyboardRef = this.keyboardService.open(defaultJson.keyboardMapping[finalLangCode]);
       document.getElementById(inputId).focus();
+      this.isUpdatedataInProgress(inputId, 'virtualKeyBoard')
     }
   }
 
@@ -1103,6 +1150,36 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
         },
         disableClose: true
       });
+  }
+
+  popupForInprogressData() {
+    setTimeout(() => {
+      let dialogRef = this.dialog
+        .open(DialogComponent, {
+          width: '750px',
+          data: {
+            case: 'updateMyDataInprogress',
+            message: this.langJson.pendingDrafts,
+            transactionDetails: this.eidDetails
+          },
+          disableClose: true
+        });
+      
+        dialogRef.afterClosed().subscribe(res =>{
+        if(res){
+          this.dataStorageService.discardPendingDrafts(this.draftsDetails)
+          .subscribe((response) =>{
+            if(response['response']){
+              this.message = this.langJson.draftCanceled  
+              this.showMessage(this.message, this.draftsDetails);
+              this.cancellable = false;
+            }else{
+              this.showErrorPopup(response['errors'])
+            }
+          })
+        }
+      })
+    },400)
   }
 
   onItemSelected(item: any) {

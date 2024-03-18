@@ -389,4 +389,71 @@
       </button>
     </div>
   </div>
+  
+  <!-- updateMyDataInprogress -->
+  <div [style.font-size]="fontSize.lableText" *ngIf="input.case === 'updateMyDataInprogress'"
+    class="data-inprogress-main-card">
+    <div width="100%">
+      <h4 class="data-inprogress-heading" style="margin: 0;">{{input.message.heading}}</h4>
+      <p class="data-inprogress-description">{{input.message.descriptionDetails}}</p>
+      <div class="data-inprogress-details-card">
+        <div class="intro-details">
+          <p class="eid-date-card">
+            <span class="eid-date">EID: <span>{{input.transactionDetails.eventId}}</span></span>
+            <strong class="eid-date">{{input.transactionDetails.timestamp}}</strong>
+          </p>
+          <p class="eid-date-card">
+            <strong class="eid-date">{{input.message.descriptionText}}</strong>
+            <span (click)="showInprogressDataDetails()" *ngIf="!isInprogressDetialsShow"
+              class="eid-number">{{input.message.viewMore}}</span>
+            <span (click)="showInprogressDataDetails()" *ngIf="isInprogressDetialsShow"
+              class="eid-number">{{input.message.viewLess}}</span>
+          </p>
+        </div>
+        <div *ngIf="isInprogressDetialsShow">
+          <hr class="line" />
+          <div class="event-details" *ngIf="langJSON">
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td class="each-event-details"><span>{{langJSON.eventId}}</span></td>
+                <td class="each-event-details"><span>{{langJSON.eventType}}</span></td>
+                <td class="each-event-details"><span>{{langJSON.eventStatus}}</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid silver;">
+                <td><strong>{{input.transactionDetails.eventId}}</strong></td>
+                <td><strong>{{input.transactionDetails.eventType}}</strong></td>
+                <td><strong>{{input.transactionDetails.eventStatus}}</strong></td>
+              </tr>
+              <tr>
+                <td><span>{{langJSON.individualId}}</span></td>
+                <td><span>{{langJSON.authenticationMode}}</span></td>
+                <td><span>{{langJSON.summary}}</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid silver;">
+                <td><strong>{{input.transactionDetails.individualId}}</strong></td>
+                <td><strong>{{input.transactionDetails.info.authenticationMode}}</strong></td>
+                <td><strong>{{input.transactionDetails.summary}}</strong></td>
+              </tr>
+              <tr>
+                <td><span>{{langJSON.attributeList}}</span></td>
+                <td><span>{{langJSON.timestamp}}</span></td>
+              </tr>
+              <tr>
+                <td><strong>{{input.transactionDetails.info.attributeList}}</strong></td>
+                <td><strong>{{input.transactionDetails.timestamp}}</strong></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="Confirmation-card">
+      <p>Are you sure you want to cancel the existing data update request to update your?</p>
+    </div>
+    <div class="button-card">
+      <button mat-button [mat-dialog-close]="false" class="data-inprogress-btns cancel-btn"
+        (click)="dismiss()">Cancel</button>
+      <button mat-button [mat-dialog-close]="true" class="data-inprogress-btns confirm-btn">Confirm</button>
+    </div>
+  </div>
 </div>

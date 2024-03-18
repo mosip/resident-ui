@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppConfigService } from 'src/app/app-config.service';
 import { AutoLogoutService } from 'src/app/core/services/auto-logout.service';
-import { MatKeyboardService } from 'ngx7-material-keyboard';
+import { MatKeyboardService } from 'ngx7-material-keyboard-ios';
 import { of } from 'rxjs';
 
 describe('TrackservicerequestComponent', () => {

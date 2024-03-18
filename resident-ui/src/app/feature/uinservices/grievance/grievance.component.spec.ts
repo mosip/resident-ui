@@ -7,7 +7,7 @@ import { AppConfigService } from 'src/app/app-config.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { AutoLogoutService } from 'src/app/core/services/auto-logout.service';
-import { MatKeyboardService } from 'ngx7-material-keyboard';
+import { MatKeyboardService } from 'ngx7-material-keyboard-ios';
 import { of } from 'rxjs';
 
 describe('GrievanceComponent', () => {
