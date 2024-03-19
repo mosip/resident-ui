@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -16,12 +17,15 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import org.testng.Assert;
+import org.testng.Reporter;
 
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 
+import io.mosip.testrig.residentui.testcase.LoginTest;
+
 public class Commons extends BaseClass{
-	private static final org.slf4j.Logger logger= org.slf4j.LoggerFactory.getLogger(Commons.class);
+	private static final Logger logger = Logger.getLogger(Commons.class);
 
 	public static String appendDate="0"+getDateTime();
 	
@@ -84,14 +88,16 @@ public class Commons extends BaseClass{
 		
 		try {
 			(new WebDriverWait(driver, 20)).until(ExpectedConditions.elementToBeClickable(by));
-			Thread.sleep(500);
+			Thread.sleep(1000);
 			driver.findElement(by).click();
 			Thread.sleep(500);
 		}catch (StaleElementReferenceException sere) {
+			Reporter.log("<p><img src='data:image/png;base64," + Screenshot.ClickScreenshot(driver) + "' width='900' height='450'/></p>");
 			// simply retry finding the element in the refreshed DOM
 			driver.findElement(by).click();
 		}
 		 catch (Exception e) {
+			 Reporter.log("<p><img src='data:image/png;base64," + Screenshot.ClickScreenshot(driver) + "' width='900' height='450'/></p>");
 				try {
 					test.fail(e.getMessage());
 				} catch (Exception e1) {
@@ -103,18 +109,42 @@ public class Commons extends BaseClass{
 
 			}
 		}
-	
+	public static ExtentTest enter(ExtentTest test,WebDriver driver, By by,int i,String value) throws TimeoutException, IOException {
+		//logger.info("Entering " + by +value);
+		try {
+			(new WebDriverWait(driver, 20)).until(ExpectedConditions.visibilityOfElementLocated(by));
+			Thread.sleep(500);
+			driver.findElements(by).get(i).sendKeys(value);
+			Thread.sleep(500);
+			try {
+				Thread.sleep(8);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+
+
+				driver.findElements(by).get(i).sendKeys(value);
+			}
+		}catch (Exception sere) {
+			Reporter.log("<p><img src='data:image/png;base64," + Screenshot.ClickScreenshot(driver) + "' width='900' height='450'/></p>");
+
+			// simply retry finding the element in the refreshed DOM
+
+			return test.fail(sere.getMessage(), MediaEntityBuilder.createScreenCaptureFromBase64String(Screenshot.ClickScreenshot(driver)).build());
+		}
+		return test.log(Status.INFO, "Enter  "+value); 
+	}
 	public  static void clickWebelement(ExtentTest test,WebDriver driver, By by) throws IOException, InterruptedException {
 		logger.info("Clicking " + by );
 		
 		try {
 			(new WebDriverWait(driver, 20)).until(ExpectedConditions.elementToBeClickable(by));
-			Thread.sleep(500);
+			Thread.sleep(1000);
 			WebElement checkbox= driver.findElement(by);
 		    js.executeScript("arguments[0].click();", checkbox);
 			Thread.sleep(500);
 		}catch (StaleElementReferenceException sere) {
 			// simply retry finding the element in the refreshed DOM
+			Reporter.log("<p><img src='data:image/png;base64," + Screenshot.ClickScreenshot(driver) + "' width='900' height='450'/></p>");
 			driver.findElement(by).click();
 		}
 		catch (Exception e) {
@@ -124,13 +154,14 @@ public class Commons extends BaseClass{
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			Reporter.log("<p><img src='data:image/png;base64," + Screenshot.ClickScreenshot(driver) + "' width='900' height='450'/></p>");
 			JavascriptExecutor executor = (JavascriptExecutor) driver;
 			executor.executeScript("arguments[0].click();", driver.findElement(by));
 
 		}
 
 		}
-	public static void enter(ExtentTest test,WebDriver driver, By by,String value) {
+	public static void enter(ExtentTest test,WebDriver driver, By by,String value) throws IOException {
 		logger.info("Entering " + by +value);
 			try {
 				(new WebDriverWait(driver, 20)).until(ExpectedConditions.visibilityOfElementLocated(by));
@@ -143,10 +174,14 @@ public class Commons extends BaseClass{
 					e.printStackTrace();
 				}
 			}catch (StaleElementReferenceException sere) {
+				Reporter.log("<p><img src='data:image/png;base64," + Screenshot.ClickScreenshot(driver) + "' width='900' height='450'/></p>");
+
 				// simply retry finding the element in the refreshed DOM
 				driver.findElement(by).sendKeys(value);
 			}
 			catch (TimeoutException toe) {
+				test.pass( MediaEntityBuilder.createScreenCaptureFromBase64String(Screenshot.ClickScreenshot(driver)).build());
+				Reporter.log("<p><img src='data:image/png;base64," + Screenshot.ClickScreenshot(driver) + "' width='900' height='500'/></p>");
 				driver.findElement(by).sendKeys(value);
 				System.out.println( "Element identified by " + by.toString() + " was not clickable after 20 seconds");
 			}
@@ -164,7 +199,7 @@ public class Commons extends BaseClass{
 			
 			
 	}
-	public static void enterdate(ExtentTest test,WebDriver driver, By by,String value) {
+	public static void enterdate(ExtentTest test,WebDriver driver, By by,String value) throws IOException {
 		logger.info("Entering " + by +value);
 			try {
 				(new WebDriverWait(driver, 20)).until(ExpectedConditions.visibilityOfElementLocated(by));
@@ -177,6 +212,8 @@ public class Commons extends BaseClass{
 					e.printStackTrace();
 				}
 			}catch (StaleElementReferenceException sere) {
+				Reporter.log("<p><img src='data:image/png;base64," + Screenshot.ClickScreenshot(driver) + "' width='900' height='450'/></p>");
+
 				// simply retry finding the element in the refreshed DOM
 				driver.findElement(by).sendKeys(value);
 			}

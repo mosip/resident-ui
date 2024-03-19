@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -60,7 +61,7 @@ public class BaseClass {
 	protected static JavascriptExecutor js;
 	protected String langcode;
 	public static LoginTest login;
-	protected String envPath = ConfigManager.getiam_adminportal_path();
+	protected String envPath = ConfigManager.getiam_residentportal_path();
 	protected String env = ConfigManager.getiam_apienvuser();
 	protected String externalurl = System.getProperty("externalurl");
 	protected String password = System.getProperty("password");
@@ -85,12 +86,25 @@ public class BaseClass {
     }
 	@BeforeMethod
 	public void setUp() throws Exception {
-		
-		WebDriverManager.chromedriver().setup();
+		logger.info("Start set up");
+		if(System.getProperty("os.name").equalsIgnoreCase("Linux") && ConfigManager.getDocker().equals("yes") ) {
+			
+			
+				logger.info("Docker start");
+				String configFilePath ="/usr/bin/chromedriver";
+				System.setProperty("webdriver.chrome.driver", configFilePath);
+			
+		}else {
+			WebDriverManager.chromedriver().setup();
+			logger.info("window chrome driver start");
+		}
 		ChromeOptions options = new ChromeOptions();
-		String headless=JsonUtil.JsonObjParsing(Commons.getTestData(),"headless");
+		String headless=ConfigManager.getHeadless();
 		if(headless.equalsIgnoreCase("yes")) {
-			options.addArguments("--headless=new");
+			logger.info("Running is headless mode");
+			options.addArguments("--headless", "--disable-gpu","--no-sandbox", "--window-size=1920x1080","--disable-dev-shm-usage");
+			
+
 		}
 		
 
@@ -98,16 +112,17 @@ public class BaseClass {
 		js = (JavascriptExecutor) driver;
 		vars = new HashMap<String, Object>();
 		driver.get(envPath);
+		logger.info("launch url --"+envPath);
 		Thread.sleep(500);
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		driver.manage().window().maximize();
 		
 		
-		String langid="lang"+JsonUtil.JsonObjParsing(Commons.getTestData(),"language");
-		String language=JsonUtil.JsonObjParsing(Commons.getTestData(),"loginlang");
+		
+		String language=ConfigManager.getloginlang();
 		try {
 			if(!language.equals("sin")) {
-			Commons.dropdown( driver, By.id("languages"), By.id(langid));
+			Commons.dropdown( driver, By.id("languages"), By.id("lang"+language));
 			}
 		}
 		catch (Exception e) {
@@ -140,7 +155,14 @@ public class BaseClass {
 //		extent.flush();
 //	}
 	
-	
+	public static String envsupportlang() {
+		List<String> langs=BaseTestCase.getLanguageList();
+		for(String lang:langs) {
+			return lang;
+		}
+		return "";
+		
+	}
 
 	@DataProvider(name = "data-provider")
 	public Object[] dpMethod() {

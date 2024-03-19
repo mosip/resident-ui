@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
+import io.mosip.testrig.residentui.kernel.util.ConfigManager;
 import io.mosip.testrig.residentui.utility.Commons;
 import io.mosip.testrig.residentui.utility.JsonUtil;
 import io.mosip.testrig.residentui.utility.MockSMTPListener;
@@ -43,7 +44,7 @@ public class VerifyPhoneNumberEmailID extends ResidentBaseClass {
 	}
 	@Test(priority=2)
 	public void VerifyEmailIDWIthInvalidOtp() throws Exception {
-		String externalemail = JsonUtil.JsonObjParsing(Commons.getTestData(), "externalemail");
+		String externalemail = ConfigManager.getexternalemail();
 		Thread.sleep(2000);
 		Commons.click(test, driver, By.id("verifyPhoneNumber/EmailID"));
 		Commons.click(test, driver, By.id("emailChannelBtn-button"));
@@ -62,7 +63,7 @@ public class VerifyPhoneNumberEmailID extends ResidentBaseClass {
 	}
 	@Test(priority=3)
 	public void VerifyEmailIDWIthoutOtp() throws Exception {
-		String externalemail = JsonUtil.JsonObjParsing(Commons.getTestData(), "externalemail");
+		String externalemail = ConfigManager.getexternalemail();
 		Thread.sleep(2000);
 		Commons.click(test, driver, By.id("verifyPhoneNumber/EmailID"));
 		Commons.click(test, driver, By.id("emailChannelBtn-button"));
@@ -77,7 +78,7 @@ public class VerifyPhoneNumberEmailID extends ResidentBaseClass {
 	}
 	@Test(priority=4)
 	public void VerifyEmailID() throws Exception {
-		String externalemail = JsonUtil.JsonObjParsing(Commons.getTestData(), "externalemail");
+		String externalemail = ConfigManager.getexternalemail();
 		Thread.sleep(2000);
 		Commons.click(test, driver, By.id("verifyPhoneNumber/EmailID"));
 		Commons.click(test, driver, By.id("emailChannelBtn-button"));

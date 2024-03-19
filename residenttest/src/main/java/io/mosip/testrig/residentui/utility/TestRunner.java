@@ -7,6 +7,9 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.testng.TestListenerAdapter;
 import org.testng.TestNG;
+import org.testng.xml.XmlClass;
+import org.testng.xml.XmlSuite;
+import org.testng.xml.XmlTest;
 
 import io.mosip.testrig.residentui.fw.util.AdminTestUtil;
 import io.mosip.testrig.residentui.kernel.util.ConfigManager;
@@ -28,12 +31,12 @@ public class TestRunner {
 
 	public static void main(String[] args) throws Exception {
 		AdminTestUtil.initialize();
-		String identityGenManual=JsonUtil.JsonObjParsing(Commons.getTestData(),"identityGenManual");
+		String identityGenManual=ConfigManager.getidentityGenManual();
 		if(identityGenManual.equals("yes")) {
-			uin=JsonUtil.JsonObjParsing(Commons.getTestData(),"UIN");
-			perpetualVid=JsonUtil.JsonObjParsing(Commons.getTestData(),"perpetualvid");
-			onetimeuseVid=JsonUtil.JsonObjParsing(Commons.getTestData(),"onetimevid");
-			temporaryVid=JsonUtil.JsonObjParsing(Commons.getTestData(),"temporaryvid");
+			uin=ConfigManager.getuin();
+			perpetualVid=ConfigManager.getperpetualvid();
+			onetimeuseVid=ConfigManager.getonetimevid();
+			temporaryVid=ConfigManager.gettemporaryvid();
 		}else {
 			uin = AdminTestUtil.generateUIN();
 
@@ -51,23 +54,88 @@ public class TestRunner {
 
 	public static void startTestRunner() throws Exception {
 		
-		
-		
-		
-		
-		
-		
 		File homeDir = null;
 		TestNG runner = new TestNG();
+		if(!ConfigManager.gettestcases().equals("")) {
+			XmlSuite suite = new XmlSuite();
+			suite.setName("MySuite");
+			suite.addListener("io.mosip.testrig.residentui.utility.EmailableReport");
+		
+			XmlClass getInformation = new XmlClass("io.mosip.testrig.residentui.testcase.GetInformation");
+			XmlClass getMyUIN = new XmlClass("io.mosip.testrig.residentui.testcase.GetMyUIN");
+			XmlClass GetPersonalisedCard = new XmlClass("io.mosip.testrig.residentui.testcase.GetPersonalisedCard");
+			XmlClass loginTest = new XmlClass("io.mosip.testrig.residentui.testcase.LoginTest");
+			XmlClass manageMyVid = new XmlClass("io.mosip.testrig.residentui.testcase.ManageMyVid");
+			XmlClass SecureMyId = new XmlClass("io.mosip.testrig.residentui.testcase.SecureMyId");
+			XmlClass shareMyData = new XmlClass("io.mosip.testrig.residentui.testcase.ShareMyData");
+			XmlClass trackMyRequest = new XmlClass("io.mosip.testrig.residentui.testcase.TrackMyRequests");
+			XmlClass updateMyDataName = new XmlClass("io.mosip.testrig.residentui.testcase.UpdateMyData");
+			XmlClass VerifyEmailIDWIthInvalidVid = new XmlClass("io.mosip.testrig.residentui.testcase.VerifyPhoneNumberEmailID");
+			XmlClass viewMyHistory = new XmlClass("io.mosip.testrig.residentui.testcase.ViewMyHistory");
+			
+
+			List<XmlClass> classes = new ArrayList<>();
+			String[] Scenarionames=ConfigManager.gettestcases().split(",");
+			for(String test:Scenarionames) {
+				String Scenarioname=test.toLowerCase();
+
+				if(Scenarioname.contains("getinformation"))
+					classes.add(getInformation);
+
+				if(Scenarioname.contains("getmyuin")) {
+					classes.add(updateMyDataName);
+					classes.add(getMyUIN);
+				}
+
+				if(test.equals("GetPersonalisedCard"))
+					classes.add(GetPersonalisedCard);
+
+				if(Scenarioname.contains("logintest"))
+					classes.add(loginTest);
+
+				if(test.equals("manageMyVid"))
+					classes.add(manageMyVid);
+
+				if(test.equals("SecureMyId"))
+					classes.add(SecureMyId);
+
+				if(test.equals("shareMyData"))
+					classes.add(shareMyData);
+
+				if(Scenarioname.contains("trackmyrequest"))
+					classes.add(trackMyRequest);
+
+				if(Scenarioname.contains("update"))
+					classes.add(updateMyDataName);
+
+				if(Scenarioname.contains("verifyemailid"))
+					classes.add(VerifyEmailIDWIthInvalidVid);
+
+				if(test.equals("viewMyHistory"))
+					classes.add(viewMyHistory);
+
+			}
+
+
+			XmlTest test = new XmlTest(suite);
+			test.setName("MyTest");
+			test.setXmlClasses(classes);
+
+			List<XmlSuite> suites = new ArrayList<>();
+			suites.add(suite);
+
+			runner.setXmlSuites(suites);
+
+		}else {
 		List<String> suitefiles = new ArrayList<String>();
 		String os = System.getProperty("os.name");
 		
 		if (checkRunType().contains("IDE") || os.toLowerCase().contains("windows") == true) {
 			homeDir = new File(getResourcePath() + "/testngFile");
-//			LOGGER.info("IDE Home Dir=" + homeDir);
+
 		} else {
 			homeDir = new File(getResourcePath() + "/testngFile");
-//			LOGGER.info("Jar Home Dir=" + homeDir);
+
 		}
 
 		for (File file : homeDir.listFiles()) {
@@ -75,35 +143,20 @@ public class TestRunner {
 				suitefiles.add(file.getAbsolutePath());
 			}
 		}
-//		String listExcludedGroups=JsonUtil.JsonObjParsing(Commons.getTestData(),"setExcludedGroups");
-//		runner.setExcludedGroups(listExcludedGroups);		
-//		runner.setTestClasses(new Class[] {
-//				LoginTest.class,    
-//				ViewMyHistory.class,
-//				ManageMyVid.class,
-//				SecureMyId.class,
-//				UpdateMyData.class,
-//				TrackMyRequests.class,
-//				GetPersonalisedCard.class,
-//				ShareMyData.class,
-//				GetMyUIN.class,
-//				GetInformation.class,
-//				VerifyPhoneNumberEmailID.class
-//
-//		});
+
 		runner.setTestSuites(suitefiles);
 		
-	
-		String langid=JsonUtil.JsonObjParsing(Commons.getTestData(),"language");
-		String language=JsonUtil.JsonObjParsing(Commons.getTestData(),"loginlang");
+		}
+		
+		String language=ConfigManager.getloginlang();
 		
 			if(language.equals("sin")) {
-				langid="";
+				language="";
 			}
 		System.getProperties().setProperty("testng.outpur.dir", "testng-report");
 		runner.setOutputDirectory("testng-report");
 		System.getProperties().setProperty("emailable.report2.name", "RESIDENT-" + BaseTestCase.environment + "-"
-				+ langid + "-run-" + System.currentTimeMillis() + "-report.html");
+				+ language + "-run-" + System.currentTimeMillis() + "-report.html");
 		
 		
 		runner.run();
@@ -113,81 +166,6 @@ public class TestRunner {
 
 		System.exit(0);
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-//		
-//		File homeDir = null;
-//		List<String> suitefiles = new ArrayList<String>();
-//		String os = System.getProperty("os.name");
-//		testNg=new TestNG();
-//		testNg.setDefaultSuiteName("resident");
-//		MockSMTPListener mockSMTPListener = new MockSMTPListener();
-//		mockSMTPListener.run();
-//		String listExcludedGroups=JsonUtil.JsonObjParsing(Commons.getTestData(),"setExcludedGroups");
-//		testNg.setExcludedGroups(listExcludedGroups);		
-//		testNg.setTestClasses(new Class[] {
-//				LoginTest.class,    
-//				ViewMyHistory.class,
-//				ManageMyVid.class,
-//				SecureMyId.class,
-//				UpdateMyData.class,
-//				TrackMyRequests.class,
-//				GetPersonalisedCard.class,
-//				ShareMyData.class,
-//				GetMyUIN.class,
-//				GetInformation.class,
-//				VerifyPhoneNumberEmailID.class
-//
-//		});
-//		if (checkRunType().contains("IDE") || os.toLowerCase().contains("windows") == true) {
-//			homeDir = new File(getResourcePath() + "/testngFile");
-////			LOGGER.info("IDE Home Dir=" + homeDir);
-//		} else {
-////			homeDir = new File(System.getProperty("user.dir") + "/"+resourceTestFolderName + "/" + TestResources.resourceFolderName +"/testngFile");
-////			LOGGER.info("Jar Home Dir=" + homeDir);
-//		}
-//
-//		for (File file : homeDir.listFiles()) {
-//			if (file.getName().toLowerCase() != null) {
-//				suitefiles.add(file.getAbsolutePath());
-//			}
-//		}
-//		testNg.setTestSuites(suitefiles);
-//		String langid=JsonUtil.JsonObjParsing(Commons.getTestData(),"language");
-//		String language=JsonUtil.JsonObjParsing(Commons.getTestData(),"loginlang");
-//		
-//			if(language.equals("sin")) {
-//				langid="";
-//			}
-//		
-//		System.getProperties().setProperty("testng.outpur.dir", "testng-report");
-//		testNg.setOutputDirectory("testng-report");
-//		System.getProperties().setProperty("emailable.report2.name", "ResidentUI" + "-"
-//				+ System.getProperty("env.user")+ "-"+langid+"-"+ System.currentTimeMillis() + "-report.html");
-//
-//
-//		testNg.run();
-//		System.exit(0);
 	}
 
 public static String getGlobalResourcePath() {

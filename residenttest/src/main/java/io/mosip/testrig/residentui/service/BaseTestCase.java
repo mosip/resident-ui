@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.json.JSONArray;
 import org.json.simple.JSONObject;
 
 import io.mosip.testrig.residentui.authentication.fw.util.RestClient;
@@ -53,14 +54,14 @@ public class BaseTestCase {
 	public static Map<?, ?> partnerQueries;
 	public static String uinEmail;
 	public static String uinPhone;
-	
-	
-    public static void main( String[] args ) {
 
-    	
-    	
-    }
-    
+
+	public static void main( String[] args ) {
+
+
+
+	}
+
 	public static String getOSType() {
 		String type = System.getProperty("os.name");
 		if (type.toLowerCase().contains("windows")) {
@@ -72,31 +73,119 @@ public class BaseTestCase {
 		}
 		return null;
 	}
-    
+
 	public static List<String> getLanguageList() {
-		logger.info("We have created a Config Manager. Beginning to read properties!");
-
-		environment = ConfigManager.getiam_apienvuser();
-		logger.info("Environemnt is  ==== :" + environment);
-		ApplnURI = ConfigManager.getiam_apiinternalendpoint();
-		logger.info("Application URI ======" + ApplnURI);
-
-		logger.info("Configs from properties file are set.");
 		if (!languageList.isEmpty()) {
 			return languageList;
 		}
-		String url = ApplnURI + props.getProperty("preregLoginConfigUrl");
-		Response response = RestClient.getRequest(url, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON);
-		org.json.JSONObject responseJson = new org.json.JSONObject(response.asString());
-		org.json.JSONObject responseValue = (org.json.JSONObject) responseJson.get("response");
-		String mandatoryLanguage = (String) responseValue.get("mosip.mandatory-languages");
 
-		languageList.add(mandatoryLanguage);
-		languageList.addAll(Arrays.asList(((String) responseValue.get("mosip.optional-languages")).split(",")));
+		String section = "";
+		String optionalLanguages = null;
+		String mandatoryLanguages = null;
+		if (isTargetEnvLTS())
+			section = "/mosip-config/application-default.properties";
+		else
+			section = "/mosip-config/sandbox/admin-mz.properties";
+		try {
 
+			optionalLanguages = getValueFromActuators(propsKernel.getProperty("actuatorMasterDataEndpoint"), section,
+					"mosip.optional-languages");
+
+			logger.info("optionalLanguages from env:" + optionalLanguages);
+
+			mandatoryLanguages = getValueFromActuators(propsKernel.getProperty("actuatorMasterDataEndpoint"), section,
+					"mosip.mandatory-languages");
+
+			logger.info("mandatoryLanguages from env:" + mandatoryLanguages);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (mandatoryLanguages != null && !mandatoryLanguages.isBlank())
+			languageList.addAll(Arrays.asList(mandatoryLanguages.split(",")));
+
+		if (optionalLanguages != null && !optionalLanguages.isBlank())
+			languageList.addAll(Arrays.asList(optionalLanguages.split(",")));
+		logger.info("languageList from env:" + languageList);
 		return languageList;
+
+	}
+	public static JSONArray idaActuatorResponseArray = null;
+	public static String getValueFromActuators(String endPoint, String section, String key) {
+
+		String url = ApplnURI + endPoint;
+		String value = null;
+		try {
+			if (idaActuatorResponseArray == null) {
+				Response response = null;
+				org.json.JSONObject responseJson = null;
+				response = RestClient.getRequest(url, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON);
+
+
+				responseJson = new org.json.JSONObject(response.getBody().asString());
+				idaActuatorResponseArray = responseJson.getJSONArray("propertySources");
+			}
+			logger.info("idaActuatorResponseArray="+idaActuatorResponseArray);
+
+			for (int i = 0, size = idaActuatorResponseArray.length(); i < size; i++) {
+				org.json.JSONObject eachJson = idaActuatorResponseArray.getJSONObject(i);
+				if (eachJson.get("name").toString().contains(section)) {
+					value = eachJson.getJSONObject(GlobalConstants.PROPERTIES).getJSONObject(key)
+							.get(GlobalConstants.VALUE).toString();
+					logger.info("value="+value);
+					break;
+				}
+			}
+
+			return value;
+		} catch (Exception e) {
+			logger.error(GlobalConstants.EXCEPTION_STRING_2 + e);
+			return value;
+		}
+
 	}
 	
+	public static String GethierarchyLevelName(int locationHierarchyLevels) {
+		kernelAuthLib = new KernelAuthentication();
+		String token = kernelAuthLib.getTokenByRole("admin");
+		String url = ApplnURI + props.getProperty("locationHierarchyLevels");
+		Response response = RestClient.getRequestWithCookie(url+locationHierarchyLevels+"/"+getlang(), MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,"Authorization", token);
+		org.json.JSONObject responseJson = new org.json.JSONObject(response.asString());
+		org.json.JSONObject responseObj = responseJson.getJSONObject("response");
+		JSONArray responseArray = responseObj.getJSONArray("locationHierarchyLevels");
+		org.json.JSONObject idItem = responseArray.getJSONObject(0);
+		String hierarchyLevelName = idItem.getString("hierarchyLevelName");
+		return hierarchyLevelName;
+
+	}
+	public static String GethierarchyName(int locationHierarchyLevels) {
+		kernelAuthLib = new KernelAuthentication();
+		String token = kernelAuthLib.getTokenByRole("admin");
+		String url = ApplnURI + props.getProperty("locationhierarchy");
+		Response response = RestClient.getRequestWithCookie(url+GethierarchyLevelName(locationHierarchyLevels), MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,"Authorization", token);
+		org.json.JSONObject responseJson = new org.json.JSONObject(response.asString());
+		org.json.JSONObject responseObj = responseJson.getJSONObject("response");
+		JSONArray responseArray = responseObj.getJSONArray("locations");
+
+		for (int i = 0, size = responseArray.length(); i < size; i++) {
+			org.json.JSONObject idItem = responseArray.getJSONObject(i);
+			String lang = idItem.getString("langCode");
+			String hierarchyName = idItem.getString("name");
+			if (lang.equals(getlang())) {
+				return hierarchyName;
+			}
+
+		}
+		return null;
+
+	}
+	public static String getlang() {
+		String language=ConfigManager.getloginlang();
+		if(language.equalsIgnoreCase("sin")) {
+			return "eng";
+		}else {
+			return language;
+		}
+	}
 	public static Properties getproperty(String path) {
 		Properties prop = new Properties();
 
@@ -108,7 +197,7 @@ public class BaseTestCase {
 		}
 		return prop;
 	}
-	
+
 	public static void initialize() {
 		PropertyConfigurator.configure(getLoggerPropertyConfig());
 		kernelAuthLib = new KernelAuthentication();
@@ -139,9 +228,9 @@ public class BaseTestCase {
 		logger.info("Configs from properties file are set.");
 
 	}
-	
-private static String targetEnvVersion = "";
-	
+
+	private static String targetEnvVersion = "";
+
 	public static boolean isTargetEnvLTS() {
 
 		if (targetEnvVersion.isEmpty()) {
@@ -151,7 +240,7 @@ private static String targetEnvVersion = "";
 			String url = ApplnURI + "/v1/auditmanager/actuator/info";
 			try {
 				response = RestClient.getRequest(url, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON);
-			//	GlobalMethods.reportResponse(response.getHeaders().asList().toString(), url, response);
+				//	GlobalMethods.reportResponse(response.getHeaders().asList().toString(), url, response);
 
 				responseJson = new org.json.JSONObject(response.getBody().asString());
 
@@ -163,7 +252,7 @@ private static String targetEnvVersion = "";
 		}
 		return targetEnvVersion.contains("1.2");
 	}
-	
+
 	private static Properties getLoggerPropertyConfig() {
 		Properties logProp = new Properties();
 		logProp.setProperty("log4j.rootLogger", "INFO, Appender1,Appender2");
@@ -176,7 +265,7 @@ private static String targetEnvVersion = "";
 		logProp.setProperty("log4j.appender.Appender2.layout.ConversionPattern", "%-7p %d [%t] %c %x - %m%n");
 		return logProp;
 	}
-	
+
 	public static JSONObject getRequestJson(String filepath) {
 		return kernelCmnLib.readJsonData(filepath, true);
 

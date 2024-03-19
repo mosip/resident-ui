@@ -2,9 +2,8 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="RESIDENT-UI-AUTOMATION-RUN">
-	<parameter name="scenarioFilter" value="random" />
-	<parameter name="stopOnError" value="false" />
-	<test name="RESIDENT-UI-AUTOMATION" group-by-instances="true">
+	
+	<test thread-count="5" name="RESIDENT-UI-AUTOMATION-RUN">
 	
 		<classes>
 			<class name="io.mosip.testrig.residentui.testcase.GetInformation" />
