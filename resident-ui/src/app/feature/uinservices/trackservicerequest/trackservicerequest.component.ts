@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy,Renderer2 } from "@angular/core";
+import { Component, OnInit, OnDestroy,Renderer2,ElementRef,ViewChildren,HostListener } from "@angular/core";
 import { DataStorageService } from 'src/app/core/services/data-storage.service';
 import { TranslateService } from "@ngx-translate/core";
 import { Subscription } from "rxjs";
@@ -9,6 +9,13 @@ import { MatDialog } from '@angular/material';
 import { saveAs } from 'file-saver';
 import { AuditService } from "src/app/core/services/audit.service";
 import { AutoLogoutService } from "src/app/core/services/auto-logout.service";
+import {
+  MatKeyboardRef,
+  MatKeyboardComponent,
+  MatKeyboardService
+} from 'ngx7-material-keyboard-ios';
+import defaultJson from "src/assets/i18n/default.json";
+import { FontSizeService } from "src/app/core/services/font-size.service";
 
 @Component({
   selector: "app-trackservicerequest",
@@ -33,8 +40,17 @@ export class TrackservicerequestComponent implements OnInit, OnDestroy {
   isLoading:boolean = true;
   eventIdValidation:any;
   showWarningMessage:boolean = false;
+  disableDownloadVidBtn:boolean = false;
 
-  constructor(private autoLogout: AutoLogoutService,private renderer:Renderer2 ,private dialog: MatDialog, private appConfigService: AppConfigService, private dataStorageService: DataStorageService, private translateService: TranslateService, private router: Router, private route: ActivatedRoute,private auditService: AuditService) {
+  private keyboardRef: MatKeyboardRef<MatKeyboardComponent>;
+  @ViewChildren('keyboardRef', { read: ElementRef })
+  private attachToElementMesOne: any;
+  constructor(private autoLogout: AutoLogoutService,private renderer:Renderer2 ,
+    private dialog: MatDialog, private appConfigService: AppConfigService, 
+    private dataStorageService: DataStorageService, private translateService: TranslateService, 
+    private router: Router, private route: ActivatedRoute,private auditService: AuditService,
+    private keyboardService: MatKeyboardService,private fontSizeService: FontSizeService
+    ) {
     this.renderer.listen('window','click',(e:Event) =>{
        if(!this.iconBtnClicked){
           this.isPopUpShow = false
@@ -48,7 +64,9 @@ export class TrackservicerequestComponent implements OnInit, OnDestroy {
     this.eventIdValidation =this.appConfigService.getConfig()["resident.validation.event-id.regex"];
     this.route.queryParams
       .subscribe(params => {
-        this.source = params.source
+        if(params.source){
+          this.source = params.source
+        }
         this.eidVal = params.eid;
         this.getEIDStatus();
       }
@@ -92,9 +110,26 @@ export class TrackservicerequestComponent implements OnInit, OnDestroy {
     }
   }
 
+  captureVirtualKeyboard(element: HTMLElement, index: number) {
+    this.keyboardRef.instance.setInputInstance(this.attachToElementMesOne._results[index]);
+  }
+
+  openKeyboard() {
+    if (this.keyboardService.isOpened) {
+      this.keyboardService.dismiss();
+      this.keyboardRef = undefined;
+    } else {
+      this.keyboardRef = this.keyboardService.open(defaultJson.keyboardMapping[this.userPreferredLangCode]);
+      document.getElementById("appIdValue").focus();
+    }
+  }
+
+  getEIDStatusByInput(){
+    this.router.navigateByUrl(`uinservices/trackservicerequest?eid=` + this.eidVal);
+  }
+
   getEIDStatus(){
-    this.isLoading = true;
-    this.auditService.audit('RP-026', 'Track Service Request', 'RP-Track Service Request', 'Track Service Request', 'User clicks on "search" button');
+    this.auditService.audit('RP-026', 'Track Service Request', 'RP-Track Service Request', 'Track Service Request', 'User clicks on "search" button', '');
     if(this.eidVal){
     this.dataStorageService
     .getEIDStatus(this.eidVal)
@@ -105,6 +140,7 @@ export class TrackservicerequestComponent implements OnInit, OnDestroy {
       }else if(response["errors"]){
         this.isLoading = false;
         this.showErrorPopup(response["errors"])
+        this.eidStatus = ""
       }
         
     });
@@ -140,41 +176,45 @@ export class TrackservicerequestComponent implements OnInit, OnDestroy {
         case: 'MESSAGE',
         title: this.popupMessages.genericmessage.successLabel,
         message: message,
-        btnTxt: this.popupMessages.genericmessage.successButton
+        btnTxt: this.popupMessages.genericmessage.successButton,
+        isOk:'OK'
       }
     });
     return dialogRef;
   }
 
   showErrorPopup(message: string) {
-    console.log("Hello")
     this.errorCode = message[0]["errorCode"]
-    if(this.errorCode === "RES-SER-410"){
-      let errorMessageType = message[0]["message"].split("-")[1].trim()
-      this.message = this.popupMessages.serverErrors[this.errorCode][errorMessageType]
-    }else{
-      this.message = this.popupMessages.serverErrors[this.errorCode]
-    }
-  
-    this.dialog
-      .open(DialogComponent, {
-        width: '550px',
-        data: {
-          case: 'MESSAGE',
-          title: this.popupMessages.genericmessage.errorLabel,
-          message: this.message,
-          btnTxt: this.popupMessages.genericmessage.successButton
-        },
-        disableClose: true
-      });
+    setTimeout(() =>{
+      if(this.errorCode === "RES-SER-410"){
+        let errorMessageType = message[0]["message"].split("-")[1].trim()
+        this.message = this.popupMessages.serverErrors[this.errorCode][errorMessageType]
+      }else{
+        this.message = this.popupMessages.serverErrors[this.errorCode]
+      }
+    
+      this.dialog
+        .open(DialogComponent, {
+          width: '550px',
+          data: {
+            case: 'MESSAGE',
+            title: this.popupMessages.genericmessage.errorLabel,
+            message: this.message,
+            btnTxt: this.popupMessages.genericmessage.successButton,
+            isOk:"OK"
+          },
+          disableClose: true
+        });
+    },1000)
+   
   }
 
   downloadVIDCard(eventId:any){
     this.dataStorageService.downloadVidCardStatus(eventId).subscribe(response =>{
      let fileName = ""
      const contentDisposition = response.headers.get('Content-Disposition');
-     console.log(contentDisposition)
      if (contentDisposition) {
+      this.disableDownloadVidBtn = true;
        const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
        const matches = fileNameRegex.exec(contentDisposition);
        if (matches != null && matches[1]) {
@@ -197,10 +237,23 @@ export class TrackservicerequestComponent implements OnInit, OnDestroy {
     // this.router.navigate(["grievanceRedressal"],{state:{eventId:eventId}})
   }
 
+  get fontSize(): any {
+    document.documentElement.style.setProperty('--fs', this.fontSizeService.fontSize.breadcrumb)
+    return this.fontSizeService.fontSize;
+  }
+
   openPopupMsg(){
     this.isPopUpShow = !this.isPopUpShow
   }
   preventCloseOnClick(){
     this.iconBtnClicked = true
+  }
+
+  @HostListener("blur", ["$event"])
+  @HostListener("focusout", ["$event"])
+  private _hideKeyboard() {
+    if (this.keyboardService.isOpened) {
+      this.keyboardService.dismiss();
+    }
   }
 }

@@ -55,16 +55,39 @@
 * {
   box-sizing: border-box;
 }
+::-webkit-input-placeholder {
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+
+::-ms-input-placeholder {
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+
+::-moz-placeholder {
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
 
 html,
 body {
   height: 100%;
   margin: 0;
-  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+  font-family: "source_sans_pro_lightregular", Helvetica, sans-serif;
+  /* font-family: 'Roboto', 'Helvetica Neue', sans-serif; */
   -ms-overflow-style: -ms-autohiding-scrollbar;
   -ms-overflow-style: none;
   background-color: #F4F4F4;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
 }
+
+@-moz-document url-prefix() {
+  body {
+    font-weight: lighter !important;
+  }
+}
+
+
 .btn_axn-pri {
   min-width: 158px;
   min-height: 50px;
@@ -169,15 +192,6 @@ body {
   background: rgba(3, 166, 74, 1) !important;
   color: rgba(255, 255, 255, 1) !important;
 }
-
-.icon {
-  margin: 5px;
-  vertical-align: middle;
-}
-
-/* .mat-form-field-appearance-legacy .mat-form-field-underline {
- background-color: #696f7c !important;
-} */
 
 .mat-error {
   color: #e44c29;
@@ -375,12 +389,13 @@ app-document > ul{
   background-color: transparent !important;
 }
 
-mat-select {
+.enable-dropdown{
   outline: 1px solid !important;
   outline-color: #909090 !important;
   outline-width: thin;
   border-radius: 5px;
   color: white !important;
+  font-size: 15px;
 }
 
 .mat-select-trigger {
@@ -449,4 +464,42 @@ button{
   align-items: center;
   margin-top: 18vw;
   display: flex;
+}
+
+::ng-deep .mat-grid-tile{
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+  height: auto;
+}
+
+.cdk-global-overlay-wrapper, .cdk-overlay-container{
+  /*overflow-y: auto;*/
+}
+
+/* @-moz-document url-prefix() {
+  .cdk-global-overlay-wrapper {
+    align-items: baseline !important;
+    margin-top: 25em !important;
+  }
+} */
+
+.info-icon-button{
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+
+}
+
+.mat-keyboard-icon{
+  float: right; 
+  color: grey; 
+  cursor: pointer;
+}
+
+::-webkit-scrollbar{
+   width: 5px;
+}
+
+.cdk-overlay-backdrop{
+  height: 100rem !important;
 }

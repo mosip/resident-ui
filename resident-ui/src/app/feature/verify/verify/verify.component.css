@@ -12,7 +12,7 @@
 }
 
 .button {
-  width: 225px;
+  width: 45%;
   height: 55px;
   background: #FFFFFF 0% 0% no-repeat padding-box;
   box-shadow: 0px 0px 10px #00000014;
@@ -21,20 +21,26 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
-  letter-spacing: 0px;
   color: #909090;
   opacity: 1;
   cursor: pointer;
+  font-size: 15px;
 }
 
 .btn-card {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  row-gap: 5px;
+  column-gap: 10px;
+  width: 100%;
 }
 
-.btn-card-xs {
+/* .btn-card-xs {
   display: contents;
-}
+} */
 
 .main-container {
   padding: 0 6% 0 6%;
@@ -45,6 +51,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   height: 450px;
   background: #FFFFFF 0% 0% no-repeat padding-box;
   border: 1px solid #D3D3D3;
@@ -68,7 +75,7 @@ label {
 }
 
 input {
-  width: 70%;
+  width: 40%;
   height: 36px;
   background: #FFFFFF 0% 0% no-repeat padding-box;
   border: 1px solid #909090;
@@ -77,7 +84,7 @@ input {
 }
 
 .show-opt-panel-card{
-  width: 100%;
+  min-width: 100%;
   height: 628px;
   background: #FFFFFF 0% 0% no-repeat padding-box;
   box-shadow: 0px 0px 5px #00000014;
@@ -87,10 +94,9 @@ input {
 }
 
 .button2 {
-  width: 108px;
+  min-width: 108px;
   height: 36px;
-  /* background: #909090 0% 0% no-repeat padding-box; */
-  border:none;
+    border:none;
   color: #ffffff;
   border-radius: 5px;
   cursor: pointer;
@@ -112,6 +118,7 @@ input {
   opacity: 1;
   font-size: 14px;
   padding: 12px;
+  overflow-wrap: anywhere;
 }
 
 .otp-infromation-card {
@@ -159,6 +166,7 @@ input {
   font-size: 16px;
   letter-spacing: 0px;
   color: #909090;
+  opacity: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -169,35 +177,64 @@ input{
   outline: none;
 }
 
-.info-box{
-  margin-top: 11.4rem;
-  min-height: 90px;
-  width: 200px;
-  border-radius: 8px;
-  padding: 8px 12px 8px 12px;
-  position: absolute ;
-  background-color: #ffffff;
-  /* top: -20px; */
-  left: 49%; 
-  /* display: inline-block; */
-  z-index: 2;
-  transform: translate3d(0, -50%, 0);
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+.label-for-otp{
+  margin: 0;
   font-size: 10px;
-  text-align: start !important;
 }
 
-.info-box:before{
-  content: "";
-  width: 20px;
-  height: 20px;
-  transform: rotate(-45deg);
-  background: #ffffff;
-  position: absolute;
-  margin-left: -37px;
-  z-index: -1;
-  top: -10px;
-  left: calc(50% - 10px);
-  text-align: start !important;
-  /* box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.5); */
+.uin-login-title-card {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0 4px 0;
+}
+
+.info-icon{
+  color: green;
+  font-size: 18px; 
+  cursor: pointer;
+  margin-left: 12px;
+}
+
+::ng-deep .mat-tooltip {
+     background-color: #fff !important;
+     color: black !important;
+     font-size: var(--fs) !important;
+     border-radius: 8px !important;
+     padding: 10px !important;
+     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5) !important;
+     margin-top: -2px !important;
+}
+
+
+@media screen and (max-width:900px){
+  .main-container{
+    padding: 0 2% 0 2%;
+  }
+  .button{
+    width: 60%;
+  }
+  .verify-phnumb-email-card{
+    padding: 5px;
+  }
+  input{
+    width: 60%;
+  }
+}
+
+@media screen and (max-width:600px){
+  .button {
+    width: 80%;
+  }
+  input{
+    width: 80%;
+  }
+}
+
+@media screen and (max-width:420px){
+  .button {
+    width: 98%;
+  }
+  input{
+    width: 95%;
+  }
 }

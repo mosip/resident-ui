@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material';
 import { AppConfigService } from 'src/app/app-config.service';
 import { saveAs } from 'file-saver';
 import { AuditService } from 'src/app/core/services/audit.service';
+import { FontSizeService } from "src/app/core/services/font-size.service";
 
 @Component({
   selector: 'app-bookappointment',
@@ -45,10 +46,11 @@ export class DownloadUinComponent implements OnInit {
     private translateService: TranslateService,
     private dialog: MatDialog,
     private appConfigService: AppConfigService,
-    private auditService: AuditService
+    private auditService: AuditService,
+    private fontSizeService: FontSizeService
   ) {
     if (this.router.getCurrentNavigation().extras.state) {
-      this.data = this.router.getCurrentNavigation().extras.state.data.AID
+      this.data = this.router.getCurrentNavigation().extras.state.data
       this.transactionID = this.router.getCurrentNavigation().extras.state.response.transactionId
       this.phoneNumber = this.router.getCurrentNavigation().extras.state.response.response.maskedMobile
       this.emailId = this.router.getCurrentNavigation().extras.state.response.response.maskedEmail
@@ -64,11 +66,6 @@ export class DownloadUinComponent implements OnInit {
       this.downloadUinData = response.downloadUin,
         this.popupMessages = response;
     })
-    // this.translateService
-    //   .getTranslation(localStorage.getItem("langCode"))
-    //   .subscribe(response => {
-    //     this.popupMessages = response;
-    //   });
     this.setOtpTime()
   }
 
@@ -106,19 +103,18 @@ export class DownloadUinComponent implements OnInit {
   }
 
   submitOtp(){
-    this.auditService.audit('RP-035', 'Get my UIN', 'RP-Get my UIN', 'Get my UIN', 'User clicks on the "submit button" on Get my UIN page');
+    this.auditService.audit('RP-035', 'Get my UIN', 'RP-Get my UIN', 'Get my UIN', 'User clicks on the "submit button" on Get my UIN page', this.data);
     this.validateUinCardOtp()
   }
 
   resendOtp(){
-    this.auditService.audit('RP-036', 'Get my UIN', 'RP-Get my UIN', 'Get my UIN', 'User clicks on "resend OTP" button on Get my UIN page');
+    this.auditService.audit('RP-036', 'Get my UIN', 'RP-Get my UIN', 'Get my UIN', 'User clicks on "resend OTP" button on Get my UIN page', this.data);
     clearInterval(this.interval)
     this.otpTimeMinutes = this.appConfigService.getConfig()['mosip.kernel.otp.expiry-time']/60;
     this.displaySeconds = "00";
     this.generateOTP(this.data)
-    this.setOtpTime()
     this.resetBtnDisable = true;
-    this.submitBtnDisable = false;
+    this.setOtpTime();
   }
 
   generateOTP(data: any) {
@@ -145,7 +141,9 @@ export class DownloadUinComponent implements OnInit {
     };
     this.dataStorageService.generateOTPForUid(request)
       .subscribe((response) => {
-       
+        if(response['response']){
+          
+        }
       },
         error => {
           console.log(error)
@@ -241,6 +239,10 @@ export class DownloadUinComponent implements OnInit {
         },
         disableClose: true
       });
+  }
+
+  get fontSize(): any {
+    return this.fontSizeService.fontSize;
   }
 
   onItemSelected(item: any) {

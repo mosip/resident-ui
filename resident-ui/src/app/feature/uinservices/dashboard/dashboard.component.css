@@ -5,8 +5,8 @@ li {
 }
 
 .mini-card {
-  width: 90%;
-  height: 90%;
+  width: 99%;
+  height: 100%;
   border-radius: 7px;
   margin-bottom: .5rem;
   padding: .5rem;
@@ -14,7 +14,7 @@ li {
 }
 
 mat-card>span img {
-  margin: 0 16px;
+  margin: 0 10px;
 }
 
 mat-card-title {
@@ -34,24 +34,42 @@ mat-card-title {
 }
 
 .uin-heading {
-  text-align: left;
   margin-left: 10px;
-  font-size: 20px;
   font-weight: 600;
   letter-spacing: 0px;
   color: #505050;
-  cursor: none;
 }
 
-@media  screen and (max-width: 1690px) and (min-width:1410px) {
-  .main-card{
-    height: 35.5rem;
+.uin-services-heading{
+  margin-left: 10px;
+  color: #505050;
+}
+
+.uin-service-card{
+  display: flex; 
+  flex-wrap: wrap; 
+  column-gap: .7rem; 
+  row-gap: .7rem;
+}
+
+.each-service-card{
+  width: 24.5%;
+}
+
+@media screen and ((min-width:1230px) and (max-width:1900px)){
+  .each-service-card{
+    width: 32.5%;
   }
 }
 
-@media  screen and (max-width: 1409px) {
-  .main-card{
-    height: 37rem;
+@media screen and ((min-width:900px) and (max-width:1229px)) {
+  .each-service-card{
+    width: 48.5%;
   }
 }
 
+@media screen and (max-width:899px){
+  .each-service-card{
+    width: 99%;
+  }
+}

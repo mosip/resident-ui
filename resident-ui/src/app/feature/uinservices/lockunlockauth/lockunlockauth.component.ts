@@ -9,8 +9,9 @@ import { DialogComponent } from 'src/app/shared/dialog/dialog.component';
 import { MatDialog } from '@angular/material';
 import { InteractionService } from "src/app/core/services/interaction.service";
 import { AuditService } from "src/app/core/services/audit.service";
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AutoLogoutService } from "src/app/core/services/auto-logout.service";
+import { BreakpointService } from "src/app/core/services/breakpoint.service";
+import { FontSizeService } from "src/app/core/services/font-size.service";
 
 @Component({
   selector: "app-lockunlockauth",
@@ -27,8 +28,6 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
   vidType:string = "";
   notificationType:Array<string>=[];
   vidValue:string = "";
-  clickedId:string;
-  isPopupSHow:boolean = false;
   infoMsg:string;
   shortInfoMsg:any;
   submitBtnDisable:boolean = true;
@@ -39,36 +38,26 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
   cols : number;
   userPreferredLangCode = localStorage.getItem("langCode");
   message2:any;
+  sitealignment:any = localStorage.getItem('direction');
 
   constructor(private autoLogout: AutoLogoutService,private interactionService: InteractionService,private dialog: MatDialog,private appConfigService: AppConfigService, private dataStorageService: DataStorageService, private translateService: TranslateService, 
-    private router: Router,private auditService: AuditService, private breakpointObserver: BreakpointObserver) {
+    private router: Router,private auditService: AuditService, private breakPointService: BreakpointService, private fontSizeService: FontSizeService) {
       this.clickEventSubscription = this.interactionService.getClickEvent().subscribe((id) => {
       if (id === "confirmBtn") {
         this.updateAuthlockStatus()
       }
     });
-    this.breakpointObserver.observe([
-      Breakpoints.XSmall,
-      Breakpoints.Small,
-      Breakpoints.Medium,
-      Breakpoints.Large,
-      Breakpoints.XLarge,
-    ]).subscribe(result => {
-      if (result.matches) {
-        if (result.breakpoints[Breakpoints.Large]) {
-          this.cols = 3;
-        }
-        if (result.breakpoints[Breakpoints.XSmall]) {
+
+    this.breakPointService.isBreakpointActive().subscribe(active =>{
+      if (active) {
+        if(active === "extraSmall" || active === "small"){
           this.cols = 1;
         }
-        if (result.breakpoints[Breakpoints.XLarge]) {
-          this.cols = 3;
-        }
-        if (result.breakpoints[Breakpoints.Medium]) {
+        if(active === "medium"){
           this.cols = 2;
         }
-        if (result.breakpoints[Breakpoints.Small]) {
-          this.cols = 1;
+        if(active === "ExtraLarge" || active === "large"){
+          this.cols = 3;
         }
       }
     });
@@ -82,6 +71,7 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
     .subscribe(response => {
       this.langJSON = response;
       this.popupMessages = response;
+      this.infoMsg = response.InfomationContent.secureMyID;
     });
 
     setTimeout(() => {
@@ -130,20 +120,21 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
             authTypesJSON = {};
             authTypesJSON["authType"] = authTypes[i].split('-')[0];
             authTypesJSON["authSubType"] =  authTypes[i].split('-')[1];
+
             if(authTypes[i].split('-')[1]){
-              newAuthlist.forEach(el => {      
+              newAuthlist.find(el => {      
                 if(el.authSubType === authTypes[i].split('-')[1]){
-                  authTypesJSON["locked"] = el.locked;
+                  return authTypesJSON["locked"] = el.locked;
                 }           
               })
             }else{
-              newAuthlist.forEach(el => {  
+              newAuthlist.find(el => {  
                 if(el.authType === authTypes[i]){                  
-                  authTypesJSON["locked"] = el.locked;
+                  return authTypesJSON["locked"] = el.locked;
                 }                    
               })
             }   
-            authTypesJSON["label"] = this.langJSON.lockunlockauth.labelmap[authTypes[i]];         
+            authTypesJSON["label"] = this.langJSON.lockunlockauth.labelmap[authTypes[i]];       
             authTypesJSON["recorddirty"] = false;
             authTypesJSON["unlockForSeconds"] = null;
             this.authlist.push(authTypesJSON);
@@ -159,7 +150,7 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
   }
 
   updateAuthlockStatusBtn(){
-    this.auditService.audit('RP-025', 'Lock/unlock authentication type', 'RP-Lock/unlock authentication type', 'Lock/unlock authentication type', 'User clicks on "submit" button');
+    this.auditService.audit('RP-025', 'Lock/unlock authentication type', 'RP-Lock/unlock authentication type', 'Lock/unlock authentication type', 'User clicks on "submit" button', '');
     this.showWarningMessage("")
   }
 
@@ -305,6 +296,7 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
         message: this.message,
         eventId,
         btnTxt: this.popupMessages.genericmessage.successButton,
+        isOk:"OK",
         clickHere:this.popupMessages.genericmessage.clickHere,
         dearResident:this.popupMessages.genericmessage.dearResident,
         trackStatusText:this.popupMessages.genericmessage.trackStatusText
@@ -321,8 +313,10 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
         title: this.popupMessages.genericmessage.warningLabel,
         message: this.popupMessages.genericmessage.secureMyId.confirmationMessage,
         btnTxt: this.popupMessages.genericmessage.yesButton,
+        isYes:"Yes",
         yesBtnFor:"lockunlockauth",
-        btnTxtNo: this.popupMessages.genericmessage.noButton
+        btnTxtNo: this.popupMessages.genericmessage.noButton,
+        isNo:"No"
       }
     });
     return dialogRef;
@@ -338,11 +332,17 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
             case: 'MESSAGE',
             title: this.popupMessages.genericmessage.errorLabel,
             message: this.popupMessages.serverErrors[errorCode],
-            btnTxt: this.popupMessages.genericmessage.successButton
+            btnTxt: this.popupMessages.genericmessage.successButton,
+            isOk:'OK'
           },
           disableClose: true
         });
     },400)
+  }
+
+  get fontSize(): any {
+    document.documentElement.style.setProperty('--fs', this.fontSizeService.fontSize.breadcrumb)
+    return this.fontSizeService.fontSize;
   }
 
   onToggle(event: any){
@@ -358,11 +358,5 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
       this.router.navigate([item]);
   }
 
-  openPopUp(clickedId:any){
-    /*this.clickedId = clickedId;
-    this.isPopupSHow = !this.isPopupSHow;
-    this.infoMsg =  this.popupMessages.InfomationContent.secureMyID[clickedId]*/
-    return this.popupMessages.InfomationContent.secureMyID[clickedId];
-  }
 
 }

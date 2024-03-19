@@ -8,6 +8,7 @@ import { DialogComponent } from 'src/app/shared/dialog/dialog.component';
 import { MatDialog } from '@angular/material';
 import { AuditService } from "src/app/core/services/audit.service";
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { FontSizeService } from "src/app/core/services/font-size.service";
 
 @Component({
   selector: "app-verify",
@@ -33,7 +34,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
   displaySeconds: any = this.otpTimeSeconds
   interval: any;
   message: string;
-  errorCodePopup: any;
+  errorCode: any;
   channelType: string;
   disableSendOtp: boolean = true;
   isPopUpShow:boolean = false;
@@ -47,6 +48,9 @@ export class VerifyComponent implements OnInit, OnDestroy {
   deviceSize:string = "";
   inputDisabled:boolean = false;
   captchaEnable: boolean = false;
+  vidLength:string = "0";
+  uinLength:string = "0";
+  aidLength:string = "0";
 
   constructor(
     private router: Router,
@@ -56,10 +60,10 @@ export class VerifyComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private renderer: Renderer2,
     private auditService: AuditService, 
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private fontSizeService: FontSizeService
   ) {
-    this.translateService.use(localStorage.getItem("langCode"));
-    this.appConfigService.getConfig();
+    this.appConfigService = this.appConfigService.getConfig();
     this.breakpointObserver.observe([
       Breakpoints.XSmall,
       Breakpoints.Small,
@@ -69,7 +73,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
     ]).subscribe(result => {
       if (result.matches) {
         if (result.breakpoints[Breakpoints.XSmall]) {
-          this.width = "90%";
+          this.width = "100%";
           this.deviceSize = "XSmall";
         }
         if (result.breakpoints[Breakpoints.Small]) {
@@ -77,11 +81,11 @@ export class VerifyComponent implements OnInit, OnDestroy {
           this.deviceSize = "Small";
         }
         if (result.breakpoints[Breakpoints.Medium]) {
-          this.width = "60%";
+          this.width = "80%";
           this.deviceSize = "Medium";
         }
         if (result.breakpoints[Breakpoints.Large]) {
-          this.width = "55%";
+          this.width = "64%";
           this.deviceSize = "Large";
         }
         if (result.breakpoints[Breakpoints.XLarge]) {
@@ -93,18 +97,21 @@ export class VerifyComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
     let self = this;
     this.translateService
       .getTranslation(localStorage.getItem("langCode"))
       .subscribe(response => {
-        this.verifyChannelData = response.verifyuinvid
-        console.log(this.verifyChannelData)
+        this.verifyChannelData = response.verifyuinvid;
         this.popupMessages = response;
         this.infoText = response.InfomationContent.verifyChannel
       });
     setTimeout(() => {
-      self.siteKey = self.appConfigService.getConfig()["mosip.resident.captcha.sitekey"];
-      self.captchaEnable = self.appConfigService.getConfig()["mosip.resident.captcha.enable"]; 
+      self.siteKey = self.appConfigService["mosip.resident.captcha.sitekey"];
+      self.captchaEnable = JSON.parse(self.appConfigService["mosip.resident.captcha.enable"]); 
+      self.vidLength = self.appConfigService["mosip.kernel.vid.length"];
+      self.uinLength = self.appConfigService["mosip.kernel.uin.length"];
+      self.aidLength = self.appConfigService["mosip.kernel.rid.length"];
     }, 1000);  
     /*this.captchaService.captchStatus.subscribe((status)=>{
       this.captchaStatus = status;
@@ -162,7 +169,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
 
   getCaptchaToken(event: Event) {
     this.captchaChecked = true
-    if (this.channelSelected && this.individualId) {
+    if (this.channelSelected && (this.individualId.length == parseInt(this.vidLength) || this.individualId.length == parseInt(this.uinLength) || this.individualId.length == parseInt(this.aidLength))) {
       if(this.captchaEnable){
         if(this.captchaChecked){
           this.disableSendOtp = false
@@ -177,7 +184,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
   
   captureValue(event: any, formControlName: string) {
     this[formControlName] = event.target.value;
-    if (this.channelSelected && this.individualId) {
+    if (this.channelSelected && (this.individualId.length == parseInt(this.vidLength) || this.individualId.length == parseInt(this.uinLength) || this.individualId.length == parseInt(this.aidLength))) {
       if(this.captchaEnable){
         if(this.captchaChecked){
           this.disableSendOtp = false
@@ -190,8 +197,17 @@ export class VerifyComponent implements OnInit, OnDestroy {
     }
   }
 
+  isNumberKey(event){
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
   setOtpTime() {
-    this.otpTimeMinutes = this.appConfigService.getConfig()['mosip.kernel.otp.expiry-time']/60;
+    this.otpTimeMinutes = this.appConfigService['mosip.kernel.otp.expiry-time']/60;
     this.interval = setInterval(() => {
       if (this.otpTimeSeconds < 0 || this.otpTimeSeconds === "00") {
         this.otpTimeSeconds = 59
@@ -217,22 +233,22 @@ export class VerifyComponent implements OnInit, OnDestroy {
   }
 
   sendOtpBtn() {
-    this.auditService.audit('RP-037', 'Verify phone number/email ID', 'RP-Verify phone number/email ID', 'Verify phone number/email ID', 'User clicks on "send OTP" button on verify phone number/email Id page');
+    this.auditService.audit('RP-037', 'Verify phone number/email ID', 'RP-Verify phone number/email ID', 'Verify phone number/email ID', 'User clicks on "send OTP" button on verify phone number/email Id page', this.individualId);
     this.isVerifiedPhoneNumEmailId()
   }
 
   resendOtp() {
-    this.auditService.audit('RP-039', 'Verify phone number/email ID', 'RP-Verify phone number/email ID', 'Verify phone number/email ID', 'User clicks on "resend OTP" button on verify phone number/email Id page');
+    this.auditService.audit('RP-039', 'Verify phone number/email ID', 'RP-Verify phone number/email ID', 'Verify phone number/email ID', 'User clicks on "resend OTP" button on verify phone number/email Id page', this.individualId);
     clearInterval(this.interval)
     this.otpTimeSeconds = "00"
-    this.otpTimeMinutes = this.appConfigService.getConfig()['mosip.kernel.otp.expiry-time']/60
+    this.otpTimeMinutes = this.appConfigService['mosip.kernel.otp.expiry-time']/60
     setInterval(this.interval)
     this.resetBtnDisable = true;
     this.generateOTP()
   }
 
   submitOtp() {
-    this.auditService.audit('RP-038', 'Verify phone number/email ID', 'RP-Verify phone number/email ID', 'Verify phone number/email ID', 'User clicks on the "submit button" on verify phone number/email Id page');
+    this.auditService.audit('RP-038', 'Verify phone number/email ID', 'RP-Verify phone number/email ID', 'Verify phone number/email ID', 'User clicks on the "submit button" on verify phone number/email Id page', this.individualId);
     this.verifyOTP()
   
   }
@@ -247,8 +263,8 @@ export class VerifyComponent implements OnInit, OnDestroy {
     } 
     let self = this;
     const request = {
-      "id": self.appConfigService.getConfig()['mosip.resident.api.id.otp.request'],
-      "version": self.appConfigService.getConfig()["mosip.resident.api.version.otp.request"],
+      "id": self.appConfigService['mosip.resident.api.id.otp.request'],
+      "version": self.appConfigService["mosip.resident.api.version.otp.request"],
       "transactionID": self.transactionID,
       "requestTime": Utils.getCurrentDate(),
       "individualId": self.individualId,
@@ -281,12 +297,13 @@ export class VerifyComponent implements OnInit, OnDestroy {
     this.dataStorageService.isVerified(this.otpChannel[0], this.individualId).subscribe(response => {
       if (!response["errors"]) {
         if (response["response"].verificationStatus) {
-          this.showMessageWarning(JSON.stringify(response["response"]));
-          this.router.navigate(["dashboard"])
+          this.showMessageWarning(response["response"]);
+          this.router.navigate(["dashboard"]);
         } else {
           this.generateOTP()
-          this.otpTimeMinutes = this.appConfigService.getConfig()['mosip.kernel.otp.expiry-time']/60
+          this.otpTimeMinutes = this.appConfigService['mosip.kernel.otp.expiry-time']/60
           this.otpTimeSeconds = "00"
+          this.disableSendOtp = true;
         }
       } else {
         this.showErrorPopup(response["errors"])
@@ -297,8 +314,8 @@ export class VerifyComponent implements OnInit, OnDestroy {
   verifyOTP() {
     let self = this;
     const request = {
-      "id": self.appConfigService.getConfig()['mosip.resident.api.id.otp.request'],
-      "version": self.appConfigService.getConfig()["mosip.resident.api.version.otp.request"],
+      "id": self.appConfigService['mosip.resident.api.id.otp.request'],
+      "version": self.appConfigService["mosip.resident.api.version.otp.request"],
       "requesttime": Utils.getCurrentDate(),
       "request": {
         "transactionId": self.transactionID,
@@ -323,7 +340,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
   }
 
   showMessage(message: string,eventId:any) {
-    if (this.channelType === "PHONE") {
+    if (this.otpChannel[0] === "PHONE") {
       this.message = this.popupMessages.genericmessage.verifyChannel.phoneSuccess.replace("$channel", this.channelType).replace("$eventId",eventId)
     } else {
       this.message = this.popupMessages.genericmessage.verifyChannel.emailSuccess.replace("$channel", this.channelType).replace("$eventId",eventId)
@@ -345,11 +362,11 @@ export class VerifyComponent implements OnInit, OnDestroy {
     return dialogRef;
   }
 
-  showMessageWarning(message: string) {
+  showMessageWarning(message:any) {
     if (this.otpChannel[0] === "PHONE") {
-      this.message = this.popupMessages.genericmessage.verifyChannel.warningMsg.replace("$channel", "Phone Number")
+      this.message = this.popupMessages.genericmessage.verifyChannel.warningMsgForPhone.replace("$userID", message.maskedUserId)
     } else {
-      this.message = this.popupMessages.genericmessage.verifyChannel.warningMsg.replace("$channel", "Email")
+      this.message = this.popupMessages.genericmessage.verifyChannel.warningMsgForEmail.replace("$userID", message.maskedUserId)
     }
 
     const dialogRef = this.dialog.open(DialogComponent, {
@@ -359,31 +376,52 @@ export class VerifyComponent implements OnInit, OnDestroy {
         title: this.popupMessages.genericmessage.warningLabel,
         warningForChannel:this.popupMessages.genericmessage.warningForChannel,
         message: this.message,
-        btnTxt: this.popupMessages.genericmessage.successButton
+        btnTxt: this.popupMessages.genericmessage.successButton,
+        isOk:'OK'
       }
     });
     return dialogRef;
   }
-   
+
   showErrorPopup(message: string) {
-    this.errorCodePopup = message[0]["errorCode"]
-    if (this.errorCodePopup === "RES-SER-410") {
+    this.errorCode = message[0]["errorCode"]
+    if (this.errorCode === "RES-SER-410") {
       let messageType = message[0]["message"].split("-")[1].trim();
-      this.message = this.popupMessages.serverErrors[this.errorCodePopup][messageType]
+      this.message = this.popupMessages.serverErrors[this.errorCode][messageType]
     } else {
-      this.message = this.popupMessages.serverErrors[this.errorCodePopup]
+      this.message = this.popupMessages.serverErrors[this.errorCode]
     }
-    this.dialog
+    if (this.errorCode === "IDA-MLC-009" || this.errorCode === 'IDA-OTA-002') {
+      this.dialog
       .open(DialogComponent, {
         width: '550px',
         data: {
-          case: 'MESSAGE',
+          case: 'errorMessageWithClickHere',
           title: this.popupMessages.genericmessage.errorLabel,
+          dearResident: this.popupMessages.genericmessage.dearResident,
           message: this.message,
-          btnTxt: this.popupMessages.genericmessage.successButton
+          clickHere2:this.popupMessages.genericmessage.clickHere2,
+          clickHere:this.popupMessages.genericmessage.clickHere,
+          btnTxt: this.popupMessages.genericmessage.successButton,
+          toFindRegCen:this.popupMessages.genericmessage.toFindRegCen,
+          isOk: "OK"
         },
         disableClose: true
       });
+    } else {
+      this.dialog
+        .open(DialogComponent, {
+          width: '550px',
+          data: {
+            case: 'MESSAGE',
+            title: this.popupMessages.genericmessage.errorLabel,
+            message: this.message,
+            btnTxt: this.popupMessages.genericmessage.successButton,
+            isOk: "OK"
+          },
+          disableClose: true
+        });
+    }
   }
 
 
@@ -400,12 +438,12 @@ export class VerifyComponent implements OnInit, OnDestroy {
     this.displaySeconds = "00"
   }
 
-  ngOnDestroy(): void {
-  }
-  
-  openPopUp(){
-    this.isPopUpShow = !this.isPopUpShow
+  get fontSize(): any {
+    document.documentElement.style.setProperty('--fs', this.fontSizeService.fontSize.breadcrumb)
+    return this.fontSizeService.fontSize;
   }
 
+  ngOnDestroy(): void {
+  }
  
 }

@@ -11,7 +11,8 @@ import { InteractionService } from "src/app/core/services/interaction.service";
 import {saveAs} from 'file-saver';
 import { AuditService } from "src/app/core/services/audit.service";
 import { AutoLogoutService } from "src/app/core/services/auto-logout.service";
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointService } from "src/app/core/services/breakpoint.service";
+import { FontSizeService } from "src/app/core/services/font-size.service";
 
 @Component({
   selector: "app-revokevid",
@@ -35,8 +36,6 @@ export class RevokevidComponent implements OnInit, OnDestroy {
   newVidValue:string;
   rowHeight:string = "2:1.2";
   cols:number;
-  showInfoCard:boolean = false;
-  iIconVidType:any;
   infoText:any;
   eventId:any;
   errorCode:string;
@@ -44,41 +43,55 @@ export class RevokevidComponent implements OnInit, OnDestroy {
   userPreferredLangCode = localStorage.getItem("langCode");
   isLoading:boolean = true;
   sitealignment:string = localStorage.getItem('direction');
-  
 
-  constructor(private autoLogout: AutoLogoutService, private interactionService: InteractionService, private dialog: MatDialog, private appConfigService: AppConfigService, private dataStorageService: DataStorageService, private translateService: TranslateService, private router: Router, private auditService: AuditService, private breakpointObserver: BreakpointObserver) {
+  constructor(private autoLogout: AutoLogoutService, private interactionService: InteractionService, private dialog: MatDialog, private appConfigService: AppConfigService, private dataStorageService: DataStorageService, private translateService: TranslateService, private router: Router,
+    private auditService: AuditService, private breakPointService: BreakpointService,
+    private fontSizeService: FontSizeService) {
     this.clickEventSubscription = this.interactionService.getClickEvent().subscribe((id) => {
       if (id === "confirmBtnForVid") {
         this.generateVID(this.newVidType)
+        if(this.newVidType === "Perpetual"){
+          this.auditService.audit('RP-013', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "Generate perpetual VID" button', '');
+        }else if(this.newVidType === "Temporary"){
+          this.auditService.audit('RP-021', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "Generate temporary VID" button', '');
+        }else{
+          this.auditService.audit('RP-017', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "Generate one-time VID" button', '');
+        }
       }else if (id === "deleteVID"){
         this.revokeVID(this.newVidValue)
+        if(this.newVidType === "Perpetual"){
+          this.auditService.audit('RP-014', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "revoke perpetual VID" button','');
+        }else if(this.newVidType === "Temporary"){
+          this.auditService.audit('RP-022', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "revoke temporary VID" button', '');
+        }else{
+          this.auditService.audit('RP-018', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "revoke one-time  VID" button', '');
+        }
       }else if(id === "downloadVID"){
         this.vidDownloadStatus(this.newVidValue)
+        if(this.newVidType === "Perpetual"){
+          this.auditService.audit('RP-015', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "User clicks on "download perpetual VID" button', '');
+        }else if(this.newVidType === "Temporary"){
+          this.auditService.audit('RP-023', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "download temporary VID" button', '');
+        }else{
+          this.auditService.audit('RP-019', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "download one-time  VID" button', '');
+        }
       }
+      
     });
 
-    this.breakpointObserver.observe([
-      Breakpoints.XSmall,
-      Breakpoints.Small,
-      Breakpoints.Medium,
-      Breakpoints.Large,
-      Breakpoints.XLarge,
-    ]).subscribe(result => {
-      if (result.matches) {
-        if (result.breakpoints[Breakpoints.Small]) {
+    this.breakPointService.isBreakpointActive().subscribe(active =>{
+      if (active) {
+        if(active === "extraSmall" || active === "small"){
           this.cols = 1;
         }
-        if (result.breakpoints[Breakpoints.XLarge]) {
+        if(active === "ExtraLarge"){
           this.cols = 4;
         }
-        if (result.breakpoints[Breakpoints.XSmall]) {
-          this.cols = 1;
-        }
-        if (result.breakpoints[Breakpoints.Large]) {
-          this.cols = 3;
-        }
-        if (result.breakpoints[Breakpoints.Medium]) {
+        if(active === "medium"){
           this.cols = 2;
+        }
+        if(active === "large"){
+          this.cols = 3;
         }
       }
     });
@@ -91,6 +104,7 @@ export class RevokevidComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         this.langJSON = response.managemyvid;
         this.popupMessages = response;
+        this.infoText = this.popupMessages.InfomationContent.revokevid
       });
     this.getVID();
 
@@ -129,7 +143,6 @@ export class RevokevidComponent implements OnInit, OnDestroy {
     let results = [];
     self.finalTypeList = {};
     this.dataStorageService.getPolicy().subscribe(response => {
-      console.log(response)
       if (response) {
         this.policyType = response;
         this.isLoading = false;
@@ -141,10 +154,10 @@ export class RevokevidComponent implements OnInit, OnDestroy {
               results.push(self.vidlist[j]);
             }
           }
-          // console.log("this.policyType.vidPolicies[i].vidType>>>"+this.policyType.vidPolicies[i].vidType);
           self.finalTypeList[this.policyType.vidPolicies[i].vidType] = results;
         }
       }
+
     },
       error => {
         console.log(error);
@@ -158,11 +171,11 @@ export class RevokevidComponent implements OnInit, OnDestroy {
 
   displayVid(finalTypeList, policyType, policy, showvid) {
     if(policyType === "Perpetual"){
-      this.auditService.audit('RP-016', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "User clicks on "eye" icon to unmask the perpetual VID');
+      this.auditService.audit('RP-016', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "User clicks on "eye" icon to unmask the perpetual VID', '');
     }else if(policyType === "Temporary"){
-      this.auditService.audit('RP-024', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "eye" icon to unmask the temporary VID');
+      this.auditService.audit('RP-024', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "eye" icon to unmask the temporary VID', '');
     }else{
-      this.auditService.audit('RP-020', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "eye" icon to unmask the one-time VID');
+      this.auditService.audit('RP-020', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "eye" icon to unmask the one-time VID', '');
     }
     let self = this;
     let results = [];
@@ -195,13 +208,6 @@ export class RevokevidComponent implements OnInit, OnDestroy {
   }
 
   generateVIDBtn(vidType: any) {
-    if(vidType === "Perpetual"){
-      this.auditService.audit('RP-013', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "Generate perpetual VID" button');
-    }else if(vidType === "Temporary"){
-      this.auditService.audit('RP-021', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "Generate temporary VID" button');
-    }else{
-      this.auditService.audit('RP-017', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "Generate one-time VID" button');
-    }
     this.newVidType = vidType
     this.showWarningMessage(vidType)
   }
@@ -243,13 +249,6 @@ export class RevokevidComponent implements OnInit, OnDestroy {
   }
 
   downloadVIDBtn(vid:any,vidType:any){
-    if(vidType === "Perpetual"){
-      this.auditService.audit('RP-015', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "User clicks on "download perpetual VID" button');
-    }else if(vidType === "Temporary"){
-      this.auditService.audit('RP-023', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "download temporary VID" button');
-    }else{
-      this.auditService.audit('RP-019', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "download one-time  VID" button');
-    }
     this.showDownloadMessage(vidType)
     this.newVidValue = vid
     this.newVidType = vidType
@@ -295,17 +294,10 @@ export class RevokevidComponent implements OnInit, OnDestroy {
   
 
   revokeVIDBtn(vidValue: any,vidType:any){
-    if(vidType === "Perpetual"){
-      this.auditService.audit('RP-014', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "revoke perpetual VID" button');
-    }else if(vidType === "Temporary"){
-      this.auditService.audit('RP-022', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "revoke temporary VID" button');
-    }else{
-      this.auditService.audit('RP-018', 'Generate/revoke VID', 'RP-Generate/revoke VID', 'Generate/revoke VID', 'User clicks on "revoke one-time  VID" button');
-    }
-    this.showDeleteMessage(vidType);
-    this.newVidValue = vidValue;
-    this.newVidType = vidType;
-  };
+    this.showDeleteMessage(vidType)
+    this.newVidValue = vidValue
+    this.newVidType - vidType
+  }
 
   revokeVID(vidValue: any) {
     this.isLoading = true;
@@ -473,6 +465,11 @@ export class RevokevidComponent implements OnInit, OnDestroy {
     this.selectedValue = event.source.value;
   }
 
+  get fontSize(): any {
+    document.documentElement.style.setProperty('--fs', this.fontSizeService.fontSize.breadcrumb)
+    return this.fontSizeService.fontSize;
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     this.clickEventSubscription.unsubscribe()
@@ -480,12 +477,6 @@ export class RevokevidComponent implements OnInit, OnDestroy {
 
   onItemSelected(item: any) {
     this.router.navigate([item]);
-  }
-
-  openPopupMsg(vidType:any){
-    this.showInfoCard = true
-    this.iIconVidType = vidType
-    this.infoText =this.popupMessages.InfomationContent.revokevid[vidType]
   }
 
 }

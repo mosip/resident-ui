@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { MatDialog } from "@angular/material";
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ViewChildren } from "@angular/core";
+import { MatDialog, MatPaginator,MatPaginatorIntl } from "@angular/material";
 import { DataStorageService } from "src/app/core/services/data-storage.service";
 import { RegistrationCentre } from "./registration-center-details.model";
 import { Router, ActivatedRoute } from "@angular/router";
@@ -10,6 +10,14 @@ import * as appConstants from "./../../../app.constants";
 import { Subscription } from "rxjs";
 import { saveAs } from 'file-saver';
 import { AuditService } from "src/app/core/services/audit.service";
+import {
+  MatKeyboardRef,
+  MatKeyboardComponent,
+  MatKeyboardService
+} from 'ngx7-material-keyboard-ios';
+import defaultJson from "src/assets/i18n/default.json";
+import { BreakpointService } from "src/app/core/services/breakpoint.service";
+import { FontSizeService } from "src/app/core/services/font-size.service";
 
 @Component({
   selector: "app-center-selection",
@@ -17,6 +25,8 @@ import { AuditService } from "src/app/core/services/audit.service";
   styleUrls: ["./center-selection.component.css"]
 })
 export class CenterSelectionComponent implements OnInit, OnDestroy {
+  // @ViewChild(MatPaginator) paginator: MatPaginator;
+
   REGISTRATION_CENTRES: RegistrationCentre[] = [];
   searchClick: boolean = false;
   isWorkingDaysAvailable = false;
@@ -36,7 +46,7 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
   nearbyClicked = false;
   apiErrorCodes: any;
   step = 0;
-  textDir = localStorage.getItem("dir");
+  textDir = localStorage.getItem("direction");
   showDescription = false;
   mapProvider = "OSM";
   searchTextFlag = false;
@@ -60,8 +70,14 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
   showWarningMsg:boolean = false;
   showMesssageText:string="";
   popupMessages: any;
-  positions: any;
+  isMobileView:boolean = false;
+  showLocationDetails:boolean = true;
+  showBackBtn:boolean = false;
+  positions:any;
 
+  private keyboardRef: MatKeyboardRef<MatKeyboardComponent>;
+  @ViewChildren('keyboardRef', { read: ElementRef })
+  private attachToElementMesOne: any;
   constructor(
     public dialog: MatDialog,
     private service: BookingService,
@@ -70,40 +86,36 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private translate: TranslateService,
     private activatedRoute: ActivatedRoute,
-    private auditService: AuditService
+    private auditService: AuditService,
+    private paginator: MatPaginatorIntl,
+    private keyboardService: MatKeyboardService,
+    private breakPointService: BreakpointService,
+    private fontSizeService: FontSizeService
   ) {
-    this.translate.use(this.langCode);
+    this.translate.use(this.langCode); 
+    this.breakPointService.isBreakpointActive().subscribe(active => {
+      if (active) {
+        if (active === "extraSmall") {
+           this.isMobileView = true;
+           this.showBackBtn = true;
+           this.showMap = false;
+        }else{
+          this.showBackBtn = false;
+          this.isMobileView = false;
+          this.showMap = true;
+          this.showLocationDetails = true;
+        }
+      }
+    })
   }
 
   async ngOnInit() {
-    /*if (this.router.url.includes("multiappointment")) {
-      this.preRegId = [...JSON.parse(localStorage.getItem("multiappointment"))];
-    } else {
-      this.activatedRoute.params.subscribe((param) => {
-        this.preRegId = [param["appId"]];
-      });
-    }
-    this.getErrorLabels();
-    await this.getUserInfo(this.preRegId);
-    this.REGISTRATION_CENTRES = [];
-    this.selectedCentre = null;
-    this.recommendedCenterLocCode = Number(this.configService.getConfigByKey(
-      appConstants.CONFIG_KEYS.preregistration_recommended_centers_locCode
-    ));
-    console.log(`recommendedCenterLocCode: ${this.recommendedCenterLocCode}`);*/
-    //await this.getIdentityJsonFormat();
-    //this.openDialog();
     this.recommendedCenterLocCode = 5;
     const subs = this.dataService
-      .getLocationHierarchyLevel("eng")
+      .getLocationHierarchyLevel(this.langCode)
       .subscribe((response) => {
         //get all location types from db
         this.allLocationTypes = response[appConstants.RESPONSE]["locationHierarchyLevels"];
-        //get the recommended loc hierachy code to which booking centers are mapped        
-        //now filter out only those hierachies which are higher than the recommended loc hierachy code
-        //ex: if locHierachy is ["Country","Region","Province","City","PostalCode"] and the
-        //recommended loc hierachy code is 3 for "City", then show only "Country","Region","Province"
-        //in the Search dropdown. There are no booking centers mapped to "PostalCode", so don't include it.
         this.locationTypes = this.allLocationTypes.filter(
           (locType) =>
             locType.hierarchyLevel <= this.recommendedCenterLocCode
@@ -119,62 +131,40 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
     this.getErrorLabels();
   }
 
-  /*getUserInfo(preRegId) {
-    return new Promise(async (resolve) => {
-      for (let i = 0; i < preRegId.length; i++) {
-        await this.getUserDetails(preRegId[i]).then((user) =>
-          this.users.push(user)
-        );
-      }
-      resolve(true);
-    });
+  captureVirtualKeyboard(element: HTMLElement, index: number) {
+    this.keyboardRef.instance.setInputInstance(this.attachToElementMesOne._results[index]);
   }
 
-  getUserDetails(prid) {
-    return new Promise((resolve) => {
-      this.dataService.getUser(prid.toString()).subscribe((response) => {
-        resolve(
-          new UserModel(
-            prid.toString(),
-            response[appConstants.RESPONSE],
-            undefined,
-            []
-          )
-        );
-      });
-    });
-  }*/
+  captureValue(event: any) {
+      this.searchText = event.target.value;
+      this.searchInput();
+  }
+
+  openKeyboard() {
+    if (this.keyboardService.isOpened) {
+      this.keyboardService.dismiss();
+      this.keyboardRef = undefined;
+    } else {
+      this.keyboardRef = this.keyboardService.open(defaultJson.keyboardMapping[this.langCode]);
+      document.getElementById("search").focus();
+    }
+  }
 
   getErrorLabels() {
     this.dataService.getI18NLanguageFiles(localStorage.getItem('langCode')).subscribe((response) => {
       this.errorlabels = response["error"];
       this.apiErrorCodes = response[appConstants.API_ERROR_CODES];
       this.popupMessages = response;
+      this.paginator.itemsPerPageLabel = response['paginatorIntl'].itemsPerPageLabel;
+      const originalGetRangeLabel = this.paginator.getRangeLabel;
+        this.paginator.getRangeLabel = (page: number, size: number, len: number) => {
+          return originalGetRangeLabel(page, size, len)
+              .replace('of', response['paginatorIntl'].of);
+      }; 
     });
   }
-  /**
-     * @description This method will get the Identity Schema Json
-     */
-  /*async getIdentityJsonFormat() {
-   return new Promise((resolve, reject) => {
-     this.dataService.getIdentityJson().subscribe(
-       async (response) => {
-         //response = identityStubJson;
-         //console.log(identityStubJson);
-         let identityJsonSpec =
-           response[appConstants.RESPONSE]["jsonSpec"]["identity"];
-         this.identityData = identityJsonSpec["identity"];
-         resolve(true);
-       },
-       (error) => {
-         this.showErrorMessage(error);
-       }
-     );
-   });
- }*/
 
   async getRecommendedCenters() {
-    //console.log("getRecommendedCenters");
     this.totalItems = 0;
     this.nearbyClicked = false;
     let uiFieldName = null;
@@ -189,36 +179,9 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
         }
       }
     });
-    /* if (!uiFieldName) {
-       //this.showErrorMessage(null, this.errorlabels.error);
-     } else {*/
-    /*this.users.forEach((user) => {
-      //console.log(typeof user.request.demographicDetails.identity[uiFieldName]);
-      if (
-        typeof user.request.demographicDetails.identity[uiFieldName] ===
-        "object"
-      ) {
-        //console.log(user.request.demographicDetails.identity[uiFieldName][0].value);
-        this.locationCodes.push(
-          user.request.demographicDetails.identity[uiFieldName][0].value
-        );
-      } else if (
-        typeof user.request.demographicDetails.identity[uiFieldName] ===
-        "string"
-      ) {
-        //console.log(user.request.demographicDetails.identity[uiFieldName]);
-        this.locationCodes.push(
-          user.request.demographicDetails.identity[uiFieldName]
-        );
-      }
-    });*/
-    //console.log(this.locationCodes);
-    //this.getRecommendedCentersApiCall();
     this.showTable = true;
     this.isWorkingDaysAvailable = true;
     await this.getLocationNamesByCodes();
-
-    /*}*/
   }
 
   getLocationNamesByCodes() {
@@ -300,14 +263,14 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
     this.pageIndex = 0;
     this.getRecommendedCenters();
   }
-
+  
   searchInput(){
-    if(this.searchText.length > 2 && this.searchText.match(/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/)){
+    if(this.searchText.length > 2 && this.searchText.match(/[\p{Letter}\p{Number}\p{Mark}\s]+/gu)){
       this.isBlankSpace = false;
     }else{
       this.isBlankSpace = true;
     }
-    if(!this.searchText.match(/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/)){
+    if(!this.searchText.match(/[\p{Letter}\p{Number}\p{Mark}\s]+/gu)){
       this.showWarningMsg = true;
     }else{
       this.showWarningMsg = false;
@@ -315,7 +278,13 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
   }
 
   showResults(pageEvent) {
-    this.auditService.audit('RP-040', 'Locate registration center', 'RP-Locate registration center', 'Locate registration center', 'User clicks on "search" button on locate registration center page');
+    this.showLocationDetails = true;
+    this.isMobileView = this.showBackBtn ?  true : false;
+    this.isWorkingDaysAvailable = false;
+    if (this.keyboardService.isOpened) {
+      this.keyboardService.dismiss();
+    }
+    this.auditService.audit('RP-040', 'Locate registration center', 'RP-Locate registration center', 'Locate registration center', 'User clicks on "search" button on locate registration center page','');
     this.REGISTRATION_CENTRES = [];
     if (this.locationType !== null && this.searchText) {
       this.showMap = false;
@@ -323,7 +292,6 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
         this.pageSize = pageEvent.pageSize;
         this.pageIndex = pageEvent.pageIndex;
       }
-      //console.log(this.locationType);
       const subs = this.dataService
         .getRegistrationCentersByNamePageWise(
           this.locationType.hierarchyLevel,
@@ -333,7 +301,6 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
         )
         .subscribe(
           (response) => {
-            console.log(response)
             if (response[appConstants.RESPONSE]) {
               this.totalItems = response[appConstants.RESPONSE].totalItems;
               this.displayResults(response[appConstants.RESPONSE]);
@@ -343,13 +310,13 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
               this.showMessage = true;
               this.showMesssageText = this.popupMessages.centerSelection.noRegCenters;
               this.selectedCentre = null;
+              this.isWorkingDaysAvailable = true;
             }
           },
           (error) => {
             this.showMessage = true;
             this.totalItems = 0;
             this.selectedCentre = null;
-            //this.showErrorMessage(error);
           });
       this.subscriptions.push(subs);
     } else {
@@ -360,12 +327,11 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
   }
 
   onChangeLocationType() {
-    //console.log('onChangeLocationType');
     this.showMessage = false;
     this.totalItems = 0;
     this.searchText = "";
-    //this.REGISTRATION_CENTRES = [];
     this.selectedCentre = null;
+    this.isBlankSpace = true;
   }
 
   plotOnMap() {
@@ -380,9 +346,29 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
     this.selectedCentre = row;
     this.enableNextButton = true;
 
-    if (Object.keys(this.selectedCentre).length !== 0) {
+    if (Object.keys(this.selectedCentre).length !== 0 && !this.isMobileView) {
       this.plotOnMap();
     }
+  }
+
+  selectedEachMap(center:any){
+    if(this.isMobileView){
+      this.showLocationDetails = false;
+    }
+    this.isMobileView = false;
+    this.selectedRow(center)
+  }
+
+  showAllCenters(){
+    this.isMobileView = false;
+    this.showLocationDetails = false;
+    this.selectedRow(this.REGISTRATION_CENTRES[0]);
+  }
+
+  backBtn(){
+    this.showMap = false;
+    this.showLocationDetails = true;
+    this.isMobileView = true;
   }
 
   getLocation() {
@@ -396,6 +382,7 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
           .getNearbyRegistrationCenters(position.coords)
           .subscribe(
             (response) => {
+              this.totalItems = 0;
               if (!response["errors"]) {
                 this.displayResults(response[appConstants.RESPONSE]);
                 this.showMessage = false;
@@ -473,20 +460,6 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
     this.router.navigate([`${this.langCode}/dashboard`]);
   }
 
-  /* routeBack() {
-     if (
-       this.router.url.includes("multiappointment") ||
-       localStorage.getItem("modifyMultipleAppointment") === "true"
-     ) {
-       this.routeDashboard();
-     } else {
-       let url = "";
-       url = Utils.getURL(this.router.url, "summary", 3);
-       this.canDeactivateFlag = false;
-       this.router.navigateByUrl(url + `/${this.preRegId[0]}/preview`);
-     }
-   }*/
-
   async displayResults(response: any) {
     if (response["registrationCenters"]) {
       this.REGISTRATION_CENTRES = response["registrationCenters"];
@@ -521,6 +494,7 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
             resolve(true);
           },
             (error) => {
+              this.isWorkingDaysAvailable = true;
               this.showErrorMessage(error);
             });
       });
@@ -539,7 +513,6 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
     if (customErrMsg) {
       message = customErrMsg;
     } else {
-      //message = Utils.createErrorMessage(error, this.errorlabels, this.apiErrorCodes, this.configService);  
     }
     const body = {
       case: "ERROR",
@@ -547,23 +520,6 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
       message: message,
       yesButtonText: this.errorlabels.button_ok,
     };
-    /* const dialogRef = this.openDialog(body, "400px");
-     dialogRef.afterClosed().subscribe(() => {
-       if (body.message === this.errorlabels.regCenterNotavailabe) {
-         this.canDeactivateFlag = false;
-         if (
-           this.router.url.includes("multiappointment") ||
-           localStorage.getItem("modifyMultipleAppointment") === "true"
-         ) {
-           this.routeDashboard();
-         } else {
-           localStorage.setItem(appConstants.MODIFY_USER, "true");
-           this.router.navigate([
-             `${this.langCode}/pre-registration/demographic/${this.preRegId[0]}`,
-           ]);
-         }
-       }
-     });*/
   }
 
   openDialog() {
@@ -583,7 +539,7 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
   }
 
   downloadCentersPdf() {
-    this.auditService.audit('RP-041', 'Locate registration center', 'RP-Locate registration center', 'Locate registration center', 'User clicks on "download" button on locate registration center page');
+    this.auditService.audit('RP-041', 'Locate registration center', 'RP-Locate registration center', 'Locate registration center', 'User clicks on "download" button on locate registration center page','');
     if (this.locationType && this.searchText) {
       this.dataService.registrationCentersList(this.langCode, this.locationType.hierarchyLevel, this.searchText)
         .subscribe(response => {
@@ -631,19 +587,10 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
     }
   }
 
-  // showErrorPopup(message: string) {
-  //   this.dialog
-  //     .open(DialogComponent, {
-  //       width: '550px',
-  //       data: {
-  //         case: 'MESSAGE',
-  //         title: this.popupMessages.genericmessage.errorLabel,
-  //         message: message,
-  //         btnTxt: this.popupMessages.genericmessage.successButton
-  //       },
-  //       disableClose: true
-  //     });
-  // }
+  get fontSize(): any {
+    document.documentElement.style.setProperty('--fs', this.fontSizeService.fontSize.tabs)
+    return this.fontSizeService.fontSize;
+  }
 
   onItemSelected(item: any) {
     if (item.index === 1) {

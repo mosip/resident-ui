@@ -89,11 +89,37 @@ h5 {
     margin-bottom: 0px;
     padding: 0 16px;
   }
+
+  .ok-button{
+    background-color: #03A64A;
+    margin-top: 0px;
+  }
+
+  .lang-btn-card{
+     text-align: right;
+     color: #ffffff;
+  }
+
+  .lang-btn-card-ara{
+    text-align: left;
+    color: #ffffff;
+  }
+
+  .no-button{
+    background-color: #909090;  
+    margin-top: 0px;
+  }
+
+  .delete-button{
+    background-color:red; 
+    margin-top: 0px;
+  }
+
   .pop-up-footer .mat-button {
     outline: none;
     margin: 0 10px;
+    border-radius: 0;
     color:#ffffff;
-    background: #909090;
     border-radius: 5px;
   }
  
@@ -181,7 +207,7 @@ td.mat-footer-cell:last-child {
   width: 100%;
   margin: 0;
   min-height: auto;
-  max-height: 370px;
+  /* max-height: 370px; */
 }
 
 .sticky-header {
@@ -204,12 +230,12 @@ td.mat-footer-cell:last-child {
 }
 
 
-.mat-menu-item{
+/* .mat-menu-item{
   line-height:20px;
   height:30px;
   font-size: x-small;
   font-family: "Roboto", sans-serif;
-}
+} */
 
 .sort-icon {
   padding-top: 3px;
@@ -272,7 +298,7 @@ p{
 
 .agree-test-card{
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .agree-card {
@@ -283,11 +309,10 @@ p{
 
 .agree-text {
   color: #000000;
-  font-size: 14px;
 }
 
 .share-btn {
-  width: 100px;
+  min-width: 100px;
   height: 36px;
   border-radius: 5px;
   border: none;
@@ -314,6 +339,7 @@ p{
   height: 20px !important;
   width: 20px !important;
   cursor: pointer;
+  margin-top: 0;
 }
 
 .otp-time-heading {
@@ -380,6 +406,10 @@ p{
   border-color: #89730B;
 }
 
+.lang-change-msg{
+  height: 100% !important;
+}
+
 .inactive-log-out-popup{
   color: #C90500;
   background-color: #FFD9D8;
@@ -389,4 +419,94 @@ p{
   color: #03A64A;
   background-color: #E8FDF2;
   border-color: #03A64A;
+}
+.warning-message-container{
+  padding: 12px; 
+  border: 1px solid red; 
+  background-color: #FFD9D8; 
+  color: red; 
+  border-radius: 8px;
+}
+
+.preview-file-name-card{
+  display: flex; 
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 4px 0 4px;
+}
+
+.data-inprogress-main-card{
+  padding: 12px;
+  max-height: 90vh;
+}
+.data-inprogress-heading{
+  padding: 0 0 10px 0;
+  color: #505050;
+}
+.data-inprogress-description{
+  border: 1px solid #D3D3D3;
+  border-radius: 7px;
+  padding: 7px;
+  /* font-size: 14px; */
+  color: #505050;
+}
+.data-inprogress-details-card{
+  border: 1px solid #909090;
+  border-radius: 5px;
+  height: auto;
+}
+.intro-details{
+  padding: 7px 7px 0 7px;
+}
+.eid-date-card{
+  /* font-size: 14px; */
+  display: flex;
+  justify-content: space-between;
+}
+.eid-number{
+  color: #008CED;
+  text-decoration: underline;
+  /* font-size: 14px; */
+  cursor: pointer;
+}
+.eid-date{
+  color: #000000;
+  /* font-size: 14px; */
+}
+.line{
+  margin: 6px 0px !important;
+}
+.button-card{
+  margin-top: 12px;
+  text-align: right;
+}
+.data-inprogress-btns{
+  margin: 5px;
+  width: 100px;
+  height: 33px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  color: #ffffff;
+}
+.cancel-btn{
+  background-color: #909090;
+}
+.confirm-btn{
+  background-color: #03A64A;
+}
+.event-details{
+  padding: 7px;
+}
+.event-details table tr td{
+  padding: 7px 0 7px 0 !important;
+  width: 33%;
+}
+.Confirmation-card{
+  padding: 7px;
+  border: 1px solid #89730B;
+  background-color: #FFF9DB;
+  border-radius: 5px;
+  color: #89730B;
+  margin-top: 8px;
 }
