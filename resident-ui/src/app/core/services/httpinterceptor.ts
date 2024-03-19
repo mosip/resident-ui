@@ -18,6 +18,7 @@ import { AppConfigService } from 'src/app/app-config.service';
 import * as appConstants from 'src/app/app.constants';
 import { HeaderService } from './header.service';
 import jwt_decode from "jwt-decode";
+import defaultJson from "src/assets/i18n/default.json";
 
 @Injectable({
   providedIn: 'root'
@@ -51,10 +52,15 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     request = request.clone({ withCredentials: true });
-    request = request.clone({
-      // setHeaders: { 'X-XSRF-TOKEN': this.cookieService.get('XSRF-TOKEN') }
-      setHeaders: { 'time-zone-offset': this.localTimeZoneOffset, 'locale': navigator.languages[0] }
-    });
+    if(localStorage.getItem("langCode")){
+      request = request.clone({
+      setHeaders: { 'time-zone-offset': this.localTimeZoneOffset, 'locale': defaultJson['languages'][localStorage.getItem("langCode")]['locale'] }
+      });
+    }else{
+      request = request.clone({
+      setHeaders: { 'time-zone-offset': this.localTimeZoneOffset, 'locale': defaultJson['languages']['eng']['locale']}
+      });
+    }
     return next.handle(request).pipe(
       tap(
         event => {
@@ -88,13 +94,8 @@ export class AuthInterceptor implements HttpInterceptor {
         err => {
           this.ngOnInit();
           if (err instanceof HttpErrorResponse) {
-            if (err.status === 401) {
-              if (this.router.url.includes('uinservices')) {
-                this.redirectService.redirect(window.location.href);
-                this.showMessage()
-              } else {
-                this.router.navigateByUrl(`dashboard`);
-              }
+            if (err.status === 401 && err.statusText === "Unauthorized") {
+             
             }else if (err.status === 403 && err.statusText === "Forbidden") {
               this.showMessage()
             } else if (err.status === 413) {

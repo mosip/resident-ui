@@ -5,22 +5,15 @@ import {
 } from '@angular/material/dialog';
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-/*import * as appConstants from '../../app.constants';*/
 import { DataStorageService } from 'src/app/core/services/data-storage.service';
 import { LoginRedirectService } from 'src/app/core/services/loginredirect.service';
 import { FormGroup } from '@angular/forms';
 import { RequestModel } from 'src/app/core/models/request.model';
-/*import { FilterRequest } from 'src/app/core/models/filter-request.model';
-import { FilterValuesModel } from 'src/app/core/models/filter-values.model';*/
 import { AppConfigService } from 'src/app/app-config.service';
-/*import Utils from 'src/app/app.utils';*/
-/*import { FilterModel } from 'src/app/core/models/filter.model';
-import { AuditService } from 'src/app/core/services/audit.service';*/
 import { TranslateService } from '@ngx-translate/core';
-/*import { OptionalFilterValuesModel } from 'src/app/core/models/optional-filter-values.model';
-import { HeaderService } from 'src/app/core/services/header.service';*/
 import { LogoutService } from './../../core/services/logout.service';
 import { InteractionService } from 'src/app/core/services/interaction.service';
+import { FontSizeService } from "src/app/core/services/font-size.service";
 
 @Component({
   selector: 'app-dialog',
@@ -38,8 +31,6 @@ export class DialogComponent implements OnInit {
   routeParts: string;
   filters = [];
   existingFilters: any;
-  /* filtersRequest: FilterRequest;
-   filterModel: FilterValuesModel;*/
   requestModel: RequestModel;
   options = [];
   createUpdateSteps: any = {};
@@ -65,6 +56,8 @@ export class DialogComponent implements OnInit {
   submitBtnBgColor: string = "#BCBCBC";
   resendBtnBgColor: string = "#BCBCBC";
   disableInput:boolean = false;
+  isInprogressDetialsShow:boolean = false;
+  langJSON:any;
 
   constructor(
     public dialog: MatDialog,
@@ -74,13 +67,13 @@ export class DialogComponent implements OnInit {
     private dataStorageService: DataStorageService,
     private config: AppConfigService,
     private activatedRoute: ActivatedRoute,
-    /*private auditService: AuditService,*/
     private translate: TranslateService,
-    /*private headerService: HeaderService,*/
     private logoutService: LogoutService,
     private interactionService: InteractionService,
-    private appConfigService: AppConfigService,
-    private redirectService: LoginRedirectService
+    public appConfigService: AppConfigService,
+    private redirectService: LoginRedirectService,
+    private fontSizeService: FontSizeService,
+    private translateService: TranslateService
   ) {
     this.translate.use(this.primaryLangCode);
     if (this.primaryLangCode === "ara") {
@@ -103,13 +96,18 @@ export class DialogComponent implements OnInit {
 
     if (this.data.case === "OTP") {
       this.setOtpTime()
-      // setInterval(this.interval)
     }
     this.appConfigService.getConfig();
   }
 
   async ngOnInit() {
     this.input = this.data;
+
+    this.translateService
+    .getTranslation(localStorage.getItem("langCode"))
+    .subscribe(response => {
+      this.langJSON = response.trackservicerequest;
+    }); 
   }
 
   setOtpTime() {
@@ -184,6 +182,11 @@ export class DialogComponent implements OnInit {
     this.interactionService.sendClickEvent("downloadPersonalCard");
   }
 
+  changeLanguage(){
+    this.dialog.closeAll();
+    this.interactionService.sendClickEvent("changeLanguage");
+  }
+
   getInputValues(value: any) {
     if (value.length > 0) {
       this.submitBtnDisabled = false
@@ -210,6 +213,11 @@ export class DialogComponent implements OnInit {
     this.dialog.closeAll();
   }
 
+  regCenters(){
+    this.router.navigate(['regcenter'])
+    this.dialog.closeAll();
+  }
+
   sendResponse(value: any) {
     if (value.length > 0) {
       this.submitBtnDisabled = true
@@ -233,15 +241,25 @@ export class DialogComponent implements OnInit {
     }
   }
   dismissPage(){
-    this.router.navigate(["/uinservices/dashboard"])
     this.dialog.closeAll()
+  }
+
+  dismissPageToHome(){
+    this.dialog.closeAll()
+    this.router.navigate(['uinservices/dashboard'])
   }
   logOut(){
     this.redirectService.redirect(window.location.href);
   }
+  get fontSize(): any {
+    return this.fontSizeService.fontSize;
+  }
+
+  showInprogressDataDetails(){
+    this.isInprogressDetialsShow = !this.isInprogressDetialsShow
+  }
+  
   logOutBtn(){
     this.interactionService.sendClickEvent("logOutBtn");
   }
 }
-
-

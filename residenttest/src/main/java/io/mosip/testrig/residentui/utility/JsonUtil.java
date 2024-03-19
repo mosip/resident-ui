@@ -122,39 +122,7 @@ public class JsonUtil {
 		return list;
 
 	}
-	public static String JsonObjArrayListParsing2(String idfield) throws Exception {
-		String a="";
-		if(idfield.equals("hierarchyLevel0")) 
-			a=ConfigManager.gethierarchyLevel0();
-		else if(idfield.equals("hierarchyLevel1")) 
-			a=ConfigManager.gethierarchyLevel1();
-
-		else if(idfield.equals("hierarchyLevel2")) 
-			a=ConfigManager.gethierarchyLevel2();
-
-		else if(idfield.equals("hierarchyLevel3")) 
-			a=ConfigManager.gethierarchyLevel3();
-
-		else if(idfield.equals("hierarchyLevel4")) 
-			a=ConfigManager.gethierarchyLevel4();
-
-		JSONArray jsonArray = new JSONArray(a);
-
-
-
-		for (int i = 0, size = jsonArray.length(); i < size; i++) {
-			JSONObject idItem = jsonArray.getJSONObject(i);
-			String lang = idItem.getString("language");
-			String val = idItem.getString("value");
-			if (lang.equals(ConfigManager.getloginlang())) {
-				return val;
-			}
-
-		}
-		return "";
-
-
-	}
+	
 	public static String  readJsonFileText(String document) {
 
 		String jsonTxt = null;

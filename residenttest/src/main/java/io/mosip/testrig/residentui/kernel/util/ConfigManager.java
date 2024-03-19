@@ -75,7 +75,6 @@ public class ConfigManager {
 	private static String Tempemail = "tempemail";
 	private static String TempEID = "tempEID";
 	private static String Aid = "aid";
-	private static String Postalcode = "postalcode";
 	private static String Headless = "headless";
 	private static String Docker = "docker";
 	private static String preconfiguredOtp;
@@ -92,11 +91,7 @@ public class ConfigManager {
 	private static String AUDIT_DB_USER = "db-su-user";
 	private static String AUDIT_DB_PASS = "postgres-password";
 	private static String AUDIT_DB_SCHEMA = "audit_db_schema";
-	private static String HierarchyLevel0 = "hierarchyLevel0";
-	private static String HierarchyLevel1 = "hierarchyLevel1";
-	private static String HierarchyLevel2 = "hierarchyLevel2";
-	private static String HierarchyLevel3 = "hierarchyLevel3";
-	private static String HierarchyLevel4 = "hierarchyLevel4";
+	
 
 	private static String IDA_DB_USER = "db-su-user";
 	private static String IDA_DB_PASS = "postgres-password";
@@ -146,11 +141,7 @@ public class ConfigManager {
 	private static String idrepo_client_secret;
 	private static String idrepo_client_id;
 	private static String idrepo_app_id;
-	private static String hierarchyLevel0;
-	private static String hierarchyLevel1;
-	private static String hierarchyLevel2;
-	private static String hierarchyLevel3;
-	private static String hierarchyLevel4;
+	
 
 	private static String admin_client_secret;
 	private static String admin_client_id;
@@ -190,7 +181,6 @@ public class ConfigManager {
 	private static String tempemail;
 	private static String tempEID;
 	private static String aid;
-	private static String postalcode;
 	private static String headless;
 	private static String docker;
 	private static String threadCount;
@@ -414,27 +404,13 @@ public class ConfigManager {
 		propsKernel.setProperty(TempEID, tempEID);
 		aid =System.getenv(Aid) == null ? propsKernel.getProperty(Aid) : System.getenv(Aid);
 		propsKernel.setProperty(Aid, aid);
-		postalcode =System.getenv(Postalcode) == null ? propsKernel.getProperty(Postalcode) : System.getenv(Postalcode);
-		propsKernel.setProperty(Postalcode, postalcode);
+		
 		headless =System.getenv(Headless) == null ? propsKernel.getProperty(Headless) : System.getenv(Headless);
 		propsKernel.setProperty(Headless, headless);
 		docker =System.getenv(Docker) == null ? propsKernel.getProperty(Docker) : System.getenv(Docker);
 		propsKernel.setProperty(Docker, docker);
 
-		hierarchyLevel0 =System.getenv(HierarchyLevel0) == null ? propsKernel.getProperty(HierarchyLevel0) : System.getenv(HierarchyLevel0);
-		propsKernel.setProperty(HierarchyLevel0, hierarchyLevel0);
-
-		hierarchyLevel1 =System.getenv(HierarchyLevel1) == null ? propsKernel.getProperty(HierarchyLevel1) : System.getenv(HierarchyLevel1);
-		propsKernel.setProperty(HierarchyLevel1, hierarchyLevel1);
-
-		hierarchyLevel2 =System.getenv(HierarchyLevel2) == null ? propsKernel.getProperty(HierarchyLevel2) : System.getenv(HierarchyLevel2);
-		propsKernel.setProperty(HierarchyLevel2, hierarchyLevel2);
-
-		hierarchyLevel3 =System.getenv(HierarchyLevel3) == null ? propsKernel.getProperty(HierarchyLevel3) : System.getenv(HierarchyLevel3);
-		propsKernel.setProperty(HierarchyLevel3, hierarchyLevel3);
-
-		hierarchyLevel4 =System.getenv(HierarchyLevel4) == null ? propsKernel.getProperty(HierarchyLevel4) : System.getenv(HierarchyLevel4);
-		propsKernel.setProperty(HierarchyLevel4, hierarchyLevel4);
+		
 
 
 		testcases =System.getenv(Testcases) == null ? propsKernel.getProperty(Testcases) : System.getenv(Testcases);
@@ -444,30 +420,14 @@ public class ConfigManager {
 	public static String gettestcases() {
 		return testcases;
 	}
-	public static String gethierarchyLevel0() {
-		return hierarchyLevel0;
-	}
-	public static String gethierarchyLevel1() {
-		return hierarchyLevel1;
-	}
-	public static String gethierarchyLevel2() {
-		return hierarchyLevel2;
-	}
-	public static String gethierarchyLevel3() {
-		return hierarchyLevel3;
-	}
-	public static String gethierarchyLevel4() {
-		return hierarchyLevel4;
-	}
+	
 	public static String getDocker() {
 		return docker;
 	}
 	public static String getHeadless() {
 		return headless;
 	}
-	public static String getPostalcode() {
-		return postalcode;
-	}
+	
 	public static String getaid() {
 		return aid;
 	}

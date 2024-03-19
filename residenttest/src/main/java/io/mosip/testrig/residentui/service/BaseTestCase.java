@@ -54,14 +54,14 @@ public class BaseTestCase {
 	public static Map<?, ?> partnerQueries;
 	public static String uinEmail;
 	public static String uinPhone;
-	
-	
-    public static void main( String[] args ) {
 
-    	
-    	
-    }
-    
+
+	public static void main( String[] args ) {
+
+
+
+	}
+
 	public static String getOSType() {
 		String type = System.getProperty("os.name");
 		if (type.toLowerCase().contains("windows")) {
@@ -73,7 +73,7 @@ public class BaseTestCase {
 		}
 		return null;
 	}
-    
+
 	public static List<String> getLanguageList() {
 		if (!languageList.isEmpty()) {
 			return languageList;
@@ -119,7 +119,7 @@ public class BaseTestCase {
 				Response response = null;
 				org.json.JSONObject responseJson = null;
 				response = RestClient.getRequest(url, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON);
-				
+
 
 				responseJson = new org.json.JSONObject(response.getBody().asString());
 				idaActuatorResponseArray = responseJson.getJSONArray("propertySources");
@@ -143,27 +143,48 @@ public class BaseTestCase {
 		}
 
 	}
-	public static String GetPostalCode() {
-		String locationCode = null;
+	
+	public static String GethierarchyLevelName(int locationHierarchyLevels) {
 		kernelAuthLib = new KernelAuthentication();
 		String token = kernelAuthLib.getTokenByRole("admin");
-		String url = ApplnURI + props.getProperty("postalCodeURL");
-		Response response = RestClient.getRequestWithCookie(url, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,"Authorization", token);
+		String url = ApplnURI + props.getProperty("locationHierarchyLevels");
+		Response response = RestClient.getRequestWithCookie(url+locationHierarchyLevels+"/"+getlang(), MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,"Authorization", token);
+		org.json.JSONObject responseJson = new org.json.JSONObject(response.asString());
+		org.json.JSONObject responseObj = responseJson.getJSONObject("response");
+		JSONArray responseArray = responseObj.getJSONArray("locationHierarchyLevels");
+		org.json.JSONObject idItem = responseArray.getJSONObject(0);
+		String hierarchyLevelName = idItem.getString("hierarchyLevelName");
+		return hierarchyLevelName;
+
+	}
+	public static String GethierarchyName(int locationHierarchyLevels) {
+		kernelAuthLib = new KernelAuthentication();
+		String token = kernelAuthLib.getTokenByRole("admin");
+		String url = ApplnURI + props.getProperty("locationhierarchy");
+		Response response = RestClient.getRequestWithCookie(url+GethierarchyLevelName(locationHierarchyLevels), MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON,"Authorization", token);
 		org.json.JSONObject responseJson = new org.json.JSONObject(response.asString());
 		org.json.JSONObject responseObj = responseJson.getJSONObject("response");
 		JSONArray responseArray = responseObj.getJSONArray("locations");
-		if (responseArray.length() > 0) {
-			org.json.JSONObject locationObject = responseArray.getJSONObject(0);
-			locationCode = locationObject.getString("code");
 
-			// Traverse on the "code" field
-			logger.info("Location Code: " + locationCode);
-			return locationCode;
-		} else {
-			logger.error("No location data found in the response.");
+		for (int i = 0, size = responseArray.length(); i < size; i++) {
+			org.json.JSONObject idItem = responseArray.getJSONObject(i);
+			String lang = idItem.getString("langCode");
+			String hierarchyName = idItem.getString("name");
+			if (lang.equals(getlang())) {
+				return hierarchyName;
+			}
+
 		}
-		return locationCode;
-		
+		return null;
+
+	}
+	public static String getlang() {
+		String language=ConfigManager.getloginlang();
+		if(language.equalsIgnoreCase("sin")) {
+			return "eng";
+		}else {
+			return language;
+		}
 	}
 	public static Properties getproperty(String path) {
 		Properties prop = new Properties();
@@ -176,7 +197,7 @@ public class BaseTestCase {
 		}
 		return prop;
 	}
-	
+
 	public static void initialize() {
 		PropertyConfigurator.configure(getLoggerPropertyConfig());
 		kernelAuthLib = new KernelAuthentication();
@@ -207,9 +228,9 @@ public class BaseTestCase {
 		logger.info("Configs from properties file are set.");
 
 	}
-	
-private static String targetEnvVersion = "";
-	
+
+	private static String targetEnvVersion = "";
+
 	public static boolean isTargetEnvLTS() {
 
 		if (targetEnvVersion.isEmpty()) {
@@ -219,7 +240,7 @@ private static String targetEnvVersion = "";
 			String url = ApplnURI + "/v1/auditmanager/actuator/info";
 			try {
 				response = RestClient.getRequest(url, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON);
-			//	GlobalMethods.reportResponse(response.getHeaders().asList().toString(), url, response);
+				//	GlobalMethods.reportResponse(response.getHeaders().asList().toString(), url, response);
 
 				responseJson = new org.json.JSONObject(response.getBody().asString());
 
@@ -231,7 +252,7 @@ private static String targetEnvVersion = "";
 		}
 		return targetEnvVersion.contains("1.2");
 	}
-	
+
 	private static Properties getLoggerPropertyConfig() {
 		Properties logProp = new Properties();
 		logProp.setProperty("log4j.rootLogger", "INFO, Appender1,Appender2");
@@ -244,7 +265,7 @@ private static String targetEnvVersion = "";
 		logProp.setProperty("log4j.appender.Appender2.layout.ConversionPattern", "%-7p %d [%t] %c %x - %m%n");
 		return logProp;
 	}
-	
+
 	public static JSONObject getRequestJson(String filepath) {
 		return kernelCmnLib.readJsonData(filepath, true);
 

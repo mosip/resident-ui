@@ -1,5 +1,8 @@
 import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
+import { FontSizeService } from "src/app/core/services/font-size.service";
+
 @Component({
   selector: "app-captcha",
   templateUrl: "./captcha.component.html",
@@ -9,14 +12,40 @@ export class CaptchaComponent implements OnInit {
   @Input() captchaSiteKey: string;
   @Input() resetCaptcha: boolean;
   @Output() captchaEvent = new EventEmitter<string>();
-  langCode: string;
-  constructor(private activatedRoute: ActivatedRoute) {}
+  langCode: string = localStorage.getItem("langCode");
+  captchaLangCode:any;
+  constructor(private activatedRoute: ActivatedRoute,private translateService: TranslateService,private fontSizeService: FontSizeService) {}
+
+  changeCaptchLang(){
+    if(this.captchaLangCode){
+      const iframeGoogleCaptcha = document.getElementById("recaptcha-container").querySelector('iframe');
+      const currentLang = iframeGoogleCaptcha.getAttribute("src").match(/hl=(.*?)&/).pop();
+      if (currentLang !== this.captchaLangCode) {
+          iframeGoogleCaptcha.setAttribute(
+              "src",
+              iframeGoogleCaptcha.getAttribute("src").replace(
+                  /hl=(.*?)&/,
+                  'hl=' + this.captchaLangCode + '&'
+              )
+          );
+      }
+      return
+    }else{
+      setTimeout(() => {
+        this.changeCaptchLang()
+      },100)
+      
+    }
+  }
 
   ngOnInit() {
-    this.langCode = localStorage.getItem("langCode");
-    /*this.activatedRoute.paramMap.subscribe((param) => {
-      this.langCode = param.get("lang").substr(0, 2);
-    });*/
+    this.translateService
+    .getTranslation('default')
+      .subscribe(response => {
+          this.captchaLangCode = response.keyboardMapping[this.langCode]
+      })
+    let count = 0;
+    this.changeCaptchLang()
   }
 
   ngOnChanges(): void {
@@ -30,6 +59,11 @@ export class CaptchaComponent implements OnInit {
 
   recaptchaError(event) {
     alert(event);
+  }
+
+  get fontSize():string {
+    let captchSize =  this.fontSizeService.fontSize.capchaSize;
+    return `scale(${captchSize})`
   }
 
   handleReset() {

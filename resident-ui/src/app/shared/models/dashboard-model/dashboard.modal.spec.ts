@@ -8,7 +8,7 @@ describe('AttributeModel interface check', () => {
       appointmentDateTime: '',
       appointmentTime: '',
       name: '',
-      nameInSecondaryLanguage: '',
+      dataCaptureLangs: [],
       postalCode: '',
       regDto: '',
       status: ''

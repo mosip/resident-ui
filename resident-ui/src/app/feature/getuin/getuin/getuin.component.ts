@@ -8,7 +8,8 @@ import Utils from 'src/app/app.utils';
 import { DialogComponent } from 'src/app/shared/dialog/dialog.component';
 import { MatDialog } from '@angular/material';
 import { AuditService } from 'src/app/core/services/audit.service';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointService } from "src/app/core/services/breakpoint.service";
+import { FontSizeService } from "src/app/core/services/font-size.service";
 
 @Component({
   selector: 'app-getuin',
@@ -38,6 +39,16 @@ export class GetuinComponent implements OnInit {
   disableSendOtp: boolean = true;
   aidStatus:string;
   captchaEnable: boolean = false;
+  sitealignment:string = localStorage.getItem('direction');
+  classes:any ={
+    "SUCCESS": "processing-position-icon position-icon",
+    "FAILURE":"failure-position-icon position-icon",
+    "IN-PROGRESS":"inactive-position-icon position-icon"
+  }
+  vidLength:string;
+  uinLength:string;
+  aidLength:string;
+  isLoading:boolean = true;
 
   constructor(
     private router: Router,
@@ -45,55 +56,65 @@ export class GetuinComponent implements OnInit {
     private dataStorageService: DataStorageService,
     private appConfigService: AppConfigService,
     private dialog: MatDialog,
-    private auditService: AuditService, 
-    private breakpointObserver: BreakpointObserver
+    private auditService: AuditService,
+    private breakPointService: BreakpointService,
+    private fontSizeService: FontSizeService
   ) {
     this.translateService.use(localStorage.getItem("langCode"));
     this.appConfigService.getConfig();
-    this.breakpointObserver.observe([
-      Breakpoints.XSmall,
-      Breakpoints.Small,
-      Breakpoints.Medium,
-      Breakpoints.Large,
-      Breakpoints.XLarge,
-    ]).subscribe(result => {
-      if (result.matches) {
-        if (result.breakpoints[Breakpoints.XLarge]) {
-          this.width = "30%";
-        }
-        if (result.breakpoints[Breakpoints.XSmall]) {
+    this.breakPointService.isBreakpointActive().subscribe(active =>{
+      if (active) {
+        if(active === "extraSmall"){
           this.width = "90%";
         }
-        if (result.breakpoints[Breakpoints.Medium]) {
+        if(active === "small"){
           this.width = "90%";
         }
-        if (result.breakpoints[Breakpoints.Small]) {
+        if(active === "medium"){
           this.width = "90%";
         }
-        if (result.breakpoints[Breakpoints.Large]) {
+        if(active === "large"){
           this.width = "40%";
+        }
+        if(active === "ExtraLarge"){
+          this.width = "30%";
         }
       }
     });
   }
 
-  ngOnInit() {
-    let self = this;
-    setTimeout(() => {
-      self.siteKey = self.appConfigService.getConfig()["mosip.resident.captcha.sitekey"];
-      self.captchaEnable = self.appConfigService.getConfig()["mosip.resident.captcha.enable"];      
-    }, 1000);  
+  getConfigData(){
+    if(localStorage.getItem('isDataLoaded') === 'true'){
+      this.siteKey = this.appConfigService.getConfig()["mosip.resident.captcha.sitekey"];
+      this.captchaEnable = JSON.parse(this.appConfigService.getConfig()["mosip.resident.captcha.enable"]);
+      this.vidLength = this.appConfigService.getConfig()["mosip.kernel.vid.length"];
+      this.uinLength = this.appConfigService.getConfig()["mosip.kernel.uin.length"];
+      this.aidLength = this.appConfigService.getConfig()["mosip.kernel.rid.length"];
+      this.getLangData()
+      this.isLoading = false;
+      return
+    }else{
+      setTimeout(()=>{ 
+      this.getConfigData()
+      },500)
+    }
+  }
+
+  getLangData(){
     this.translateService.use(localStorage.getItem("langCode"));    
     this.translateService
     .getTranslation(this.userPreferredLangCode)
       .subscribe(response => {
         this.getUinData = response.uinservices
         this.popupMessages = response
-        this.infoText = response.InfomationContent.getUin
+        this.infoText = response.InfomationContent.getUin.replace('$AID',this.aidLength).replace('$UIN',this.uinLength).replace('$VID',this.vidLength)
         this.getStatusData = response.uinStatus
         this.stageKeys =  Object.keys(this.getStatusData.statusStages)
+    });
+  }
 
-      });
+  ngOnInit() {
+    this.getConfigData()
   }
 
   onItemSelected(item: any) {
@@ -104,19 +125,35 @@ export class GetuinComponent implements OnInit {
     }
   }
 
-  // ischecked() {
-  //   this.isChecked = !this.isChecked
-  //   if (this.isChecked) {
-  //     this.buttonbgColor = "#03A64A"
-  //   } else {
-  //     this.buttonbgColor = "#BFBCBC"
-  //   }
-  // }
+  isNumberKey(event){
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)){
+      return false;
+    }else{
+      return true;
+    }
+  }
+  getUserID(event){
+    this.aid = event.target.value
+    if (this.captchaEnable) {
+      if (grecaptcha.getResponse().length && (this.aid.length == parseInt(this.vidLength) || this.aid.length == parseInt(this.uinLength) || this.aid.length == parseInt(this.aidLength))) {
+        this.disableSendOtp = false;
+      } else {
+        this.disableSendOtp = true;
+      }
+    }else{
+      if (this.aid.length == parseInt(this.vidLength) || this.aid.length == parseInt(this.uinLength) || this.aid.length == parseInt(this.aidLength)) {
+        this.disableSendOtp = false;
+      }else{
+        this.disableSendOtp = true;
+      }
+    }
+  }
   
   getCaptchaToken(event: any) {
     if (event) {
       if(this.captchaEnable){
-        if(grecaptcha.getResponse().length){
+        if(this.aid.length == parseInt(this.vidLength) || this.aid.length == parseInt(this.uinLength) || this.aid.length == parseInt(this.aidLength)){
           this.disableSendOtp = false;
         }
       }else{
@@ -127,20 +164,16 @@ export class GetuinComponent implements OnInit {
     }
   }
 
-  // if (this.isChecked && data["AID"] !== "") {
-  //   this.generateOTP(data)
-  // }
 
-  submitUserID(data: NgForm) {
-    this.auditService.audit('RP-034', 'Get my UIN', 'RP-Get my UIN', 'Get my UIN', 'User clicks on "send OTP" button on Get my UIN page');
-    if ( data !== undefined) {
-      this.aid = data["AID"]
-      this.getStatus(data)
+  submitUserID() {
+    this.auditService.audit('RP-034', 'Get my UIN', 'RP-Get my UIN', 'Get my UIN', 'User clicks on "send OTP" button on Get my UIN page',this.aid);
+    if (this.aid !== undefined) {
+      this.getStatus(this.aid)
     }
   }
 
   getStatus(data:any){
-    this.dataStorageService.getStatus(data["AID"]).subscribe(response =>{
+    this.dataStorageService.getStatus(data).subscribe(response =>{
       if(response["response"]){
         if(response["response"].transactionStage === "CARD_READY_TO_DOWNLOAD" && response["response"].aidStatus === "SUCCESS"){
           this.generateOTP(data);
@@ -150,6 +183,7 @@ export class GetuinComponent implements OnInit {
           this.aidStatus = response["response"].aidStatus;
           this.orderStatusIndex =  this.stageKeys.indexOf(this.orderStatus);
         }
+        this.disableSendOtp = true;
       }else{
         this.showErrorPopup(response["errors"]);
       }
@@ -169,7 +203,7 @@ export class GetuinComponent implements OnInit {
     let self = this;
     const request = {
       "id": "mosip.identity.otp.internal",
-      "individualId": data["AID"],
+      "individualId": data,
       "metadata": {},
       "otpChannel": [
             "PHONE",
@@ -198,7 +232,6 @@ export class GetuinComponent implements OnInit {
     if (this.errorCode === "RES-SER-410") {
       let messageType = message[0]["message"].split("-")[1].trim();
       this.message = this.popupMessages.serverErrors[this.errorCode][messageType]
-      console.log(messageType)
     } else {
       this.message = this.popupMessages.serverErrors[this.errorCode]
     }
@@ -209,10 +242,16 @@ export class GetuinComponent implements OnInit {
           case: 'MESSAGE',
           title: this.popupMessages.genericmessage.errorLabel,
           message: this.message,
-          btnTxt: this.popupMessages.genericmessage.successButton
+          btnTxt: this.popupMessages.genericmessage.successButton,
+          isOk:"OK"
         },
         disableClose: true
       });
+  }
+
+  get fontSize(): any {
+    document.documentElement.style.setProperty('--fs', this.fontSizeService.fontSize.breadcrumb)
+    return this.fontSizeService.fontSize;
   }
 
   openPopup(){
@@ -220,5 +259,3 @@ export class GetuinComponent implements OnInit {
   }
 
 }
-
-

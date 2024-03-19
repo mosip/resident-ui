@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChildren, ElementRef, HostListener } from "@angular/core";
 import { DataStorageService } from 'src/app/core/services/data-storage.service';
 import { TranslateService } from "@ngx-translate/core";
 import { Subscription } from "rxjs";
@@ -11,8 +11,15 @@ import { saveAs } from 'file-saver';
 import { InteractionService } from "src/app/core/services/interaction.service";
 import { AuditService } from "src/app/core/services/audit.service";
 import moment from 'moment';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointService } from "src/app/core/services/breakpoint.service";
 import { AutoLogoutService } from "src/app/core/services/auto-logout.service";
+import {
+  MatKeyboardRef,
+  MatKeyboardComponent,
+  MatKeyboardService
+} from 'ngx7-material-keyboard-ios';
+import defaultJson from "src/assets/i18n/default.json";
+import { FontSizeService } from "src/app/core/services/font-size.service";
 
 @Component({
   selector: "app-sharewithpartner",
@@ -39,9 +46,12 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
   eventId: any;
   shareBthDisabled: boolean = true;
   valuesSelected: any = [];
-  width: string;
-  attributeWidth: string;
+  previewWidth:string;
   cols: number;
+  dataCols:number;
+  previewCols:number;
+  dataRow:number;
+  previewRow:number;
   message2: any;
   totalCommentCount: number;
   remainingChars: number;
@@ -50,45 +60,54 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
   formatLabels: any;
   isLoading: boolean = true;
   selectedOprionsFormOptions: object = {};
+  sitealignment:string = localStorage.getItem('direction');
 
-  constructor(private autoLogout: AutoLogoutService, private interactionService: InteractionService, private dialog: MatDialog, private appConfigService: AppConfigService, private dataStorageService: DataStorageService, private translateService: TranslateService, private router: Router, private auditService: AuditService, private breakpointObserver: BreakpointObserver) {
+  private keyboardRef: MatKeyboardRef<MatKeyboardComponent>;
+  @ViewChildren('keyboardRef', { read: ElementRef })
+  private attachToElementMesOne: any;
+  constructor(private autoLogout: AutoLogoutService, private interactionService: InteractionService, private dialog: MatDialog, private appConfigService: AppConfigService, private dataStorageService: DataStorageService, 
+    private translateService: TranslateService, private router: Router, private auditService: AuditService, private breakPointService: BreakpointService,
+    private keyboardService: MatKeyboardService,
+    private fontSizeService: FontSizeService
+    ) {
     this.clickEventSubscription = this.interactionService.getClickEvent().subscribe((id) => {
       if (id === "shareWithPartner") {
         this.shareInfo()
       }
     });
-    this.breakpointObserver.observe([
-      Breakpoints.XSmall,
-      Breakpoints.Small,
-      Breakpoints.Medium,
-      Breakpoints.Large,
-      Breakpoints.XLarge,
-    ]).subscribe(result => {
-      if (result.matches) {
-        if (result.breakpoints[Breakpoints.Small]) {
+
+    this.breakPointService.isBreakpointActive().subscribe(active =>{
+      if (active) {
+        if(active === "ExtraLarge"){
+          this.cols = 5;
+          this.dataCols = 2;
+          this.previewCols = 3;
+          this.dataRow = 4;
+          this.previewRow = 4;
+          this.previewWidth = "28em"
+        }
+        if(active === "large" || active === "medium"){
+          this.cols = 5;
+          this.dataCols = 3;
+          this.previewCols = 2;
+          this.dataRow = 4;
+          this.previewRow = 4;
+        }
+        if(active === "small" || active === "extraSmall"){
           this.cols = 1;
-          this.width = "35em";
-          this.attributeWidth = "20em";
+          this.dataCols = 1;
+          this.previewCols = 1;
+          this.dataRow = 3;
+          this.previewRow = 4;
         }
-        if (result.breakpoints[Breakpoints.XLarge]) {
-          this.cols = 2;
-          this.width = "40em";
-          this.attributeWidth = "25em";
+        if(active === "large" || active === "small"){
+          this.previewWidth = "28em"
         }
-        if (result.breakpoints[Breakpoints.XSmall]) {
-          this.cols = 1;
-          this.width = "19em";
-          this.attributeWidth = "10em";
+        if(active === "medium"){
+          this.previewWidth = "23em"
         }
-        if (result.breakpoints[Breakpoints.Large]) {
-          this.cols = 2;
-          this.width = "29em";
-          this.attributeWidth = "18em";
-        }
-        if (result.breakpoints[Breakpoints.Medium]) {
-          this.cols = 2;
-          this.width = "25em";
-          this.attributeWidth = "12em";
+        if(active === "extraSmall"){
+          this.previewWidth = "88vw"
         }
       }
     });
@@ -106,16 +125,6 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
         this.langJSON = response;
         this.popupMessages = response;
       });
-
-    // this.dataStorageService
-    //   .getConfigFiles("sharewithpartner")
-    //   .subscribe((response) => {
-    //     this.schema = response["identity"];
-    //     this.schema.forEach(data => {
-    //       this.valuesSelected.push(data.attributeName)
-    //     })
-    //   });
-    
 
     this.getPartnerDetails();
     this.getUserInfo()
@@ -182,6 +191,19 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
     let enterdChars = this.purpose.length
     this.remainingChars = this.totalCommentCount - enterdChars
   }
+  captureVirtualKeyboard(element: HTMLElement, index: number) {
+    this.keyboardRef.instance.setInputInstance(this.attachToElementMesOne._results[index]);
+  }
+
+  openKeyboard() {
+    if (this.keyboardService.isOpened) {
+      this.keyboardService.dismiss();
+      this.keyboardRef = undefined;
+    } else {
+      this.keyboardRef = this.keyboardService.open(defaultJson.keyboardMapping[this.langCode]);
+      document.getElementById("sharingReasonPlaceholder").focus();
+    }
+  }
 
   getPartnerDetails() {
     this.dataStorageService
@@ -208,29 +230,32 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
             if (data.formatRequired) {
               if (data.attributeName === "fullAddress") {
                 this.fullAddress = ""
+
                 this.schema.forEach(item => {
                   if (item.attributeName === data.attributeName) {
                     this.formatLabels = item.formatOption[this.langCode]
                   }
                 })
-
+                
                 this.formatLabels.forEach(item => {
                   if (this.userInfo[item.value] !== undefined) {
                     if (typeof this.userInfo[item.value] !== "string") {
                       this.userInfo[item.value].forEach(eachLang => {
                         if (eachLang.language === this.langCode) {
-                          this.fullAddress = this.fullAddress + "," + eachLang.value
+                          this.fullAddress = this.fullAddress + ", " + eachLang.value
                         }
                       })
                     } else {
-                      this.fullAddress = this.fullAddress + this.userInfo[item.value]
+                      this.fullAddress = this.fullAddress +", " + this.userInfo[item.value]
                     }
                   }
                 })
+
+
                 this.fullAddress = this.fullAddress.replace(/^./, "");
                 value = this.fullAddress
               } else {
-                this.userInfo[data.attributeName].forEach(item =>{
+                this.userInfo['fullName'].forEach(item =>{
                   if(item.language === this.langCode){
                     value = item.value
                   }
@@ -246,23 +271,24 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
         }
 
         if (data.formatRequired) {
-          this.sharableAttributes[data.attributeName] = { "label": data.label[this.langCode], "attributeName": data['attributeName'], "isMasked": data['maskRequired'], "format": data['defaultFormat'], "value": value };
+          this.sharableAttributes[data.attributeName] = { "label": data.label[this.langCode], "attributeName": data['attributeName'], "isMasked": false, "format": data['defaultFormat'], "value": value };
         } else {
-          this.sharableAttributes[data.attributeName] = { "label": data.label[this.langCode], "attributeName": data['attributeName'], "isMasked": data['maskRequired'], "value": value };
+          this.sharableAttributes[data.attributeName] = { "label": data.label[this.langCode], "attributeName": data['attributeName'], "isMasked": false, "value": value };
         }
       }
 
-      this.schema = this.schema.map(item => {
-        if (item.attributeName === data.attributeName) {
-          let newItem = { ...item, checked: !item.checked }
-          if (!newItem.checked && newItem['formatOption']) {
-            newItem['formatOption'][this.langCode] = this.selectedOprionsFormOptions[data.attributeName]
+      this.schema = this.schema.map(eachItem => {
+        if (eachItem.attributeName === data.attributeName) {
+          let newObj = { ...eachItem, checked: !eachItem.checked }
+          if (!newObj.checked && newObj['formatOption']) {
+            newObj['formatOption'][this.langCode] = this.selectedOprionsFormOptions[data.attributeName]
           }
-          return newItem
+          return newObj
         } else {
-          return item
+          return eachItem
         }
       })
+
     } else {
       if (!data.formatRequired) {
         let value;
@@ -271,17 +297,17 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
         } else {
           value = this.userInfo[type];
         }
-        this.sharableAttributes[data.attributeName] = { "label": data.label[this.langCode], "attributeName": data['attributeName'], "isMasked": $event.checked, "value": value };
+        this.sharableAttributes[data.attributeName] = { "label": data.label[this.langCode], "attributeName": data['attributeName'], "isMasked": !this.sharableAttributes[data.attributeName]['isMasked'], "value": value };
       } else {
         let value = "";
-        let allValue = "";
+        let allValues = "";
         let self = this;
         let selectedFormats = "";
         if (typeof this.userInfo[data.attributeName] === "string") {
-          data.formatOption[this.langCode].forEach(item => {
-            item.checked = !item.checked
-            if (item.checked) {
-              value = moment(this.userInfo[data.attributeName]).format(item["value"]);
+          data.formatOption[this.langCode].forEach(eachItem => {
+            eachItem.checked = !eachItem.checked
+            if (eachItem.checked) {
+              value = moment(this.userInfo[data.attributeName]).format(eachItem["value"]);
               selectedFormats = type['label']
             }
           })
@@ -292,7 +318,7 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
                 if (item.value === type['value']) {
                   return item['checked'] = !item['checked']
                 } else {
-                  return item['checked'];
+                  return item['checked'] = item['checked']
                 }
               })
             }
@@ -308,11 +334,11 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
                     if (item.checked) {
                       if (self.userInfo[item.value] !== undefined) {
                         if (item.value === "postalCode") {
-                          allValue = allValue + self.userInfo[item.value];
+                          allValues = allValues + self.userInfo[item.value];
                         } else {
                           this.userInfo[item.value].forEach(eachLang => {
                               if (eachLang.language === this.langCode) {
-                                allValue = allValue + eachLang.value + ",";
+                                allValues = allValues + eachLang.value + ", ";
                               }
                           })
                         }
@@ -322,11 +348,11 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
                   });
                 }
               });
-
+              
               let unCheckFullAddress = () =>{
-                data.formatOption[this.langCode].forEach(item =>{
-                  if(item.value === "fullAddress"){
-                    item['checked'] = false;
+                data.formatOption[this.langCode].forEach(eachItem =>{
+                  if(eachItem.value === "fullAddress"){
+                    eachItem['checked'] = false;
                   }
                 })
               }
@@ -347,11 +373,8 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
               })
 
               selectedFormats = selectedFormats.replace(/.$/, '');
-              if (allValue.endsWith(',')) {
-                allValue = allValue.replace(/.$/, '');
-              }
-
-              value = allValue;
+              allValues = allValues.replace(/,(\s+)?$/, "");
+              value = allValues;
             } else {
               value = this.fullAddress
               data.formatOption[this.langCode].forEach(item => {
@@ -419,13 +442,14 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
   }
 
   captureDropDownValue(event: any) {
+    console.log(event.source.value)
     if (event.source.selected) {
       this.partnerId = event.source.value;
     }
   }
 
   shareInfoBtn() {
-    this.auditService.audit('RP-033', 'Share credential with partner', 'RP-Share credential with partner', 'Share credential with partner', 'User clicks on "share" button on share credential page');
+    this.auditService.audit('RP-033', 'Share credential with partner', 'RP-Share credential with partner', 'Share credential with partner', 'User clicks on "share" button on share credential page','');
     if (!this.partnerId) {
       this.message = this.popupMessages.genericmessage.sharewithpartner.needPartner
       this.showValidateMessage(this.message);
@@ -471,10 +495,10 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
           this.showErrorPopup(response["errors"])
         }
       },
-      err => {
-        console.error(err);
-      });
-    }
+        err => {
+          console.error(err);
+        });
+  }
 
   termAndConditions() {
     const dialogRef = this.dialog.open(DialogComponent, {
@@ -518,13 +542,14 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
       data: {
         case: 'MESSAGE',
         title: this.popupMessages.genericmessage.successLabel,
-        clickHere: this.popupMessages.genericmessage.clickHere,
         clickHere2: this.popupMessages.genericmessage.clickHere2,
+        clickHere: this.popupMessages.genericmessage.clickHere,
         eventId: this.eventId,
         trackStatusText: this.popupMessages.genericmessage.trackStatusText,
         dearResident: this.popupMessages.genericmessage.dearResident,
         message: this.message,
-        btnTxt: this.popupMessages.genericmessage.successButton
+        btnTxt: this.popupMessages.genericmessage.successButton,
+        isOk:'OK'
       }
     });
     return dialogRef;
@@ -540,7 +565,8 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
               case: 'MESSAGE',
               title: this.popupMessages.genericmessage.errorLabel,
               message: this.popupMessages.serverErrors[errorCode],
-              btnTxt: this.popupMessages.genericmessage.successButton
+              btnTxt: this.popupMessages.genericmessage.successButton,
+              isOk:'OK'
             },
             disableClose: true
           });
@@ -555,7 +581,8 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
           case: 'MESSAGE',
           title: this.popupMessages.genericmessage.errorLabel,
           message: message,
-          btnTxt: this.popupMessages.genericmessage.successButton
+          btnTxt: this.popupMessages.genericmessage.successButton,
+          isOk:'OK'
         },
         disableClose: true
       });
@@ -570,7 +597,9 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('uinservices/viewhistory');
   }
 
-
+  get fontSize(): any {
+    return this.fontSizeService.fontSize;
+  }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
@@ -579,6 +608,14 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
 
   onItemSelected(item: any) {
     this.router.navigate([item]);
+  }
+
+  @HostListener("blur", ["$event"])
+  @HostListener("focusout", ["$event"])
+  private _hideKeyboard() {
+    if (this.keyboardService.isOpened) {
+      this.keyboardService.dismiss();
+    }
   }
 
 }

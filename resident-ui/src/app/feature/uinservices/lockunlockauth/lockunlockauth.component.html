@@ -1,4 +1,4 @@
-<span class="breadcrumb">
+<span class="breadcrumb" [style.font-size]="fontSize.breadcrumb">
 	<!-- <a (click)="onItemSelected('dashboard')">{{'dashboard.home' | translate}} &nbsp;&nbsp;</a> > &nbsp;&nbsp; -->
 	<a (click)="onItemSelected('uinservices/dashboard')">{{'dashboard.uinservices' | translate}} &nbsp;&nbsp;</a> > &nbsp;&nbsp;<span class="active">{{'lockunlockauth.title' | translate}}</span>
 </span>
@@ -7,32 +7,28 @@
 </div>
 <div class="main-div" *ngIf="!showSpinner">
 	<mat-card>
-		<h3 class="main-heading">{{'lockunlockauth.title' | translate}}</h3>
-		<p class="intro-description">{{'lockunlockauth.introDescription' | translate}}</p>
-		<mat-grid-list [cols]="cols" rowHeight="190px" gutterSize="10px" *ngIf="authlist">
+		<h3 [style.font-size]="fontSize.headingForUIN" class="main-heading">{{'lockunlockauth.title' | translate}}</h3>
+		<p [style.font-size]="fontSize.paragraph" class="intro-description">{{'lockunlockauth.introDescription' | translate}}</p>
+		<mat-grid-list [cols]="cols" rowHeight="190px" gutterSize="10px" *ngIf="authlist" dir="{{sitealignment}}">
 			<mat-grid-tile *ngFor="let authInfo of authlist; let i = index">
 				<mat-card (click)="setAuthlockStatus(authInfo)" id="setAuthlockStatus{{i}}"  [ngClass]="authInfo.recorddirty == false ? 'mini-card' : 'mini-card-yellow'" >
-				  <mat-card-header>			  	
-				    <mat-card-title><span><img alt="" src="assets\{{authInfo.label}}.png"></span>&nbsp;&nbsp;&nbsp;<span style="font-size: 14px;font-weight: 800;">{{authInfo.label}}</span></mat-card-title>	
-					<mat-icon [matTooltip]="openPopUp(authInfo.label)" class="info-icon">info</mat-icon> 
-					<div *ngIf="isPopupSHow && clickedId === (authInfo.label)" class="info-box">
-						<p style="margin-top: 0px;">{{infoMsg}}</p>
-						<p class="read-more-btn">{{readText}}</p>
-					</div>
+				  <mat-card-header *ngIf="authInfo.label">			  	
+				    <mat-card-title><span>
+						<img src="assets\{{authInfo.label.icon}}.png" alt="">
+					</span>&nbsp;&nbsp;&nbsp;<span class="auth-type-text" [style.font-size]="fontSize.subHeading">{{authInfo.label.label}}</span></mat-card-title>	
+					<mat-icon #tooltip="matTooltip" [matTooltip]="infoMsg[authInfo.label.icon]" matTooltipPosition="below" matTooltipHideDelay="5000" matTooltipClass="below" class="info-icon">info</mat-icon> 
 				  </mat-card-header>
 				  <mat-card-content>
-				    <p *ngIf="authInfo.locked"><img alt="" mat-card-sm-image src="assets\images\lock.png" ></p>
-				    <p *ngIf="!authInfo.locked"><img alt="" mat-card-sm-image src="assets\images\unlock.png" ></p>
+				    <p *ngIf="authInfo.locked"><img mat-card-sm-image src="assets\images\lock.png" alt=""></p>
+				    <p *ngIf="!authInfo.locked"><img mat-card-sm-image src="assets\images\unlock.png" alt=""></p>
 				  </mat-card-content>
 				  <mat-card-actions>
-				    <button style="margin-left: 1.5rem;" *ngIf="authInfo.locked" mat-stroked-button color="primary">{{'lockunlockauth.unlockLabel' | translate}}</button>
-				    <button style="margin-left: 1.5rem;"  *ngIf="!authInfo.locked" mat-stroked-button color="primary">{{'lockunlockauth.lockLabel' | translate}}</button>
+				    <button [style.font-size]="fontSize.paragraph" *ngIf="authInfo.locked" mat-stroked-button color="primary">{{'lockunlockauth.unlockLabel' | translate}}</button>
+				    <button [style.font-size]="fontSize.paragraph" *ngIf="!authInfo.locked" mat-stroked-button color="primary">{{'lockunlockauth.lockLabel' | translate}}</button>
 				  </mat-card-actions>
 				</mat-card>
 			</mat-grid-tile>		  
 		</mat-grid-list>
-		<button [disabled]="submitBtnDisable" id="updateAuthlockStatusBtn" mat-raised-button color="primary" (click)="updateAuthlockStatusBtn()">{{'verifyuinvid.submit' | translate}}</button>
+		<button [style.font-size]="fontSize.paragraph" [disabled]="submitBtnDisable" id="updateAuthlockStatusBtn" mat-raised-button color="primary" (click)="updateAuthlockStatusBtn()">{{'verifyuinvid.submitBtnLabel' | translate}}</button>
 	</mat-card>	
 </div>
-
-

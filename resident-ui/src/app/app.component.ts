@@ -7,17 +7,46 @@ import { filter } from 'rxjs/operators';
 import { LogoutService } from 'src/app/core/services/logout.service';
 import { AuditService } from 'src/app/core/services/audit.service';
 import { DataStorageService } from 'src/app/core/services/data-storage.service';
+import { MatKeyboardService } from 'ngx7-material-keyboard-ios';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import defaultJson from "src/assets/i18n/default.json";
+
+import {
+  MomentDateAdapter,
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+} from '@angular/material-moment-adapter';
+
+export const MY_DATE_FORMATS = {
+  display: {
+    dateInput: 'DD/MMM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    },
+    {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS},
+  ],
 })
 
 export class AppComponent {
   title = 'resident-ui';
   subscriptions: Subscription[] = [];
   previousUrl: string;
+  primaryLangCode: string = localStorage.getItem("langCode");
+  sitealignment;
+  currentRoute: string;
+  agent:any = window.navigator.userAgent.toLowerCase();
 
   constructor(
     private appConfigService: AppConfigService,
@@ -25,31 +54,93 @@ export class AppComponent {
     private router: Router,
     private logoutService: LogoutService,
     private auditService: AuditService,
-    private dataStorageService: DataStorageService
+    private keyboardService: MatKeyboardService,
+    private dataStorageService: DataStorageService,
+    private dateAdapter: DateAdapter<Date>,
   ) {
-    this.appConfigService.getConfig();
+    this.currentRoute = "";
+    // router.events.subscribe((val) => {
+    //     if (val instanceof NavigationStart) {
+    //       this.currentRoute = val.url;
+    //       if(localStorage.getItem("selectedfontsize")){
+    //         if(localStorage.getItem("selectedfontsize") === "12"){
+    //           // if(this.currentRoute === "/getuin" || this.currentRoute === "/verify"){
+    //           //   document.body.style["zoom"] = "100%";
+    //           //   document.body.style["transform"] = "scale(1, .9)";
+    //           //   document.body.style["transformOrigin "] = "0 0";
+    //           //   document.body.style["margin-top"] = "-5.2em";
+    //           //   document.body.style["height"] = "100rem";
+    //           // }else{
+    //             // document.body.style["zoom"] = "90%";
+    //           //   document.body.style.removeProperty('transform');
+    //           //   document.body.style.removeProperty('transformOrigin');
+    //           //   document.body.style.removeProperty('margin-top');
+    //           //   document.body.style.removeProperty("height");
+    //           // }
+    //         }else if(localStorage.getItem("selectedfontsize") === "14"){
+    //           // if(this.currentRoute === "/getuin" || this.currentRoute === "/verify"){
+    //           //   document.body.style["zoom"] = "100%";
+    //           //   document.body.style["transform"] = "scale(1, 1.0)";
+    //           //   document.body.style["transformOrigin "] = "0 0";
+    //           //   document.body.style["margin-top"] = "0%";
+    //           //   document.body.style["height"] = "100rem";
+    //           // }else{
+    //             // document.body.style["zoom"] = "100%";
+    //           //   document.body.style.removeProperty('transform');
+    //           //   document.body.style.removeProperty('transformOrigin');
+    //           //   document.body.style.removeProperty('margin-top');
+    //           //   document.body.style.removeProperty("height");
+
+    //           // }
+    //         }else if(localStorage.getItem("selectedfontsize") === "16"){
+    //           // if(this.currentRoute === "/getuin" || this.currentRoute === "/verify"){
+    //           //   document.body.style["zoom"] = "100%";
+    //           //   document.body.style["transform"] = "scale(1, 1.1)";
+    //           //   document.body.style["transformOrigin "] = "0 0";
+    //           //   document.body.style["margin-top"] = "5em";
+    //           //   document.body.style["height"] = "100rem";
+    //           // }else{
+    //             // document.body.style["zoom"] = "110%";
+    //           //   document.body.style.removeProperty('transform');
+    //           //   document.body.style.removeProperty('transformOrigin');
+    //           //   document.body.style.removeProperty('margin-top');
+    //           //   document.body.style.removeProperty("height");
+    //           // }
+    //         }else if(localStorage.getItem("selectedfontsize") === "18"){
+    //           // if(this.currentRoute === "/getuin" || this.currentRoute === "/verify"){
+    //           //   document.body.style["zoom"] = "100%";
+    //           //   document.body.style["transform"] = "scale(1, 1.2)";
+    //           //   document.body.style["transformOrigin "] = "0 0";
+    //           //   document.body.style["margin-top"] = "10em";
+    //           //   document.body.style["height"] = "100rem";
+    //           // }else{
+    //             // document.body.style["zoom"] = "120%";
+    //           //   document.body.style.removeProperty('transform');
+    //           //   document.body.style.removeProperty('transformOrigin');
+    //           //   document.body.style.removeProperty('margin-top');
+    //           //   document.body.style.removeProperty("height");
+    //           // }
+    //         }
+    //       }
+    //     }
+    // });
     
+    this.appConfigService.getConfig();
+    if (this.primaryLangCode === "ara") {
+      localStorage.setItem('direction','rtl')
+    }else{
+      localStorage.setItem('direction','ltr')
+    }
+    this.sitealignment = localStorage.getItem('direction');
+    document.body.dir = this.sitealignment;
   }
   
-  // @HostListener('window:popstate', ['$event'])
-  // PopState(event) {
-  //   console.log("Testing1")
-  //   console.log(window.location.hash)
-  //   if(window.location.hash.includes("uinservices")){
-  //   console.log("Testing2")
-  //   }else{ 
-  //     console.log("Testing3")
-  //     if(confirm("Are you sure want to leave the page. you will be logged out automatically if you press OK?")){
-  //       this.auditService.audit('RP-002', 'Logout', 'RP-Logout', 'Logout', 'User clicks on "logout" button after logging in to UIN services');
-  //       this.logoutService.logout();
-  //     }else{
-  //       this.router.navigate([this.router.url]); 
-  //       return false;
-  //     }
-  //   }
-  // }
-  
   ngOnInit() { 
+    if(!localStorage.getItem("selectedfontsize")){
+      localStorage.setItem("selectedfontsize", "14");
+    }
+    
+    this.dateAdapter.setLocale(defaultJson.keyboardMapping[this.primaryLangCode]);
     this.router.routeReuseStrategy.shouldReuseRoute = function(){
       return false;
     };
@@ -62,12 +153,21 @@ export class AppComponent {
             this.router.navigate(['uinservices/dashboard']); 
           }
         }else{
-          this.router.navigate(['dashboard']);
+          if(window.location.href.includes('error=invalid_transaction')){
+            this.router.navigate(['error']);
+          }else{
+            if (window.location.href.includes('uinservices')) {
+              this.router.navigate(['dashboard']);
+            }
+          };
         }
       }else{
         this.router.navigate(['dashboard']);
       }
     });
+    if(window.location.href.includes('error=invalid_transaction')){
+      this.router.navigate(['error']);
+    }
     
     if(!localStorage.getItem("langCode")){
       localStorage.setItem("langCode", "eng");
@@ -86,16 +186,25 @@ export class AppComponent {
            // this.configService.navigationType = 'popstate';
             //this.preventBack();
           }
+          if (this.keyboardService.isOpened) {
+            this.keyboardService.dismiss();
+          }
         })
     );
   }
 
-  // preventBack() {
-  //   window.history.forward();
-  //   window.onunload = function() {
-  //     null;
-  //   };
-  // }
+  preventBack() {
+    window.history.forward();
+    window.onunload = function() {
+      null;
+    };
+  }
+
+  @HostListener('document:keydown.escape', ['$event']) onKeydownHandler(event: KeyboardEvent) {
+    if (this.keyboardService.isOpened) {
+      this.keyboardService.dismiss();
+    }
+  }
 
   @HostListener('mouseover')
   @HostListener('document:mousemove', ['$event'])

@@ -15,6 +15,7 @@ import { DialogComponent } from 'src/app/shared/dialog/dialog.component';
 import { AuthService } from 'src/app/core/services/authservice.service';
 /*import { MatMenuModule } from '@angular/material/menu';*/
 import { InteractionService } from "src/app/core/services/interaction.service";
+import { FontSizeService } from "src/app/core/services/font-size.service";
 
 @Component({
   selector: "app-header",
@@ -28,8 +29,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   textDir = localStorage.getItem("dir");
   defaultJsonValue: any;
   selectedLanguage: any;
-  supportedLanguages: Array<string>;
-  selectLanguagesArr: any;
+  selectLanguagesArr: any = [];
   zoomLevel:any = [{"fontSize":"12", "label":"Small"},{"fontSize":"14", "label":"Normal"},{"fontSize":"16", "label":"Large"},{"fontSize":"18", "label":"Huge"}];
   fullName: string;
   lastLogin: string;
@@ -38,9 +38,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   notificationList:any;
   langCode = localStorage.getItem("langCode");
   popupMessages:any;
+  langJson:any;
   page = 1;
   selector: string = "#notificationMenu";
   clickEventSubscription: Subscription;
+  sitealignment:string = localStorage.getItem('direction');
+  activeUrl:string;
+  agent:any = window.navigator.userAgent.toLowerCase();
+  selectedfontsize:any = localStorage.getItem('selectedfontsize');
+  selectedLangData:any;
 
   constructor(
     private router: Router,
@@ -53,79 +59,64 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private auditService: AuditService,
     private dialog: MatDialog,
     private authService: AuthService,
-    private interactionService: InteractionService
+    private interactionService: InteractionService,
+    private fontSizeService: FontSizeService
   ) {
     this.clickEventSubscription = this.interactionService.getClickEvent().subscribe((id) => {
       if (id === "logOutBtn") {
         this.logoutService.logout();
       }
+      if(id === "changeLanguage"){
+        this.selectedLanguage = this.selectedLangData.nativeName;
+        localStorage.setItem("langCode", this.selectedLangData.code);
+        window.location.reload();
+      }
+      
     }) 
   }
 
-  onScroll() {
-    console.log("scroll down>>>");
-    /*this.dataStorageService
-    .getNotificationData(this.langCode)
-    .subscribe((response) => {
-      if(response["response"])     
-        this.notificationList = response["response"]["data"];
-        console.log(this.notificationList)
-    });*/
+  getConfigData(){
+    if(localStorage.getItem('isDataLoaded') === 'true'){
+      let supportedLanguages = this.appConfigService.getConfig()['supportedLanguages'].split(','); 
+      if(supportedLanguages.length > 1){
+        supportedLanguages.forEach((language) => {
+          this.selectLanguagesArr.push({
+           code: language.trim(),
+           value: defaultJson.languages[language.trim()].nativeName,
+          });
+        });
+      }
+      
+      this.translateService.use(localStorage.getItem("langCode")); 
+      this.textDir = localStorage.getItem("dir");
+      return
+    }else{
+      setTimeout(()=>{ 
+      this.getConfigData()
+      },400)
+    }
   }
 
-  onScrollUp() {
-    console.log("scroll up>>>");
-    /*this.dataStorageService
-    .getNotificationData(this.langCode)
-    .subscribe((response) => {
-      if(response["response"])     
-        this.notificationList = response["response"]["data"];
-        console.log(this.notificationList)
-    });*/
-  }
 
  async ngOnInit() {
     this.defaultJsonValue = defaultJson;
-    this.supportedLanguages = [];
-    this.selectLanguagesArr = []; 
-    let self = this;       
-    setTimeout(()=>{        
-      if(!localStorage.getItem("langCode")){
-        localStorage.setItem("langCode", "eng");
-        self.selectedLanguage = defaultJson["languages"][0].nativeName;
-      }else{
-        Object.keys(defaultJson["languages"]).forEach(function(key) {
-          if(localStorage.getItem("langCode") === key){
-            self.selectedLanguage = defaultJson["languages"][key].nativeName;
-          }
-        });                
-      }
+    let self = this;
+    this.getConfigData();
 
-      let supportedLanguages = this.appConfigService.getConfig()['supportedLanguages'].split(',');
-      if(supportedLanguages.length > 1){
-        this.selectLanguagesArr = [];
-        supportedLanguages.map((language) => {
-          if (defaultJson.languages && defaultJson.languages[language.trim()]) {
-            if(language === "eng"){
-              this.selectLanguagesArr.push({
-                code: language.trim(),
-                value: defaultJson.languages[language.trim()].name,
-              });
-            }
-          }
-        });
-      }
-
-      self.translateService.use(localStorage.getItem("langCode")); 
-      self.textDir = localStorage.getItem("dir");
-    }, 1000);    
-
+    if(!localStorage.getItem("langCode")){
+      localStorage.setItem("langCode", "eng");
+      this.selectedLanguage =  defaultJson["languages"]['eng'].nativeName;
+    }else{
+      let key = localStorage.getItem("langCode")
+      this.selectedLanguage =  defaultJson["languages"][key].nativeName;              
+    }
     self.getProfileInfo();
 
     await  this.translateService
     .getTranslation(localStorage.getItem("langCode"))
     .subscribe(response => {
       this.popupMessages = response;
+      this.langJson = response.genericmessage
     });
     
     if(localStorage.getItem("redirectURL") === window.location.href){
@@ -144,12 +135,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.showMessage("logout")
       localStorage.removeItem('logOut');
     }
-    
-    // if(localStorage.getItem("zoomLevel")){
-    //   document.body.style["zoom"] = localStorage.getItem("zoomLevel");
-    // }
-    
-    //window.addEventListener('scroll', this.scroll, true); //third parameter
+    this.activeUrl = window.location.hash
+    this.selectedfontsize= localStorage.getItem('selectedfontsize')
   }
 
   getNotificationInfo(){
@@ -176,10 +163,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     .subscribe((response) => {
       if(response["response"])     
         this.notificationList = response["response"]["data"];
-        console.log(this.notificationList)
     });
 
-    this.auditService.audit('RP-001', 'Notification section', 'RP-Notification', 'Notification section', 'User clicks on "notification" icon after logging in to UIN services');
+    this.auditService.audit('RP-001', 'Notification section', 'RP-Notification', 'Notification section', 'User clicks on "notification" icon after logging in to UIN services', '');
     this.getNotificationInfo();
   }
 
@@ -190,7 +176,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   getProfileInfo(){
     let self = this;
     this.dataStorageService
-    .getProfileInfo()
+    .getProfileInfo(this.langCode)
     .subscribe((response) => {
       if(response["response"]){
         let autonotificationcall = self.appConfigService.getConfig()['resident.ui.notification.update.interval.seconds'];
@@ -220,31 +206,84 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   zoom(item:any) {
+    localStorage.setItem("selectedfontsize", item.fontSize);
+    this.selectedfontsize= localStorage.getItem('selectedfontsize')
     if(item.fontSize === "12"){
-      document.body.style["zoom"]= "90%";
-      // localStorage.setItem("zoomLevel","90%");
-      // location.reload();
+      // if(this.agent.indexOf('firefox') > -1 || (this.router.url === "/getuin" || this.router.url === "/verify")){
+      //   document.body.style["zoom"] = "100rem";
+      //   document.body.style["transform"] = "scale(1, .9)";
+      //   document.body.style["transformOrigin "] = "0 0";
+      //   document.body.style["margin-top"] = "-5.2em";
+      //   document.body.style["height"] = "100rem";
+      // }else{
+        document.body.style["zoom"]= "90%";
+        // document.body.style.removeProperty('transform');
+        // document.body.style.removeProperty('transformOrigin');
+        // document.body.style.removeProperty('margin-top');
+        // document.body.style.removeProperty("height");
+      // }
     }else if(item.fontSize === "14"){
-      document.body.style["zoom"]= "100%";
-      // localStorage.setItem("zoomLevel","100%");
-      // location.reload()
+      // if(this.agent.indexOf('firefox') > -1 || (this.router.url === "/getuin" || this.router.url === "/verify")){
+      //   document.body.style["zoom"] = "100rem";
+      //   document.body.style["transform"] = "scale(1, 1.0)";
+      //   document.body.style["transformOrigin "] = "0 0";
+      //   document.body.style["margin-top"] = "0%";
+      //   document.body.style["height"] = "100rem";
+      // }else{
+        document.body.style["zoom"]= "100%";
+        // document.body.style.removeProperty('transform');
+        // document.body.style.removeProperty('transformOrigin');
+        // document.body.style.removeProperty('margin-top');
+        // document.body.style.removeProperty("height");
+      // }
     }else if(item.fontSize === "16"){
-      document.body.style["zoom"]= "110%";
-      // localStorage.setItem("zoomLevel","110%");
-      // location.reload()
+      // if(this.agent.indexOf('firefox') > -1 || (this.router.url === "/getuin" || this.router.url === "/verify")){
+      //   document.body.style["zoom"] = "100rem";
+      //   document.body.style["transform"] = "scale(1, 1.1)";
+      //   document.body.style["transformOrigin "] = "0 0";
+      //   document.body.style["margin-top"] = "5em";
+      //   document.body.style["height"] = "100rem";
+      // }else{
+        document.body.style["zoom"]= "110%";
+        // document.body.style.removeProperty('transform');
+        // document.body.style.removeProperty('transformOrigin');
+        // document.body.style.removeProperty('margin-top');
+        // document.body.style.removeProperty("height");
+      // }
     }else if(item.fontSize === "18"){
-      // localStorage.setItem("zoomLevel","120%");
-      document.body.style["zoom"]= "120%";
-      // location.reload()
+      // if(this.agent.indexOf('firefox') > -1 || (this.router.url === "/getuin" || this.router.url === "/verify")){
+      //   document.body.style["zoom"] = "100rem";
+      //   document.body.style["transform"] = "scale(1, 1.2)";
+      //   document.body.style["transformOrigin "] = "0 0";
+      //   document.body.style["margin-top"] = "10em";
+      //   document.body.style["height"] = "100rem";
+        // document.body.style["zoom"]= "120%";
+        
+      // }else{
+        document.body.style["zoom"]= "120%";
+        // document.body.style.removeProperty('transform');
+        // document.body.style.removeProperty('transformOrigin');
+        // document.body.style.removeProperty('margin-top');
+        // document.body.style.removeProperty("height");
+      // }
     }    
   }
 
-  onlanguagechange(item:any) {
-    if(item){
+  setFontSize(size: any): void {
+    localStorage.setItem("selectedfontsize", size.fontSize);
+    this.selectedfontsize= localStorage.getItem('selectedfontsize')
+    this.fontSizeService.setFontSize(size.fontSize);
+  }
+
+  onlanguagechange(item:any) {    
+    if(window.location.href.includes('/uinservices/updatedemographic')){
+      this.selectedLangData = item;
+      this.showMsgForChangeLang();
+    }else{
       this.selectedLanguage = item.nativeName;
       localStorage.setItem("langCode", item.code);
-      location.reload();
-    }    
+      window.location.reload();
+    }
   }
 
   godashboard() {
@@ -265,8 +304,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     ]);
   }
 
+  get fontSize(): any {
+    return this.fontSizeService.fontSize;
+  }
+
   doLogout() {
-    this.auditService.audit('RP-002', 'Logout', 'RP-Logout', 'Logout', 'User clicks on "logout" button after logging in to UIN services');
+    this.auditService.audit('RP-002', 'Logout', 'RP-Logout', 'Logout', 'User clicks on "logout" button after logging in to UIN services', '');
     const dialogRef = this.dialog.open(DialogComponent, {
       width: '500px',
       data: {
@@ -276,7 +319,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
         clickYesToProceed: this.popupMessages.genericmessage.clickYesToProceed,
         yesBtnFor:"logOutBtn",
         btnTxt: this.popupMessages.genericmessage.yesButton,
-        btnTxtNo: this.popupMessages.genericmessage.noButton
+        isYes:"Yes",
+        btnTxtNo: this.popupMessages.genericmessage.noButton,
+        isNo:"No"
       }
     });
     return dialogRef;
@@ -286,13 +331,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       if(message === "logIn"){
         const dialogRef = this.dialog.open(DialogComponent, {
-          width: '550px',
+          width: '550px', 
           data: {
             case: 'LoginLogoutSuccessMessages',
             title: this.popupMessages.genericmessage.successLabel,
             message: this.popupMessages.genericmessage.SuccessLogin,
             dearResident:this.popupMessages.genericmessage.dearResident,
-            btnTxt: this.popupMessages.genericmessage.successButton
+            btnTxt: this.popupMessages.genericmessage.successButton,
+            isOk:'OK'
           }
         });
         return dialogRef;
@@ -307,7 +353,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
             dearResident:this.popupMessages.genericmessage.dearResident,
             clickHere2: this.popupMessages.genericmessage.clickHere2,
             relogin: this.popupMessages.genericmessage.relogin,
-            btnTxt: this.popupMessages.genericmessage.successButton
+            btnTxt: this.popupMessages.genericmessage.successButton,
+            isOk:'OK'
           }
         });
         return dialogRef;
@@ -333,6 +380,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
     return dialogRef;
   },400)
+  }
+
+  showMsgForChangeLang(){
+    const dialogRef = this.dialog.open(DialogComponent, {
+      width: '400px',
+      data: {
+        case: 'MESSAGEFORLANGCHANGE',
+        message:this.popupMessages.genericmessage.langChgWarnText ,
+        btnTxt: this.popupMessages.genericmessage.continue,
+        btnTxtCanc: this.popupMessages.genericmessage.cancel
+        
+      }
+    });
+    return dialogRef;
   }
 
   onItemSelected(item: any) {

@@ -10,7 +10,6 @@ input {
 
 ::placeholder {
   text-align: left;
-  font-size: 12px;
   letter-spacing: 0px;
   color: #BCBCBC;
   opacity: 1;
@@ -24,9 +23,6 @@ input {
   background-color: #03A64A;
 }
 
-td>label {
-  font-size: 12px;
-}
 td{
   width: 30%;
 }
@@ -63,7 +59,7 @@ td {
 }
 
 .info-icon{
-  color: green;
+  color: green !important;
   font-size: 18px; 
   cursor: pointer;
   margin-left: 4px;
@@ -74,37 +70,6 @@ td {
   display: flex; 
 }
 
-.info-box{
-  margin-top: 42px;
-  min-height: 90px;
-  width: 200px;
-  border-radius: 8px;
-  padding: 8px 12px 8px 12px;
-  position: absolute ;
-  background-color: #ffffff;
-  /* top: -20px; */
-  left: 194px; 
-  /* display: inline-block; */
-  z-index: 2;
-  transform: translate3d(0, -50%, 0);
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
-  font-size: 10px;
-}
-
-.info-box:before{
-  content: "";
-  width: 20px;
-  height: 20px;
-  transform: rotate(-45deg);
-  background: #ffffff;
-  position: absolute;
-  margin-left: -37px;
-  z-index: -1;
-  top: -10px;
-  left: calc(50% - 10px);
-  text-align: start;
-  /* box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.5); */
-}
 .click-here{
   text-decoration: underline;
   color: #03A64A;
@@ -115,4 +80,70 @@ td {
   color: red; 
   font-size: 11px;
   margin-top: 5px;
+}
+
+.event-id-search-card{
+  border-radius: 4px !important;
+  padding: 3px; 
+  border: 1px solid #909090; 
+  display: flex;
+  align-items: center;
+}
+
+.event-id-search-main-card{
+  display: flex; 
+  align-items: center;
+}
+
+.mat-card{
+  padding: 16px;
+  width: 100% !important;
+}
+
+@media screen and (max-width:600px){
+  .mat-card{
+    padding: 8px;
+  }
+  .event-id-search-main-card{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .event-id-search-card{
+    width: 100%;
+  }
+  input{
+    width: 94%;
+  }
+}
+
+
+
+::ng-deep .mat-tooltip {
+  background-color: #ffffff !important;
+  color: black !important;
+  font-size: var(--fs) !important;
+  border-radius: 8px !important;
+  padding: 10px !important;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+  margin-top: -2px !important;
+    &::after {
+        width: 0;
+        height: 0;
+        content: '';
+        position: absolute;
+        border-left: 0.5rem solid transparent;
+        border-right: 0.5rem solid transparent;
+        border-bottom: 0.5rem solid #0000008c;
+        border-color: transparent transparent #ffffff transparent;
+        border-width: 10px;
+      }
+      &.below {
+        overflow: initial;
+        margin-top:0.4rem;
+        &:after {
+          top: -0.5rem;
+          right: calc(50% - 0.5rem);
+          transform: rotate(0);
+        }
+  }
 }

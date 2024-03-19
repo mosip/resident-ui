@@ -171,8 +171,8 @@ export class DataStorageService {
     return this.httpClient.post(this.BASE_URL + '/auth-lock-unlock', request, { observe: 'response', responseType: 'blob' as 'json' });
   }
 
-  getProfileInfo() {
-    return this.httpClient.get(this.BASE_URL + '/profile');
+  getProfileInfo(langCode) {
+    return this.httpClient.get(this.BASE_URL + '/profile?languageCode=' +  langCode);
   }
 
   getServiceHistory(request: any, filters: any,pageSize1:any) {
@@ -180,7 +180,7 @@ export class DataStorageService {
     if (request) {
       let pageSize = request.pageSize;
       let pageIndex = parseInt(request.pageIndex);
-      buildURL = "?pageStart=" + pageIndex + "&pageFetch=" + pageSize;
+      buildURL = "?pageIndex=" + pageIndex + "&pageSize=" + pageSize;
       if (request) {
         buildURL = buildURL + "&" + filters;
       }
@@ -218,7 +218,7 @@ export class DataStorageService {
   shareInfo(request: any) {
     return this.httpClient.post(this.BASE_URL + '/share-credential', request, { observe: 'response' });
   }
-  
+
   downloadAcknowledgement(eventId: string) {
     return this.httpClient.get<Blob>(this.BASE_URL + '/ack/download/pdf/event/' + eventId + '/language/' + localStorage.getItem("langCode"), { observe: 'response', responseType: 'blob' as 'json' });
   }
@@ -257,7 +257,6 @@ export class DataStorageService {
     if (!filters) {
       buildURL = "?languageCode=" + localStorage.getItem("langCode");
     }
-    console.log("buildURL>>>" + buildURL);
     return this.httpClient.get<Blob>(this.BASE_URL + '/download/service-history' + buildURL, { observe: 'response', responseType: 'blob' as 'json' });
   }
 
@@ -294,7 +293,8 @@ export class DataStorageService {
   }
 
   getImmediateChildren(locationCode: string, langCode: string) {
-    return this.httpClient.get(this.BASE_URL + '/proxy/masterdata/locations/immediatechildren/' + locationCode + '/' + langCode);
+    // return this.httpClient.get(this.BASE_URL + '/proxy/masterdata/locations/immediatechildren/' + locationCode + '/' + langCode);
+    return this.httpClient.get(this.BASE_URL + '/auth-proxy/masterdata/locations/immediatechildren/' + locationCode + '?languageCodes=' + langCode)
   }
 
 
@@ -334,11 +334,35 @@ export class DataStorageService {
     return this.httpClient.post(this.BASE_URL + '/documents/'+transactionID+'?docCatCode='+docCatCode+'&docTypCode='+docTypCode+'&langCode='+localStorage.getItem("langCode")+'&referenceId='+referenceId, request);
   }
 
+  deleteUploadedFile(docId:string, transactionID:string){
+    return this.httpClient.delete(this.BASE_URL + '/documents/'+docId + "?transactionId=" + transactionID)
+  }
+
   isAuthenticated(){
     return this.httpClient.get(this.BASE_URL+'/authorize/admin/validateToken');
   }
 
   getUpdateMyDataSchema(schemaType:any){
     return this.httpClient.get(this.BASE_URL+'/auth-proxy/config/ui-schema/'+schemaType)
+  }
+
+  translateUserInput(request:any){
+    return this.httpClient.post(this.BASE_URL + '/transliteration/transliterate', request)
+  }
+
+  getUpdateDataCount(){
+    return this.httpClient.get(this.BASE_URL + '/identity/update-count')
+  }
+
+  getPreferredLangs(langCode:string){
+    return this.httpClient.get(this.BASE_URL + '/auth-proxy/masterdata/dynamicfields/preferredLang/' + langCode + '?withValue=true' )
+  }
+
+  getPendingDrafts(){
+    return this.httpClient.get(this.BASE_URL + '/identity/get-pending-drafts')
+  }
+
+  discardPendingDrafts(eid:string){
+    return this.httpClient.post(this.BASE_URL + '/identity/discardPendingDraft/' + eid, '')
   }
 }

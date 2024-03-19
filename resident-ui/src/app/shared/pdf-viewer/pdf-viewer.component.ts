@@ -43,7 +43,7 @@ export class PDFViewerComponent {
   @Output()
   PdfDocumentLoad = new EventEmitter<IPdfDocumentLoad>();
 
-  private _pdfDocument: any;
+  public _pdfDocument: any;
 
   constructor() {
     if (isSSR()) {

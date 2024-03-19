@@ -4,11 +4,16 @@ ul, li{
 }
 .mini-card {
   width: 98%;
-  height: 172px;
+  height: 180px;
   border-radius: 5px;
   background: #FAF8F8 0% 0% no-repeat padding-box;
   box-shadow: none;
   border: 1px solid silver;
+  background: #FAF8F8 0% 0% no-repeat padding-box;
+}
+.mat-card-header-text{
+  display: flex;
+  margin: 0px;
 }
 .tp-radio-group {  
   display: inline-flex;  
@@ -96,4 +101,44 @@ mat-card-subtitle{
   margin-top: .3rem;
   column-gap: 15px;
   margin-bottom: 0px;
+}
+
+.empty-vid-card{
+  width: 56%; 
+  background-color: #F4F4F4;
+}
+
+::ng-deep .mat-tooltip {
+  background-color: #ffffff !important;
+  color: black !important;
+  font-size: var(--fs) !important;
+  border-radius: 8px !important;
+  padding: 10px !important;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+  margin-top: -2px !important;
+}
+.user-icon{
+  color: green;
+  font-size: 18px; 
+  cursor: pointer; 
+  margin-top: 7px;
+}
+.create-btn{
+  min-width: 100px; 
+  height: 36px; 
+  display: flex; 
+  align-items: center;
+}
+
+.vid-type-card{
+  min-width: 9rem; 
+  display: flex; 
+  align-items: center; 
+  column-gap: 5px;
+  max-width: 21rem;
+}
+@media screen and (max-width: 550px){
+  .empty-vid-card{
+    width: 100%;
+  }
 }
