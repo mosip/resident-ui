@@ -436,7 +436,8 @@
             "descriptionText": "Description : Données démographiques mises à jour",
             "descriptionDetails": "Nous avons trouvé une demande de mise à jour des données existante qui est toujours en cours. Afin de soulever une nouvelle demande, vous devrez supprimer la demande existante.",
             "viewMore":"Voir plus",
-            "viewLess":"Voir moins"
+            "viewLess":"Voir moins",
+            "warnMsg":"Êtes-vous sûr de vouloir annuler la demande de mise à jour des données existante pour mettre à jour votre ?"
         },
         "draftCanceled":"Votre demande de mise à jour de données existante a été annulée avec succès. Vous pouvez maintenant procéder à une autre demande de mise à jour des données."
     },

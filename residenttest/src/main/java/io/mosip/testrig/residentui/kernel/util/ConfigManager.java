@@ -14,14 +14,14 @@ import io.mosip.testrig.residentui.utility.TestRunner;
 public class ConfigManager {
 
 	private static final org.slf4j.Logger LOGGER= org.slf4j.LoggerFactory.getLogger(ConfigManager.class);
-	
+
 	private static String MOSIP_PMS_CLIENT_SECRET = "mosip_pms_client_secret";
 	private static String MOSIP_PMS_CLIENT_ID = "mosip_pms_client_id";
 	private static String MOSIP_PMS_APP_ID = "mosip_pms_app_id";
 	private static String USEPRECONFIGOTP = "usePreConfiguredOtp";
 	private static String PRECONFIGOTP = "preconfiguredOtp";
-	
-	
+
+
 
 	private static String MOSIP_RESIDENT_CLIENT_SECRET = "mosip_resident_client_secret";
 	private static String MOSIP_RESIDENT_CLIENT_ID = "mosip_resident_client_id";
@@ -62,10 +62,23 @@ public class ConfigManager {
 	private static String S3_ACCOUNT = "s3-account";
 	private static String PUSH_TO_S3 = "push-reports-to-s3";
 	private static String ENABLE_DEBUG = "enableDebug";
+	private static String LOGIN_LANG = "loginlang";
 	private static String THREAD_COUNT = "threadCount";
 	private static String LANG_SELECT = "langselect";
+	private static String IdentityGenManual = "identityGenManual";
+	private static String Perpetualvid = "perpetualvid";
+	private static String Temporaryvid = "temporaryvid";
+	private static String UIN = "uin";
+	private static String Onetimevid = "onetimevid";
+	private static String Externalemail = "externalemail";
+	private static String Tempemail1 = "tempemail1";
+	private static String Tempemail = "tempemail";
+	private static String TempEID = "tempEID";
+	private static String Aid = "aid";
+	private static String Headless = "headless";
+	private static String Docker = "docker";
 	private static String preconfiguredOtp;
-	
+
 
 	private static String DB_PORT = "db-port";
 	private static String DB_DOMAIN = "db-server";
@@ -76,27 +89,28 @@ public class ConfigManager {
 	private static String HIBERNATE_CONTEXT_CLASS = "hibernate.current_session_context_class";
 
 	private static String AUDIT_DB_USER = "db-su-user";
-	private static String AUDIT_DB_PASS = "postgresql-password";
+	private static String AUDIT_DB_PASS = "postgres-password";
 	private static String AUDIT_DB_SCHEMA = "audit_db_schema";
+	
 
 	private static String IDA_DB_USER = "db-su-user";
-	private static String IDA_DB_PASS = "postgresql-password";
+	private static String IDA_DB_PASS = "postgres-password";
 	private static String IDA_DB_SCHEMA = "ida_db_schema";
 
 	private static String PMS_DB_USER = "db-su-user";
-	private static String PMS_DB_PASS = "postgresql-password";
+	private static String PMS_DB_PASS = "postgres-password";
 	private static String PMS_DB_SCHEMA = "pms_db_schema";
 
 	private static String KM_DB_USER = "db-su-user";
-	private static String KM_DB_PASS = "postgresql-password";
+	private static String KM_DB_PASS = "postgres-password";
 	private static String KM_DB_SCHEMA = "km_db_schema";
 
 	private static String MASTER_DB_USER = "db-su-user";
-	private static String MASTER_DB_PASS = "postgresql-password";
+	private static String MASTER_DB_PASS = "postgres-password";
 	private static String MASTER_DB_SCHEMA = "master_db_schema";
 
 	private static String IAM_EXTERNAL_URL = "keycloak-external-url";
-	private static String IAM_ADMINPORTAL_PATH = "adminPortalPath";
+	private static String IAM_RESIDENTPORTAL_PATH = "residentPortalPath";
 	private static String IAM_APIENVUSER = "apiEnvUser";
 	private static String IAM_APIINTERNALENDPOINT = "apiInternalEndPoint";
 	private static String IAM_REALM_ID = "keycloak-realm-id";
@@ -108,9 +122,11 @@ public class ConfigManager {
 	private static String MOUNT_PATH = "mountPath";
 	private static String AUTHCERTS_PATH = "authCertsPath";
 	private static String MOUNT_PATH_FOR_SCENARIO = "mountPathForScenario";
-	
-	private static String PACKET_UTILITY_BASE_URL = "packetUtilityBaseUrl";
 
+	private static String PACKET_UTILITY_BASE_URL = "packetUtilityBaseUrl";
+	private static String Testcases = "residentscenariosToExecute";
+
+	private static String testcases;
 	private static String pms_client_secret;
 	private static String pms_client_id;
 	private static String pms_app_id;
@@ -125,6 +141,7 @@ public class ConfigManager {
 	private static String idrepo_client_secret;
 	private static String idrepo_client_id;
 	private static String idrepo_app_id;
+	
 
 	private static String admin_client_secret;
 	private static String admin_client_id;
@@ -153,6 +170,19 @@ public class ConfigManager {
 	private static String s3_secret_key;
 	private static String push_reports_to_s3;
 	private static String enableDebug;
+	private static String loginlang;
+	private static String identityGenManual;
+	private static String perpetualvid;
+	private static String temporaryvid;
+	private static String uin;
+	private static String onetimevid;
+	private static String externalemail;
+	private static String tempemail1;
+	private static String tempemail;
+	private static String tempEID;
+	private static String aid;
+	private static String headless;
+	private static String docker;
 	private static String threadCount;
 	private static String langselect;
 
@@ -187,7 +217,7 @@ public class ConfigManager {
 	private static String iam_external_url;
 	private static String iam_realm_id;
 	private static String iam_users_to_create;
-	private static String iam_adminportal_path;
+	private static String iam_residentportal_path;
 	private static String iam_keyclockurl;
 	private static String iam_apienvuser;
 	private static String iam_apiinternalendpoint;
@@ -251,26 +281,26 @@ public class ConfigManager {
 		s3_user_key = getValueForKey(S3_USER_KEY);
 		s3_secret_key = getValueForKey(S3_SECRET_KEY);
 		s3_account = getValueForKey(S3_ACCOUNT);
-		
-		iam_adminportal_path =System.getenv(IAM_ADMINPORTAL_PATH) == null
-				? propsKernel.getProperty(IAM_ADMINPORTAL_PATH)
-				: System.getenv(IAM_ADMINPORTAL_PATH);
-		
-		LOGGER.info("adminportal_path from config manager::" + iam_adminportal_path);
+
+		iam_residentportal_path =System.getenv(IAM_RESIDENTPORTAL_PATH) == null
+				? propsKernel.getProperty(IAM_RESIDENTPORTAL_PATH)
+						: System.getenv(IAM_RESIDENTPORTAL_PATH);
+
+		LOGGER.info("residentportal_path from config manager::" + iam_residentportal_path);
 		iam_apienvuser = System.getenv(IAM_APIENVUSER) == null
 				? propsKernel.getProperty(IAM_APIENVUSER)
-				: System.getenv(IAM_APIENVUSER);
+						: System.getenv(IAM_APIENVUSER);
 		LOGGER.info("apienvuser from config manager::" + iam_apienvuser);
 		iam_apiinternalendpoint = System.getenv(IAM_APIINTERNALENDPOINT) == null
 				? propsKernel.getProperty(IAM_APIINTERNALENDPOINT)
-				: System.getenv(IAM_APIINTERNALENDPOINT);
+						: System.getenv(IAM_APIINTERNALENDPOINT);
 		LOGGER.info("apiinternalendpoint from config manager::" + iam_apiinternalendpoint);
-		
+
 		serviceNotDeployedList = System.getenv(SERVICES_NOT_DEPLOYED) == null
 				? propsKernel.getProperty(SERVICES_NOT_DEPLOYED)
-				: System.getenv(SERVICES_NOT_DEPLOYED);
+						: System.getenv(SERVICES_NOT_DEPLOYED);
 		propsKernel.setProperty(SERVICES_NOT_DEPLOYED, serviceNotDeployedList);
-//		push_reports_to_s3 = getValueForKey(PUSH_TO_S3);
+		//		push_reports_to_s3 = getValueForKey(PUSH_TO_S3);
 		db_port = getValueForKey(DB_PORT);
 		db_domain = getValueForKey(DB_DOMAIN);
 		hibernate_connection_driver_class = getValueForKey(HIBERNATE_CONNECTION_DRIVER_CLASS);
@@ -297,88 +327,162 @@ public class ConfigManager {
 		System.out.println("keycloakendpoint from config manager::" + iam_external_url);
 		reportExpirationInDays = System.getenv(REPORT_EXPIRATION_IN_DAYS) == null
 				? propsKernel.getProperty(REPORT_EXPIRATION_IN_DAYS)
-				: System.getenv(REPORT_EXPIRATION_IN_DAYS);
+						: System.getenv(REPORT_EXPIRATION_IN_DAYS);
 		propsKernel.setProperty(REPORT_EXPIRATION_IN_DAYS, reportExpirationInDays);	
 		iam_realm_id = getValueForKey(IAM_REALM_ID);
 		iam_users_to_create = getValueForKey(IAM_USERS_TO_CREATE);
 		iam_users_password = getValueForKey(IAM_USERS_PASSWORD);
-		
+
 		usePreConfiguredOtp = System.getenv(USEPRECONFIGOTP) == null ? propsKernel.getProperty(USEPRECONFIGOTP)
 				: System.getenv(USEPRECONFIGOTP);
 		propsKernel.setProperty(USEPRECONFIGOTP, usePreConfiguredOtp);
-		
+
 		preconfiguredOtp = System.getenv(PRECONFIGOTP) == null ? propsKernel.getProperty(PRECONFIGOTP)
 				: System.getenv(PRECONFIGOTP);
 		propsKernel.setProperty(PRECONFIGOTP, preconfiguredOtp);
 
 		admin_client_secret = System.getenv(MOSIP_ADMIN_CLIENT_SECRET) == null
 				? propsKernel.getProperty(MOSIP_ADMIN_CLIENT_SECRET)
-				: System.getenv(MOSIP_ADMIN_CLIENT_SECRET);
+						: System.getenv(MOSIP_ADMIN_CLIENT_SECRET);
 
 		propsKernel.setProperty(MOSIP_ADMIN_CLIENT_SECRET, admin_client_secret);
 
 		authDemoServicePort = System.getenv(AUTH_DEMO_SERVICE_PORT) == null
 				? propsKernel.getProperty(AUTH_DEMO_SERVICE_PORT)
-				: System.getenv(AUTH_DEMO_SERVICE_PORT);
+						: System.getenv(AUTH_DEMO_SERVICE_PORT);
 		propsKernel.setProperty(AUTH_DEMO_SERVICE_PORT, authDemoServicePort);
 
 		authDemoServiceBaseUrl = System.getenv(AUTH_DEMO_SERVICE_BASE_URL) == null
 				? propsKernel.getProperty(AUTH_DEMO_SERVICE_BASE_URL)
-				: System.getenv(AUTH_DEMO_SERVICE_BASE_URL);
+						: System.getenv(AUTH_DEMO_SERVICE_BASE_URL);
 		propsKernel.setProperty(AUTH_DEMO_SERVICE_BASE_URL, authDemoServiceBaseUrl);
 
 		mountPath = System.getenv(MOUNT_PATH) == null ? propsKernel.getProperty(MOUNT_PATH) : System.getenv(MOUNT_PATH);
 		propsKernel.setProperty(MOUNT_PATH, mountPath);
-		
+
 		authCertsPath = System.getenv(AUTHCERTS_PATH) == null ? propsKernel.getProperty(AUTHCERTS_PATH) : System.getenv(AUTHCERTS_PATH);
 		propsKernel.setProperty(AUTHCERTS_PATH, authCertsPath);
-		
+
 		mountPathForScenario = System.getenv(MOUNT_PATH_FOR_SCENARIO) == null ? propsKernel.getProperty(MOUNT_PATH_FOR_SCENARIO) : System.getenv(MOUNT_PATH_FOR_SCENARIO);
 		propsKernel.setProperty(MOUNT_PATH_FOR_SCENARIO, mountPathForScenario);
-		
+
 		packetUtilityBaseUrl = System.getenv(PACKET_UTILITY_BASE_URL) == null ? propsKernel.getProperty(PACKET_UTILITY_BASE_URL) : System.getenv(PACKET_UTILITY_BASE_URL);
 		propsKernel.setProperty(PACKET_UTILITY_BASE_URL, packetUtilityBaseUrl);
-		
+
 		push_reports_to_s3 =System.getenv(PUSH_TO_S3) == null ? propsKernel.getProperty(PUSH_TO_S3) : System.getenv(PUSH_TO_S3);
 		propsKernel.setProperty(PUSH_TO_S3, push_reports_to_s3);
-		
+
 		enableDebug =System.getenv(ENABLE_DEBUG) == null ? propsKernel.getProperty(ENABLE_DEBUG) : System.getenv(ENABLE_DEBUG);
 		propsKernel.setProperty(ENABLE_DEBUG, enableDebug);
-		
+
 		threadCount =System.getenv(THREAD_COUNT) == null ? propsKernel.getProperty(THREAD_COUNT) : System.getenv(THREAD_COUNT);
 		propsKernel.setProperty(THREAD_COUNT, threadCount);
-		
+
 		langselect =System.getenv(LANG_SELECT) == null ? propsKernel.getProperty(LANG_SELECT) : System.getenv(LANG_SELECT);
 		propsKernel.setProperty(LANG_SELECT, langselect);
+
+		loginlang =System.getenv(LOGIN_LANG) == null ? propsKernel.getProperty(LOGIN_LANG) : System.getenv(LOGIN_LANG);
+		propsKernel.setProperty(LOGIN_LANG, loginlang);
+
+		identityGenManual =System.getenv(IdentityGenManual) == null ? propsKernel.getProperty(IdentityGenManual) : System.getenv(IdentityGenManual);
+		propsKernel.setProperty(IdentityGenManual, identityGenManual);
+		perpetualvid =System.getenv(Perpetualvid) == null ? propsKernel.getProperty(Perpetualvid) : System.getenv(Perpetualvid);
+		propsKernel.setProperty(Perpetualvid, perpetualvid);
+		temporaryvid =System.getenv(Temporaryvid) == null ? propsKernel.getProperty(Temporaryvid) : System.getenv(Temporaryvid);
+		propsKernel.setProperty(Temporaryvid, temporaryvid);
+		uin =System.getenv(UIN) == null ? propsKernel.getProperty(UIN) : System.getenv(UIN);
+		propsKernel.setProperty(UIN, uin);
+		onetimevid =System.getenv(Onetimevid) == null ? propsKernel.getProperty(Onetimevid) : System.getenv(Onetimevid);
+		propsKernel.setProperty(Onetimevid, onetimevid);
+		externalemail =System.getenv(Externalemail) == null ? propsKernel.getProperty(Externalemail) : System.getenv(Externalemail);
+		propsKernel.setProperty(Externalemail, externalemail);
+		tempemail1 =System.getenv(Tempemail1) == null ? propsKernel.getProperty(Tempemail1) : System.getenv(Tempemail1);
+		propsKernel.setProperty(Tempemail1, tempemail1);
+		tempemail =System.getenv(Tempemail) == null ? propsKernel.getProperty(Tempemail) : System.getenv(Tempemail);
+		propsKernel.setProperty(Tempemail, tempemail);
+		tempEID =System.getenv(TempEID) == null ? propsKernel.getProperty(TempEID) : System.getenv(TempEID);
+		propsKernel.setProperty(TempEID, tempEID);
+		aid =System.getenv(Aid) == null ? propsKernel.getProperty(Aid) : System.getenv(Aid);
+		propsKernel.setProperty(Aid, aid);
 		
+		headless =System.getenv(Headless) == null ? propsKernel.getProperty(Headless) : System.getenv(Headless);
+		propsKernel.setProperty(Headless, headless);
+		docker =System.getenv(Docker) == null ? propsKernel.getProperty(Docker) : System.getenv(Docker);
+		propsKernel.setProperty(Docker, docker);
+
 		
-		
-		//enableDebug threadCount  langselect
+
+
+		testcases =System.getenv(Testcases) == null ? propsKernel.getProperty(Testcases) : System.getenv(Testcases);
+		propsKernel.setProperty(Testcases, testcases);
 
 	}
-
+	public static String gettestcases() {
+		return testcases;
+	}
+	
+	public static String getDocker() {
+		return docker;
+	}
+	public static String getHeadless() {
+		return headless;
+	}
+	
+	public static String getaid() {
+		return aid;
+	}
+	public static String gettempEID() {
+		return tempEID;
+	}
+	public static String gettempemail() {
+		return tempemail;
+	}
+	public static String gettempemail1() {
+		return tempemail1;
+	}
+	public static String getexternalemail() {
+		return externalemail;
+	}
+	public static String getonetimevid() {
+		return onetimevid;
+	}
+	public static String getuin() {
+		return uin;
+	}
+	public static String gettemporaryvid() {
+		return temporaryvid;
+	}
+	public static String getperpetualvid() {
+		return perpetualvid;
+	}
+	public static String getidentityGenManual() {
+		return identityGenManual;
+	}
 	public static String getAuthDemoServicePort() {
 		return authDemoServicePort;
+	}
+	public static String getloginlang() {
+		return loginlang;
 	}
 
 	public static String getAuthDemoServiceBaseUrl() {
 		return authDemoServiceBaseUrl;
 
 	}
-	
-	
+
+
 	public static String getLangselect() {
 		return langselect;
 
 	}
-	
+
 	public static String getThreadCount() {
 		return threadCount;
 
 	}
-	
-	
-	
+
+
+
 	public static String getEnableDebug() {
 		return enableDebug;
 
@@ -387,15 +491,15 @@ public class ConfigManager {
 	public static String getmountPath() {
 		return mountPath;
 	}
-	
+
 	public static String getmountPathForScenario() {
 		return mountPathForScenario;
 	}
-	
+
 	public static String getpacketUtilityBaseUrl() {
 		return packetUtilityBaseUrl;
 	}
-	
+
 	public static String getauthCertsPath() {
 		return authCertsPath;
 	}
@@ -441,7 +545,7 @@ public class ConfigManager {
 	public static String getAdminClientSecret() {
 		return admin_client_secret;
 	}
-	
+
 	public static Boolean IsDebugEnabled() {
 		return enableDebug.equalsIgnoreCase("yes");
 	}
@@ -564,8 +668,8 @@ public class ConfigManager {
 	public static String getShowSql() {
 		return hibernate_show_sql;
 	}
-	public static String getiam_adminportal_path() {
-		return iam_adminportal_path;
+	public static String getiam_residentportal_path() {
+		return iam_residentportal_path;
 	}
 	public static String getiam_keyclockurl() {
 		iam_keyclockurl=propsKernel.getProperty("keycloakurl");
@@ -675,11 +779,11 @@ public class ConfigManager {
 	public static String getIAMUsersPassword() {
 		return iam_users_password;
 	}
-	
+
 	public static String getUsePreConfiguredOtp() {
 		return usePreConfiguredOtp;
 	}
-	
+
 	public static String getPreConfiguredOtp() {
 		return preconfiguredOtp;
 

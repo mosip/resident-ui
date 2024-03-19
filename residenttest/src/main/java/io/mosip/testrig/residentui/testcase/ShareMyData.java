@@ -17,7 +17,7 @@ public class ShareMyData extends BaseClass {
 		test = extent.createTest("shareMyData Test", "verify shareMyData");
 		Commons.clickWebelement(test, driver, By.id("uinservices/sharewithpartner"));
 
-		Commons.clickWebelement(test, driver, By.id("fullName"));
+		Commons.clickWebelement(test, driver, By.id("name"));
 		Commons.clickWebelement(test, driver, By.id("dateOfBirth"));
 		Commons.clickWebelement(test, driver, By.id("UIN"));
 		Commons.dropdown(test, driver, By.id("partnerDetails"));
@@ -33,7 +33,7 @@ public class ShareMyData extends BaseClass {
 		Thread.sleep(3000);
 		test.log(Status.INFO, "Click On Share without partner name and purpose");
 		Commons.clickWebelement(test, driver, By.id("uinservices/sharewithpartner"));
-		Commons.clickWebelement(test, driver, By.id("fullName"));
+		Commons.clickWebelement(test, driver, By.id("name"));
 		Commons.clickWebelement(test, driver, By.id("dateOfBirth"));
 		Commons.clickWebelement(test, driver, By.id("UIN"));
 		Commons.clickWebelement(test, driver, By.id("shareBtn"));
@@ -82,7 +82,7 @@ public class ShareMyData extends BaseClass {
 		// without purpose and partner
 		test.log(Status.INFO, "Share My Data without purpose and partner");
 		Commons.clickWebelement(test, driver, By.id("uinservices/sharewithpartner"));
-		Commons.clickWebelement(test, driver, By.id("fullName"));
+		Commons.clickWebelement(test, driver, By.id("name"));
 		Commons.clickWebelement(test, driver, By.id("dateOfBirth"));
 		Commons.clickWebelement(test, driver, By.id("UIN"));
 		Commons.clickWebelement(test, driver, By.id("perpetualVID"));

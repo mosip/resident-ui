@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 import com.aventstack.extentreports.Status;
 
+import io.mosip.testrig.residentui.kernel.util.ConfigManager;
 import io.mosip.testrig.residentui.utility.BaseClass;
 import io.mosip.testrig.residentui.utility.Commons;
 import io.mosip.testrig.residentui.utility.JsonUtil;
@@ -62,7 +63,7 @@ import io.mosip.testrig.residentui.utility.JsonUtil;
 	}
 	
 	public void TrackMyRequestsWithDiffEId() throws Exception {
-		String tempEID=JsonUtil.JsonObjParsing(Commons.getTestData(),"tempEID");
+		String tempEID=ConfigManager.gettempEID();
 		LoginTest.loginTest();
 		test=extent.createTest("TrackMyRequestsInvalidEId", "verify Login");
 		 Commons.click(test,driver, By.id("uinservices/trackservicerequest"));

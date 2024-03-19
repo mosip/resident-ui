@@ -436,7 +436,8 @@
             "descriptionText": "Descripción: Datos demográficos actualizados",
             "descriptionDetails": "Hemos encontrado una solicitud de actualización de datos existente que aún está en curso. Para generar una nueva solicitud, deberá eliminar la solicitud existente.",
             "viewMore":"Ver más",
-            "viewLess":"Ver menos"
+            "viewLess":"Ver menos",
+            "warnMsg":"¿Está seguro de que desea cancelar la Solicitud de actualización de datos existente para actualizar la suya?"
         },
         "draftCanceled":"Su solicitud de actualización de datos existente se canceló exitosamente. Ahora puede proceder a generar otra solicitud de Actualización de datos."
     },

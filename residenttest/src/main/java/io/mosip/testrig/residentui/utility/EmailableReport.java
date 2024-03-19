@@ -1,10 +1,12 @@
 package io.mosip.testrig.residentui.utility;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.text.NumberFormat;
@@ -56,7 +58,7 @@ public class EmailableReport implements IReporter {
 	int totalSkippedTests = 0;
 	int totalFailedTests = 0;
 
-	
+
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
@@ -92,7 +94,7 @@ public class EmailableReport implements IReporter {
 		File orignialReportFile = new File(System.getProperty("user.dir") + "/"
 				+ System.getProperty("testng.outpur.dir") + "/" + System.getProperty("emailable.report2.name"));
 		logger.info("reportFile is::" + System.getProperty("user.dir") + "/" + System.getProperty("testng.outpur.dir")
-				+ "/" + System.getProperty("emailable.report2.name"));
+		+ "/" + System.getProperty("emailable.report2.name"));
 
 		File newReportFile = new File(
 				System.getProperty("user.dir") + "/" + System.getProperty("testng.outpur.dir") + "/" + newString);
@@ -115,9 +117,9 @@ public class EmailableReport implements IReporter {
 
 						/* Need to figure how to handle EXTENT report handling */
 
-						
 
-						
+
+
 
 					} catch (Exception e) {
 						logger.error("error occured while pushing the object" + e.getMessage());
@@ -140,9 +142,13 @@ public class EmailableReport implements IReporter {
 		Properties properties = new Properties();
 		try (InputStream is = EmailableReport.class.getClassLoader().getResourceAsStream("git.properties")) {
 			properties.load(is);
+			Process process = Runtime.getRuntime().exec("git rev-parse --abbrev-ref HEAD");
 
+			// Read the output of the command
+			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String branch = reader.readLine();
 			return "Commit Id is: " + properties.getProperty("git.commit.id.abbrev") + " & Branch Name is:"
-					+ properties.getProperty("git.branch");
+			+ branch;
 
 		} catch (IOException io) {
 			logger.error(io.getMessage());
@@ -226,10 +232,10 @@ public class EmailableReport implements IReporter {
 			writer.print("<tr><th colspan=\"7\"><span class=\"not-bold\"><pre>");
 			writer.print(Utils.escapeHtml("Server Component Details " + AdminTestUtil.getServerComponentsDetails()));
 			writer.print("</pre></span>");
-//			writer.print(GlobalConstants.TRTR);
+			//			writer.print(GlobalConstants.TRTR);
 
 			writer.print("<tr>");
-//			writer.print("<th>Test Suite</th>");
+			//			writer.print("<th>Test Suite</th>");
 			writer.print("<th># Passed</th>");
 			writer.print("<th># Skipped</th>");
 			writer.print("<th># Failed</th>");
@@ -251,8 +257,8 @@ public class EmailableReport implements IReporter {
 				writer.print(">");
 
 				buffer.setLength(0);
-//				writeTableData(buffer.append("<a href=\"#t").append(testIndex).append("\">")
-//						.append(Utils.escapeHtml(testResult.getTestName())).append("</a>").toString());
+				//				writeTableData(buffer.append("<a href=\"#t").append(testIndex).append("\">")
+				//						.append(Utils.escapeHtml(testResult.getTestName())).append("</a>").toString());
 				writeTableData(integerFormat.format(passedTests), (passedTests > 0 ? "num green-bg" : "num"));
 				writeTableData(integerFormat.format(skippedTests), (skippedTests > 0 ? "num orange-bg" : "num"));
 				writeTableData(integerFormat.format(failedTests), (failedTests > 0 ? "num attn" : "num"));
@@ -357,7 +363,7 @@ public class EmailableReport implements IReporter {
 				buffer.setLength(0);
 				int scenariosPerClass = 0;
 				int methodIndex = 0;
-				
+
 				for (MethodResult methodResult : classResult.getMethodResults()) {
 					List<ITestResult> results = methodResult.getResults();
 					int resultsCount = results.size();
@@ -367,23 +373,23 @@ public class EmailableReport implements IReporter {
 					// Write the remaining scenarios for the method
 
 					for (int i = 0; i < resultsCount; i++) {
-						
+
 						ITestResult result = results.get(i);
-				//		String [] scenarioDetails = getScenarioDetails(result);
-						
-				//		String scenarioName = Utils.escapeHtml("Scenario_" + scenarioDetails[0]);
-					//	String scenarioDescription = Utils.escapeHtml(scenarioDetails[1]);
-						
+						//		String [] scenarioDetails = getScenarioDetails(result);
+
+						//		String scenarioName = Utils.escapeHtml("Scenario_" + scenarioDetails[0]);
+						//	String scenarioDescription = Utils.escapeHtml(scenarioDetails[1]);
+
 						long scenarioStart = result.getStartMillis();
 						long scenarioDuration = result.getEndMillis() - scenarioStart;
 
-//						buffer.append("<tr class=\"").append(cssClass).append("\">").append("<td><a href=\"#m")
-//								.append(scenarioIndex).append("\">").append(scenarioName).append("</a></td>")
-//								.append("<td>").append(scenarioDescription).append("</td>")
-//								.append("<td>").append(scenarioDuration).append("</td></tr>");
+						//						buffer.append("<tr class=\"").append(cssClass).append("\">").append("<td><a href=\"#m")
+						//								.append(scenarioIndex).append("\">").append(scenarioName).append("</a></td>")
+						//								.append("<td>").append(scenarioDescription).append("</td>")
+						//								.append("<td>").append(scenarioDuration).append("</td></tr>");
 						buffer.append("<tr class=\"").append(cssClass).append("\">")  // Start of table row with a specified CSS class
-					      .append("<td><a href=\"#m").append(scenarioIndex).append("\">").append(methodName).append("</a></td>")  // Table cell with a hyperlink
-					      .append("<td>").append(scenarioDuration).append("</td></tr>");  // Table cell with scenario duration
+						.append("<td><a href=\"#m").append(scenarioIndex).append("\">").append(methodName).append("</a></td>")  // Table cell with a hyperlink
+						.append("<td>").append(scenarioDuration).append("</td></tr>");  // Table cell with scenario duration
 
 						scenarioIndex++;
 					}
@@ -400,7 +406,7 @@ public class EmailableReport implements IReporter {
 		return scenarioCount;
 	}
 
-	
+
 
 	/**
 	 * Writes the details for all test scenarios.
@@ -419,7 +425,7 @@ public class EmailableReport implements IReporter {
 				scenarioIndex += writeScenarioDetails(testResult.getFailedTestResults(), scenarioIndex);
 				scenarioIndex += writeScenarioDetails(testResult.getSkippedConfigurationResults(), scenarioIndex);
 				scenarioIndex += writeScenarioDetails(testResult.getSkippedTestResults(), scenarioIndex);
-			//	scenarioIndex += writeScenarioDetails(testResult.getPassedTestResults(), scenarioIndex);
+				//	scenarioIndex += writeScenarioDetails(testResult.getPassedTestResults(), scenarioIndex);
 			}
 		}
 	}
@@ -435,12 +441,12 @@ public class EmailableReport implements IReporter {
 			for (MethodResult methodResult : classResult.getMethodResults()) {
 				List<ITestResult> results = methodResult.getResults();
 				assert !results.isEmpty();
-				ITestResult firstResult = results.iterator().next();
-				String methodName=firstResult.getName();
+				//	ITestResult firstResult = results.iterator().next();
+				//	String methodName=firstResult.getName();
 				String label = Utils
 						.escapeHtml(className + "#" + results.iterator().next().getMethod().getMethodName());
 				for (ITestResult result : results) {
-					writeScenario(scenarioIndex, methodName, result);
+					writeScenario(scenarioIndex, label, result);
 					scenarioIndex++;
 				}
 			}
@@ -456,7 +462,7 @@ public class EmailableReport implements IReporter {
 		writer.print("<h3 id=\"m");
 		writer.print(scenarioIndex);
 		writer.print("\">");
-		 writer.print(label);
+		writer.print(label);
 		writer.print("</h3>");
 
 		writer.print("<table class=\"result\">");

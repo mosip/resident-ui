@@ -11,7 +11,7 @@ public class BookinganAppointment extends ResidentBaseClass {
 
 	@Test
 	public void bookinganAppointment () throws Exception {
-		 String externalemail=JsonUtil.JsonObjParsing(Commons.getTestData(),"externalemail");
+		 String externalemail="";
 		
 		
 		

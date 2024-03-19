@@ -37,7 +37,7 @@ public class ResidentBaseClass {
 	protected JavascriptExecutor js;
 	protected String langcode;
 	protected String env = ConfigManager.getiam_apienvuser();
-	protected String envPath = ConfigManager.getiam_adminportal_path();
+	protected String envPath = ConfigManager.getiam_residentportal_path();
 	protected String vid = System.getProperty("vid");
 	protected String externalurl = System.getProperty("externalurl");
 	protected String password = System.getProperty("password");
@@ -61,37 +61,38 @@ public class ResidentBaseClass {
 	@BeforeMethod
 	public void setUp() throws Exception {
 		test = extent.createTest(env, getCommitId());
-//		System.out.println(System.getProperty("user.dir"));
-//		String configFilePath = System.getProperty("user.dir") + "\\chromedriver\\chromedriver.exe";
-//		System.setProperty("webdriver.chrome.driver", configFilePath);	
-//		ChromeOptions options = new ChromeOptions();
-//		try {
-//			String headless=JsonUtil.JsonObjParsing(Commons.getTestData(),"headless");
-//			if(headless.equalsIgnoreCase("yes")) {
-//				options.addArguments("--headless=new");
-//			}
-//		} catch (Exception e1) {
-//			
-//			e1.printStackTrace();
-//		}
+		if(System.getProperty("os.name").equalsIgnoreCase("Linux") && ConfigManager.getDocker().equals("yes") ) {
+			
+			
+			logger.info("Docker start");
+			String configFilePath ="/usr/bin/chromedriver";
+			System.setProperty("webdriver.chrome.driver", configFilePath);
+		
+	}else {
 		WebDriverManager.chromedriver().setup();
+		logger.info("window chrome driver start");
+	}
 		ChromeOptions options = new ChromeOptions();
-		String headless = JsonUtil.JsonObjParsing(Commons.getTestData(), "headless");
-		if (headless.equalsIgnoreCase("yes")) {
-			options.addArguments("--headless=new");
+		String headless=ConfigManager.getHeadless();
+		if(headless.equalsIgnoreCase("yes")) {
+			logger.info("Running is headless mode");
+			options.addArguments("--headless", "--disable-gpu","--no-sandbox", "--window-size=1920x1080","--disable-dev-shm-usage");
+			
+
 		}
+		
 		driver = new ChromeDriver(options);
 		js = (JavascriptExecutor) driver;
 		vars = new HashMap<String, Object>();
 		driver.get(envPath);
+		logger.info("launch url --"+envPath);
 		Thread.sleep(500);
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		driver.manage().window().maximize();
-		String langid="lang"+JsonUtil.JsonObjParsing(Commons.getTestData(),"language");
-		String language=JsonUtil.JsonObjParsing(Commons.getTestData(),"loginlang");
+		String language=ConfigManager.getloginlang();
 		try {
 			if(!language.equals("sin")) {
-			Commons.dropdown( driver, By.id("languages"), By.id(langid));
+			Commons.dropdown( driver, By.id("languages"), By.id("lang"+language));
 			}
 		}
 		catch (Exception e) {

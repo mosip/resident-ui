@@ -1,10 +1,12 @@
 package io.mosip.testrig.residentui.testcase;
 
 import org.openqa.selenium.By;
+import org.testng.Reporter;
 import org.testng.annotations.Test;
 
 import com.aventstack.extentreports.Status;
 
+import io.mosip.testrig.residentui.kernel.util.ConfigManager;
 import io.mosip.testrig.residentui.utility.BaseClass;
 import io.mosip.testrig.residentui.utility.Commons;
 import io.mosip.testrig.residentui.utility.JsonUtil;
@@ -14,17 +16,17 @@ import io.mosip.testrig.residentui.utility.TestRunner;
 public class UpdateMyData extends BaseClass {
 	
 	public void updateMyDataName() throws Exception {
-		String tempemail1 = JsonUtil.JsonObjParsing(Commons.getTestData(), "tempemail1");
+		String tempemail1 = ConfigManager.gettempemail1();
 		LoginTest.loginTest();
 		test = extent.createTest("updateMyData Test ", "verify Login");
 		Commons.clickWebelement(test, driver, By.id("uinservices/updatedemographic"));
-		Commons.enter(test, driver, By.id("fullNameeng"), data);
+		Commons.enter(test, driver, By.id("fullName"+BaseClass.envsupportlang()), data);
 		Commons.dropdown(test, driver, By.id("gender"));
 		test.log(Status.INFO, "Click on gender");
 		Commons.enter(test, driver, By.id("proofOfIdentityvalue"), data);
 		Commons.dropdown(test, driver, By.id("proofOfIdentity"));
 		Commons.enter(test, driver, By.id("fileDropRef"),
-				TestRunner.getResourcePath() + "\\BulkUploadFiles\\tonyId.png");
+				TestRunner.getResourcePath() + "//BulkUploadFiles//tonyId.png");
 		Thread.sleep(2000);
 		Commons.clickWebelement(test, driver, By.id("previewBtn"));
 
@@ -45,16 +47,16 @@ public class UpdateMyData extends BaseClass {
 		Commons.clickWebelement(test, driver, By.xpath("//div[@id='mat-tab-label-0-1']"));
 		
 		
-		Commons.enter(test, driver, By.id("addressLine1eng"), data);
-		Commons.dropdown(test, driver, By.id("Regioneng"));
-		Commons.dropdown(test, driver, By.id("Provinceeng"));
-		Commons.dropdown(test, driver, By.id("Cityeng"));
-		Commons.dropdown(test, driver, By.id("Zoneeng"));
+		Commons.enter(test, driver, By.id("addressLine1"+BaseClass.envsupportlang()), data);
+		Commons.dropdown(test, driver, By.id("Region"+BaseClass.envsupportlang()));
+		Commons.dropdown(test, driver, By.id("Province"+BaseClass.envsupportlang()));
+		Commons.dropdown(test, driver, By.id("City"+BaseClass.envsupportlang()));
+		Commons.dropdown(test, driver, By.id("Zone"+BaseClass.envsupportlang()));
 		Commons.dropdown(test, driver, By.id("Postal Code"));
 		Commons.dropdown(test, driver, By.id("proofOfAddress"));
 		Commons.enter(test, driver, By.id("proofOfAddressvalue"), data);
 		Commons.enter(test, driver, By.id("fileAddRef"),
-				TestRunner.getResourcePath() + "\\BulkUploadFiles\\tonyId.png");
+				TestRunner.getResourcePath() + "//BulkUploadFiles//tonyId.png");
 		test.log(Status.INFO, "file Uploaded");
 		Thread.sleep(2000);
 		Commons.clickWebelement(test, driver, By.id("previewBtn"));
@@ -68,7 +70,7 @@ public class UpdateMyData extends BaseClass {
 
 	}
 	public void UpdateDataWithEmail() throws Exception {
-		String tempemail1 = JsonUtil.JsonObjParsing(Commons.getTestData(), "tempemail1");
+		String tempemail1 = ConfigManager.gettempemail1();
 		LoginTest.loginTest();
 		test.log(Status.INFO, "Update Email");
 		Commons.click(test, driver, By.id("uinservices/updatedemographic"));
@@ -110,15 +112,15 @@ public class UpdateMyData extends BaseClass {
 		test = extent.createTest("UpdateDataWithoutAddressLine ", "verify Login");
 		Commons.clickWebelement(test, driver, By.id("uinservices/updatedemographic"));
 		Commons.clickWebelement(test, driver, By.xpath("//div[@id='mat-tab-label-0-1']"));
-		Commons.dropdown(test, driver, By.id("Regioneng"));
-		Commons.dropdown(test, driver, By.id("Provinceeng"));
-		Commons.dropdown(test, driver, By.id("Cityeng"));
-		Commons.dropdown(test, driver, By.id("Zoneeng"));
+		Commons.dropdown(test, driver, By.id("Region"+BaseClass.envsupportlang()));
+		Commons.dropdown(test, driver, By.id("Province"+BaseClass.envsupportlang()));
+		Commons.dropdown(test, driver, By.id("City"+BaseClass.envsupportlang()));
+		Commons.dropdown(test, driver, By.id("Zone"+BaseClass.envsupportlang()));
 		Commons.dropdown(test, driver, By.id("Postal Code"));
 		Commons.dropdown(test, driver, By.id("proofOfAddress"));
 		Commons.enter(test, driver, By.id("proofOfAddressvalue"), data);
 		Commons.enter(test, driver, By.id("fileAddRef"),
-				TestRunner.getResourcePath() + "\\BulkUploadFiles\\tonyId.png");
+				TestRunner.getResourcePath() + "//BulkUploadFiles//tonyId.png");
 		test.log(Status.INFO, "file Uploaded");
 		Thread.sleep(2000);
 		Commons.clickWebelement(test, driver, By.id("previewBtn"));

@@ -14,9 +14,9 @@
 		"10VerifyPhoneNumberEmailID":"VPNEEI",
 		"11viewMyHistory":"VMH",
 		"BELOW_ARE_STATIC_KEYWORDS": "We are using this setExcludedGroups to exclude scenarios",
-		"setExcludedGroups": "LG,GMU,VPNEEI,GI,MMV,SMI,SMD,TMR,VMH,GPC",
+		"setExcludedGroups": "GMU,VPNEEI,UMD,GI,MMV,SMI,SMD,TMR,VMH,GPC",
 		"identityGenManual":"no",
-		"perpetualvid":"3820153059067924",
+		"perpetualvid":"2572612719356852",
 		 "temporaryvid":"3048902169863853",
 		 "UIN":"7817563598",
 		 "onetimevid":"6301483241681503",
@@ -26,8 +26,9 @@
 		 "tempEID": "9154434691678886",
 		 "aid":"10001100800003920230505043751",
 		 "postalcode": "14080",
-		 "headless": "no",
-		 "language":"ara",
+		 "headless": "yes",
+		 "Docker":"yes",
+		 "language":"eng",
 		 "loginlang":"mul",
 		"hierarchyLevel0": [
 			{

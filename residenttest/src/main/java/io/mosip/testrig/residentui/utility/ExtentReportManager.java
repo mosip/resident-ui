@@ -11,13 +11,14 @@ public class ExtentReportManager {
 	public static ExtentSparkReporter html;
 	public static	ExtentReports extent;
 	//public static WebDriver driver;
-	public static String Filepath;
+	public static String Reportname="resident"+Commons.getDateTime()+".html";;
+	public static String Filepath=System.getProperty("user.dir")+"/Reports/"+Reportname;;
+	
 	public static	ExtentTest test;
 	public static ExtentReports getReports() {
 		if(extent==null) {
 			extent=new ExtentReports();
 			extent=new ExtentReports();
-			 Filepath=System.getProperty("user.dir")+"/Reports/"+"resident"+Commons.getDateTime()+".html";
 			html=new ExtentSparkReporter(Filepath);
 			  extent.attachReporter(html);
 		}

@@ -436,7 +436,8 @@
             "descriptionText": "Description: Demographic Data Updated",
             "descriptionDetails": "We have found an existing Data Update Request which is still In Progress. In order to raise a new request, you will have to delete the existing request.",
             "viewMore":"View More",
-            "viewLess":"View Less"
+            "viewLess":"View Less",
+            "warnMsg":"Are you sure you want to cancel the existing Data Update Request to update your?"
         },
         "draftCanceled":"Your existing Data Update Request has been successfully canceled. You can now proceed to raise another Data Update request."
     },
