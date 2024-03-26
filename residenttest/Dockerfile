@@ -31,7 +31,8 @@ RUN groupadd -g ${container_user_gid} ${container_user_group} \
     && chown -R ${container_user}:${container_user} /home/${container_user}/  \
     && curl -LO "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl" \
     && chmod +x kubectl \
-    && mv kubectl /usr/local/bin/
+    && mv kubectl /usr/local/bin/ \
+    && chown -R ${container_user}:${container_user} /home/${container_user}
 
 # Switch to the specified user for the subsequent commands
 USER ${container_user_uid}:${container_user_gid}
@@ -43,8 +44,6 @@ COPY --chown=${container_user_uid}:${container_user} ./target/*.jar ${work_dir}
 
 # Set working directory
 WORKDIR /home/${container_user}/
-
-
 
 # Entrypoint for the container
 ENTRYPOINT ["/bin/bash", "-c", "./entrypoint.sh"]
