@@ -28,7 +28,7 @@
                       <td width="100%" class="main-table-data" *ngIf="userInfo[field.attributeName]">
                         <table width="100%">
                           <!-- number of attems mobile and tab code -->
-                          <tr class="number-of-attems-mobile-card">
+                          <tr class="number-of-attems-mobile-card" *ngIf="attributeUpdateCountMaxLimit[field.attributeName]">
                             <td>
                               <div [style.font-size]="fontSize.lableText"
                                 [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-left-card' : 'number-of-attems-left-card'">
@@ -74,7 +74,7 @@
                             </td>
                             <td width="1%" class="ele-for-lap-tab-card"></td>
                             <td *ngIf="attributeUpdateCountRemainLimit" class="number-of-attems-main-card">
-                              <div
+                              <div *ngIf="attributeUpdateCountMaxLimit[field.attributeName]"
                                 [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-left-card' : 'number-of-attems-left-card'">
                                 <div *ngIf="langCode !== 'ara'"
                                   [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-arrow-shape':'number-of-attems-arrow-shape'">
@@ -139,8 +139,8 @@
                       <td class="main-table-data" width="100%" *ngIf="userInfo[field.attributeName]">
                         <table width="100%" *ngFor="let language of supportedLanguages;">
                           <!-- number of attems mobile and tab code -->
-                          <tr class="number-of-attems-mobile-card">
-                            <td>
+                          <tr class="number-of-attems-mobile-card" *ngIf="attributeUpdateCountRemainLimit">
+                            <td *ngIf="attributeUpdateCountMaxLimit[field.attributeName]">
                               <div
                                 [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-left-card' : 'number-of-attems-left-card'">
                                 <div [style.font-size]="fontSize.lableText">
@@ -193,7 +193,7 @@
                             </td>
                             <td class="sub-table-row ele-for-lap-tab-card" width="1%"></td>
                             <td *ngIf="i===0 && attributeUpdateCountRemainLimit" class="number-of-attems-main-card">
-                              <div
+                              <div *ngIf="attributeUpdateCountMaxLimit[field.attributeName]"
                                 [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-left-card' : 'number-of-attems-left-card'">
                                 <div *ngIf="langCode !== 'ara'"
                                   [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-arrow-shape':'number-of-attems-arrow-shape'">
@@ -262,8 +262,8 @@
                       <td class="main-table-data" width="100%" *ngIf="userInfo[field.attributeName]">
                         <table width="100%">
                           <!-- number of attems mobile and tab code -->
-                          <tr class="number-of-attems-mobile-card">
-                            <td>
+                          <tr class="number-of-attems-mobile-card" *ngIf="attributeUpdateCountRemainLimit">
+                            <td *ngIf="attributeUpdateCountMaxLimit[field.attributeName]">
                               <div
                                 [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-left-card' : 'number-of-attems-left-card'">
                                 <div [style.font-size]="fontSize.lableText" style="padding-right: 4px;" *ngIf="langJson && attributeUpdateCountMaxLimit">
@@ -320,7 +320,7 @@
                             </td>
                             <td class="sub-table-row ele-for-lap-tab-card" width="1%"></td>
                             <td *ngIf="i===0 && attributeUpdateCountRemainLimit" class="number-of-attems-main-card">
-                              <div
+                              <div *ngIf="attributeUpdateCountMaxLimit[field.attributeName]"
                                 [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-left-card' : 'number-of-attems-left-card'">
                                 <div *ngIf="langCode !== 'ara'"
                                   [ngClass]="attributeUpdateCountRemainLimit[field.attributeName] <= 0 ? 'low-number-of-attems-arrow-shape':'number-of-attems-arrow-shape'">

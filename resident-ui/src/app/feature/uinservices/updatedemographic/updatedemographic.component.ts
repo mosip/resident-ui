@@ -105,9 +105,8 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
   selectedOptionData:any;
   oldSelectedIndex:any;
   isSameData: any = {};
-  cancellable:boolean;
+  cancellable:boolean = false;
   draftsDetails:any;
-  eidDetails:any;
 
 
   private keyboardRef: MatKeyboardRef<MatKeyboardComponent>;
@@ -174,8 +173,6 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
         this.matTabLabel = response.updatedemographic.identity;
       });
 
-    this.getUpdateMyDataSchema();
-    // this.getUserInfo();
     await this.getMappingData();
     const subs = this.autoLogout.currentMessageAutoLogout.subscribe(
       (message) => (this.message2 = message) //message =  {"timerFired":false}
@@ -190,22 +187,16 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
     } else {
       this.autoLogout.getValues(this.langCode);
       this.autoLogout.continueWatching();
-    }    
-    this.dataStorageService.getPendingDrafts().subscribe((response) =>{
-      if(response['response']){
-        this.cancellable = response['response'].cancellable;
-        this.draftsDetails = response['response'].drafts[0].eid;
+    }
 
-        if(this.cancellable){
-          this.dataStorageService
-            .getEIDStatus(this.draftsDetails)
-            .subscribe((response) => {
-            if(response["response"]){
-              this.eidDetails = response["response"];
-            }else if(response["errors"]){
-              this.eidDetails = ""
-            }   
-          });
+    this.dataStorageService.getPendingDrafts(this.langCode).subscribe((response) =>{
+      this.getUpdateMyDataSchema();
+      if(response['response']){
+        if(!response['response'].drafts.length){
+          this.cancellable = false;
+        }else{
+          this.cancellable = true;
+          this.draftsDetails = response['response'].drafts;
         }
 
       }else{
@@ -1154,20 +1145,20 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
 
   popupForInprogressData() {
     setTimeout(() => {
-      let dialogRef = this.dialog
-        .open(DialogComponent, {
+      const dialogRef = this.dialog.open(DialogComponent, {
           width: '750px',
           data: {
             case: 'updateMyDataInprogress',
             message: this.langJson.pendingDrafts,
-            transactionDetails: this.eidDetails
-          },
-          disableClose: true
+            draftsDetails: this.draftsDetails,
+            confirmBtn: this.popupMessages.genericmessage.confirm,
+            cancelBtn: this.popupMessages.genericmessage.cancel
+          }
         });
       
         dialogRef.afterClosed().subscribe(res =>{
         if(res){
-          this.dataStorageService.discardPendingDrafts(this.draftsDetails)
+          this.dataStorageService.discardPendingDrafts(res)
           .subscribe((response) =>{
             if(response['response']){
               this.message = this.langJson.draftCanceled  
@@ -1179,6 +1170,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
           })
         }
       })
+      return dialogRef;
     },400)
   }
 

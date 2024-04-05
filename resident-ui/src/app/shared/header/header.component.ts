@@ -137,6 +137,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     this.activeUrl = window.location.hash
     this.selectedfontsize= localStorage.getItem('selectedfontsize')
+    this.fontSizeService.setFontSize(this.selectedfontsize);
   }
 
   getNotificationInfo(){
@@ -203,70 +204,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   textDirection() {
     return localStorage.getItem("dir");
-  }
-
-  zoom(item:any) {
-    localStorage.setItem("selectedfontsize", item.fontSize);
-    this.selectedfontsize= localStorage.getItem('selectedfontsize')
-    if(item.fontSize === "12"){
-      // if(this.agent.indexOf('firefox') > -1 || (this.router.url === "/getuin" || this.router.url === "/verify")){
-      //   document.body.style["zoom"] = "100rem";
-      //   document.body.style["transform"] = "scale(1, .9)";
-      //   document.body.style["transformOrigin "] = "0 0";
-      //   document.body.style["margin-top"] = "-5.2em";
-      //   document.body.style["height"] = "100rem";
-      // }else{
-        document.body.style["zoom"]= "90%";
-        // document.body.style.removeProperty('transform');
-        // document.body.style.removeProperty('transformOrigin');
-        // document.body.style.removeProperty('margin-top');
-        // document.body.style.removeProperty("height");
-      // }
-    }else if(item.fontSize === "14"){
-      // if(this.agent.indexOf('firefox') > -1 || (this.router.url === "/getuin" || this.router.url === "/verify")){
-      //   document.body.style["zoom"] = "100rem";
-      //   document.body.style["transform"] = "scale(1, 1.0)";
-      //   document.body.style["transformOrigin "] = "0 0";
-      //   document.body.style["margin-top"] = "0%";
-      //   document.body.style["height"] = "100rem";
-      // }else{
-        document.body.style["zoom"]= "100%";
-        // document.body.style.removeProperty('transform');
-        // document.body.style.removeProperty('transformOrigin');
-        // document.body.style.removeProperty('margin-top');
-        // document.body.style.removeProperty("height");
-      // }
-    }else if(item.fontSize === "16"){
-      // if(this.agent.indexOf('firefox') > -1 || (this.router.url === "/getuin" || this.router.url === "/verify")){
-      //   document.body.style["zoom"] = "100rem";
-      //   document.body.style["transform"] = "scale(1, 1.1)";
-      //   document.body.style["transformOrigin "] = "0 0";
-      //   document.body.style["margin-top"] = "5em";
-      //   document.body.style["height"] = "100rem";
-      // }else{
-        document.body.style["zoom"]= "110%";
-        // document.body.style.removeProperty('transform');
-        // document.body.style.removeProperty('transformOrigin');
-        // document.body.style.removeProperty('margin-top');
-        // document.body.style.removeProperty("height");
-      // }
-    }else if(item.fontSize === "18"){
-      // if(this.agent.indexOf('firefox') > -1 || (this.router.url === "/getuin" || this.router.url === "/verify")){
-      //   document.body.style["zoom"] = "100rem";
-      //   document.body.style["transform"] = "scale(1, 1.2)";
-      //   document.body.style["transformOrigin "] = "0 0";
-      //   document.body.style["margin-top"] = "10em";
-      //   document.body.style["height"] = "100rem";
-        // document.body.style["zoom"]= "120%";
-        
-      // }else{
-        document.body.style["zoom"]= "120%";
-        // document.body.style.removeProperty('transform');
-        // document.body.style.removeProperty('transformOrigin');
-        // document.body.style.removeProperty('margin-top');
-        // document.body.style.removeProperty("height");
-      // }
-    }    
   }
 
   setFontSize(size: any): void {

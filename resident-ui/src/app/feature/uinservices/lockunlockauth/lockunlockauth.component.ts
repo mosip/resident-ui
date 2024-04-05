@@ -229,22 +229,7 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
         }
       }
     })
-  //  for(let item in this.changedItems){
-  //     for(var i=0; i < this.authlist.length; i++){
-  //       console.log(this.authlist[i].authSubType)
-  //       if(item === this.authlist[i].authSubType){
-  //         if(JSON.parse(localStorage.getItem("authList"))[i].locked !== this.authlist[i].locked){
-  //           buildfinaldata.push(this.authlist[i]);
-  //         }
-  //         break;
-  //       }else if(item === this.authlist[i].authType){
-  //         if(JSON.parse(localStorage.getItem("authList"))[i].locked !== this.authlist[i].locked){
-  //           buildfinaldata.push(this.authlist[i]);
-  //         }
-  //         break;
-  //       }
-  //     }
-  //   }
+
     const request = {
       "id": "mosip.resident.auth.lock.unlock",
       "version": this.appConfigService.getConfig()["resident.vid.version.new"],
@@ -256,14 +241,14 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
     };
     this.dataStorageService.updateAuthlockStatus(request).subscribe(response => {
         this.getAuthlockStatus();  
-        if(!response["errors"]){
+        if(!response.body["errors"]){
           this.submitBtnDisable = true;
           let eventId = response.headers.get("eventid")
-          this.showMessage(JSON.stringify(response["response"]),eventId);
+          this.showMessage(eventId);
           this.changedItems = {}
           this.router.navigate(['uinservices/dashboard']);
         }else{
-          this.showErrorPopup(response["errors"]);
+          this.showErrorPopup(response.body["errors"]);
         }
       },
       error => {
@@ -286,7 +271,7 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
     return dialogRef;
   }
 
-  showMessage(message: string,eventId:any) {   
+  showMessage(eventId:any) {   
     this.message =  this.popupMessages.genericmessage.secureMyId.successMsg.replace("$eventId",eventId)
     const dialogRef = this.dialog.open(DialogComponent, {
       width: '550px',
