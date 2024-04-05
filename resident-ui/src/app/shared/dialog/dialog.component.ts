@@ -58,6 +58,8 @@ export class DialogComponent implements OnInit {
   disableInput:boolean = false;
   isInprogressDetialsShow:boolean = false;
   langJSON:any;
+  selectedIndex:any;
+  eidDetails:any;
 
   constructor(
     public dialog: MatDialog,
@@ -255,8 +257,22 @@ export class DialogComponent implements OnInit {
     return this.fontSizeService.fontSize;
   }
 
-  showInprogressDataDetails(){
-    this.isInprogressDetialsShow = !this.isInprogressDetialsShow
+  showInprogressDataDetails(btnType:string, index:any, eid:string){
+    this.selectedIndex = index;
+    this.isInprogressDetialsShow = false;
+
+    if(btnType === 'viewMore'){
+      this.dataStorageService
+      .getEIDStatus(eid)
+      .subscribe((response) => {
+        if(response["response"]){
+          this.eidDetails = response["response"];
+          this.isInprogressDetialsShow = true;
+        }else if(response["errors"]){
+          this.eidDetails = ""
+        }   
+      });
+    }
   }
   
   logOutBtn(){

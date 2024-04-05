@@ -433,11 +433,12 @@
         "DocIDPlaceholder": "Ingresar número de documento",
         "pendingDrafts":{
             "heading": "Se encontró una solicitud existente; se requiere acción.",
-            "descriptionText": "Descripción: Datos demográficos actualizados",
+            "descriptionText": "Descripción: ",
             "descriptionDetails": "Hemos encontrado una solicitud de actualización de datos existente que aún está en curso. Para generar una nueva solicitud, deberá eliminar la solicitud existente.",
             "viewMore":"Ver más",
             "viewLess":"Ver menos",
-            "warnMsg":"¿Está seguro de que desea cancelar la Solicitud de actualización de datos existente para actualizar la suya?"
+            "warnMsg":"¿Está seguro de que desea cancelar la Solicitud de actualización de datos existente para actualizar la suya?",
+            "warnMsgTwo":"No puede cancelar esta solicitud ya que todavía está en estado Pendiente. Inténtalo después de un tiempo."
         },
         "draftCanceled":"Su solicitud de actualización de datos existente se canceló exitosamente. Ahora puede proceder a generar otra solicitud de Actualización de datos."
     },
@@ -545,6 +546,7 @@
         "login": " para iniciar sesión.",
         "click":"haz clic aquí.",
         "cancel":"Cancelar",
+        "confirm":"Confirmar",
         "continue":"Continuar",
         "langChgWarnText":"Al pulsar en continuar se perderán los datos que hayas introducido.",
         "toSeeMoreDetails":"ver más detalles.",
@@ -708,6 +710,8 @@
         "RES-SER-524": "No se permite actualizar UIN porque el paquete anterior está pendiente. Para continuar, deséchelo.",
         "RES-SER-525": "No se permite actualizar UIN porque el paquete anterior está pendiente y no se puede cancelar.",
         "RES-SER-526": "Límite de recuento de actualizaciones para los atributos excedidos: - %s",
-        "RES-SER-470": "No se encontraron registros"
+        "RES-SER-470": "No se encontraron registros",
+        "RES-SER-401": "Excepción básica",
+        "RES-SER-474": "Excepción de identificación individual no encontrada"
     }
 }
