@@ -168,7 +168,7 @@ export class DataStorageService {
   }
 
   updateAuthlockStatus(request: any) {
-    return this.httpClient.post(this.BASE_URL + '/auth-lock-unlock', request, { observe: 'response', responseType: 'blob' as 'json' });
+    return this.httpClient.post(this.BASE_URL + '/auth-lock-unlock', request, { observe: 'response'});
   }
 
   getProfileInfo(langCode) {
@@ -358,8 +358,8 @@ export class DataStorageService {
     return this.httpClient.get(this.BASE_URL + '/auth-proxy/masterdata/dynamicfields/preferredLang/' + langCode + '?withValue=true' )
   }
 
-  getPendingDrafts(){
-    return this.httpClient.get(this.BASE_URL + '/identity/get-pending-drafts')
+  getPendingDrafts(langCode:string){
+    return this.httpClient.get(this.BASE_URL + '/identity/get-pending-drafts/' + langCode)
   }
 
   discardPendingDrafts(eid:string){

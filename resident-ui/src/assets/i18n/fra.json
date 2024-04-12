@@ -432,12 +432,13 @@
         "docTypePlaceholder": "Sélectionner le type de document",
         "DocIDPlaceholder": "Entrer l'identifiant du document",
         "pendingDrafts":{
-            "heading": "Demande existante trouvée, action requise !",
-            "descriptionText": "Description : Données démographiques mises à jour",
+            "heading": "Demande existante trouvée, action requise!",
+            "descriptionText": "Description: ",
             "descriptionDetails": "Nous avons trouvé une demande de mise à jour des données existante qui est toujours en cours. Afin de soulever une nouvelle demande, vous devrez supprimer la demande existante.",
             "viewMore":"Voir plus",
             "viewLess":"Voir moins",
-            "warnMsg":"Êtes-vous sûr de vouloir annuler la demande de mise à jour des données existante pour mettre à jour votre ?"
+            "warnMsg":"Êtes-vous sûr de vouloir annuler la demande de mise à jour des données existante pour mettre à jour votre ?",
+            "warnMsgTwo":"Vous ne pouvez pas annuler cette demande car elle est toujours à l'état En attente. S'il vous plaît, essayez après un certain temps."
         },
         "draftCanceled":"Votre demande de mise à jour de données existante a été annulée avec succès. Vous pouvez maintenant procéder à une autre demande de mise à jour des données."
     },
@@ -545,6 +546,7 @@
         "login": " pour vous connecter.",
         "click":"cliquez ici.",
         "cancel":"Annuler",
+        "confirm":"Confirmer",
         "continue":"Continuer",
         "langChgWarnText":"En cliquant sur continuer, les données que vous avez saisies seront perdues.",
         "toSeeMoreDetails":"pour voir plus de détails",
@@ -708,6 +710,8 @@
         "RES-SER-524": "Non autorisé à mettre à jour l'UIN car le paquet précédent est en attente. Pour continuer, veuillez le jeter.",
         "RES-SER-525": "Non autorisé à mettre à jour l'UIN car le paquet précédent est en attente et il ne peut pas être annulé.",
         "RES-SER-526": "Limite du nombre de mises à jour pour les attributs dépassée : - %s",
-        "RES-SER-470": "Aucun enregistrement trouvé"
+        "RES-SER-470": "Aucun enregistrement trouvé",
+        "RES-SER-401": "Exception de base",
+        "RES-SER-474": "Exception d'identification individuelle introuvable"
     }
 }

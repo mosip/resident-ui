@@ -433,11 +433,12 @@
         "DocIDPlaceholder":"Enter Document ID",
         "pendingDrafts":{
             "heading": "Existing request found, action required!",
-            "descriptionText": "Description: Demographic Data Updated",
-            "descriptionDetails": "We have found an existing Data Update Request which is still In Progress. In order to raise a new request, you will have to delete the existing request.",
+            "descriptionText": "Description: ",
+            "descriptionDetails": "We have found an existing Data Update Request which is still in progress. In order to raise a new request, you will have to delete the existing request.",
             "viewMore":"View More",
             "viewLess":"View Less",
-            "warnMsg":"Are you sure you want to cancel the existing Data Update Request to update your?"
+            "warnMsg":"Are you sure you want to cancel the existing Data Update Request to update your?",
+            "warnMsgTwo":"You cannot cancel this request since it is still in Pending state. Please try after sometime."
         },
         "draftCanceled":"Your existing Data Update Request has been successfully canceled. You can now proceed to raise another Data Update request."
     },
@@ -545,6 +546,7 @@
         "login": " to login.",
         "click":"Click here",
         "cancel":"Cancel",
+        "confirm":"Confirm",
         "continue":"Continue",
         "langChgWarnText":"On clicking on continue, the data that you have entered will be lost.",
         "toSeeMoreDetails":"to see more details.",
@@ -708,6 +710,8 @@
         "RES-SER-524": "Not allowed to update UIN as previous packet is pending. To proceed further please discard it.",
         "RES-SER-525": "Not allowed to update UIN as previous packet is pending and it cannot be cancelled.",
         "RES-SER-526": "Update count limit for the attributes exceeded:- %s",
-        "RES-SER-470": "No Record(s) found"
+        "RES-SER-470": "No Record(s) found",
+        "RES-SER-401": "Base exception.",
+        "RES-SER-474": "Individual ID not found exception"
     }
 }

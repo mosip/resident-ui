@@ -454,9 +454,10 @@ p{
   border: 1px solid #909090;
   border-radius: 5px;
   height: auto;
+  margin-bottom: 6px;
 }
 .intro-details{
-  padding: 7px 7px 0 7px;
+  padding: 7px;
 }
 .eid-date-card{
   /* font-size: 14px; */
@@ -477,13 +478,12 @@ p{
   margin: 6px 0px !important;
 }
 .button-card{
-  margin-top: 12px;
+  margin-top: 6px;
   text-align: right;
 }
 .data-inprogress-btns{
-  margin: 5px;
-  width: 100px;
-  height: 33px;
+  min-width: 100px;
+  height: 100%;
   border: none;
   outline: none;
   border-radius: 5px;
@@ -491,9 +491,11 @@ p{
 }
 .cancel-btn{
   background-color: #909090;
+  margin-top: 6px 0 6px;
 }
 .confirm-btn{
   background-color: #03A64A;
+  margin-top: 6px;
 }
 .event-details{
   padding: 7px;
@@ -508,5 +510,15 @@ p{
   background-color: #FFF9DB;
   border-radius: 5px;
   color: #89730B;
-  margin-top: 8px;
+  margin-top: 6px;
+}
+.confirm-card{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.hello{
+  display: none;
 }
