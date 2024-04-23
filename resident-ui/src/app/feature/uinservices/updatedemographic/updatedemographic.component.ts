@@ -421,7 +421,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
 
   getGender() {
     this.dropDownValues["gender"] = {}
-    this.dataStorageService.getDataForDropDown("/proxy/masterdata/dynamicfields/all/gender").subscribe(response => {
+    this.dataStorageService.getDataForDropDown("/proxy/masterdata/dynamicfields/gender").subscribe(response => {
       if (response['response']) {
         response['response'].forEach(eachItem => {
           this.dropDownValues["gender"][eachItem.langCode] = eachItem.fieldVal
