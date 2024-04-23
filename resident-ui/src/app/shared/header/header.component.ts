@@ -47,6 +47,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   agent:any = window.navigator.userAgent.toLowerCase();
   selectedfontsize:any = localStorage.getItem('selectedfontsize');
   selectedLangData:any;
+  isAuthorized:boolean = false;
 
   constructor(
     private router: Router,
@@ -180,6 +181,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     .getProfileInfo(this.langCode)
     .subscribe((response) => {
       if(response["response"]){
+        this.isAuthorized = true;
         let autonotificationcall = self.appConfigService.getConfig()['resident.ui.notification.update.interval.seconds'];
         let timeperiod = autonotificationcall*1000;
 
