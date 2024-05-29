@@ -39,6 +39,9 @@ function installing_resident() {
     ENABLE_INSECURE='--set enable_insecure=true';
   fi
 
+  API_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-api-internal-host})
+  RESIDENT_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-resident-host})
+
   echo Installing Resident UI
   helm -n $NS install resident-ui mosip/resident-ui --set resident.apiHost=$API_HOST --set istio.hosts\[0\]=$RESIDENT_HOST --version $RESIDENT_UI_CHART_VERSION
 

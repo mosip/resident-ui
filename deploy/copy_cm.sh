@@ -3,7 +3,7 @@
 # DST_NS: Destination namespace
 
 function copying_cm() {
-  COPY_UTIL=.copy_cm_func.sh
+  COPY_UTIL=./copy_cm_func.sh
   DST_NS=resident
 
   $COPY_UTIL configmap global default $DST_NS
