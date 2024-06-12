@@ -18,13 +18,14 @@ on:
       - release-*
       - master
       - develop
+      - develop-java21
       - develop-*
       - 1*
       - MOSIP*
 
 jobs:
   build-resident-ui:
-    uses: mosip/kattu/.github/workflows/npm-build.yml@master
+    uses: mosip/kattu/.github/workflows/npm-build.yml@master-java21
     with:
       SERVICE_LOCATION: ./resident-ui
       BUILD_ARTIFACT: resident-ui
@@ -42,7 +43,7 @@ jobs:
             BUILD_ARTIFACT: 'resident-ui'
       fail-fast: false
     name: ${{ matrix.SERVICE_NAME }}
-    uses: mosip/kattu/.github/workflows/docker-build.yml@master
+    uses: mosip/kattu/.github/workflows/docker-build.yml@master-java21
     with:
       SERVICE_LOCATION: ${{ matrix.SERVICE_LOCATION }}
       SERVICE_NAME: ${{ matrix.SERVICE_NAME }}
@@ -57,7 +58,7 @@ jobs:
   sonar-analysis:
     needs: build-resident-ui
     if: "${{ github.event_name != 'pull_request' }}"
-    uses: mosip/kattu/.github/workflows/npm-sonar-analysis.yml@master
+    uses: mosip/kattu/.github/workflows/npm-sonar-analysis.yml@master-java21
     with:
       SERVICE_LOCATION: resident-ui
       SONAR_URL: 'https://sonarcloud.io'
@@ -67,7 +68,7 @@ jobs:
       ORG_KEY: ${{ secrets.ORG_KEY }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
   build-maven-uitest-resident:
-    uses: mosip/kattu/.github/workflows/maven-build.yml@master
+    uses: mosip/kattu/.github/workflows/maven-build.yml@master-java21
     with:
       SERVICE_LOCATION: ./uitest-resident
       BUILD_ARTIFACT: uitest-resident
@@ -87,12 +88,12 @@ jobs:
       SERVICE_LOCATION: uitest-resident
       BUILD_ARTIFACT: uitest-resident-local
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v3
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
         with:
-          ref: ${{ github.ref }}
-          java-version: 11
+          distribution: 'temurin'
+          java-version: '21'
           server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
           settings-path: ${{ github.workspace }} # location for the settings.xml file
 
@@ -146,7 +147,7 @@ jobs:
             BUILD_ARTIFACT: 'uitest-resident-local'
       fail-fast: false
     name: ${{ matrix.SERVICE_NAME }}
-    uses: mosip/kattu/.github/workflows/docker-build.yml@master
+    uses: mosip/kattu/.github/workflows/docker-build.yml@master-java21
     with:
       SERVICE_LOCATION: ${{ matrix.SERVICE_LOCATION }}
       SERVICE_NAME: ${{ matrix.SERVICE_NAME }}
@@ -172,7 +173,7 @@ jobs:
   sonar_analysis_uitest-resident:
     needs: build-uitest-resident-local
     if: "${{  github.event_name != 'pull_request' }}"
-    uses: mosip/kattu/.github/workflows/maven-sonar-analysis.yml@master
+    uses: mosip/kattu/.github/workflows/maven-sonar-analysis.yml@master-java21
     with:
       SERVICE_LOCATION: uitest-resident
       SONAR_URL: 'https://sonarcloud.io'
