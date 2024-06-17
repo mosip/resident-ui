@@ -1,4 +1,5 @@
 FROM selenium/standalone-chrome:latest
+FROM mosipdev/openjdk-21-jre:latest
 
 USER root
 
