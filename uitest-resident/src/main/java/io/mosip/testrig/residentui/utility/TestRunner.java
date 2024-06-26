@@ -26,11 +26,13 @@ public class TestRunner {
 	public static String perpetualVid="";
 	public static String onetimeuseVid="";
 	public static String temporaryVid="";
-
+	protected static MockSMTPListener mockSMTPListener = null;
 	static TestNG testNg;
 
 	public static void main(String[] args) throws Exception {
-		AdminTestUtil.initialize();
+		AdminTestUtil.initialize();	
+		 mockSMTPListener = new MockSMTPListener();
+		mockSMTPListener.run();
 		String identityGenManual=ConfigManager.getidentityGenManual();
 		if(identityGenManual.equals("yes")) {
 			uin=ConfigManager.getuin();

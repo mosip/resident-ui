@@ -1,4 +1,5 @@
 package io.mosip.testrig.residentui.utility;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
@@ -14,16 +15,13 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.json.JSONException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 import io.mosip.testrig.residentui.fw.util.AdminTestUtil;
-
 import io.mosip.testrig.residentui.kernel.util.ConfigManager;
 import io.mosip.testrig.residentui.utility.pojo.Root;
+
 
 
 public class MockSMTPListener {
@@ -35,25 +33,22 @@ public class MockSMTPListener {
 	public static Boolean bTerminate = false;
 	
 	public MockSMTPListener() {
-		
+		if (ConfigManager.IsDebugEnabled())
+			logger.setLevel(Level.ALL);
+		else
+			logger.setLevel(Level.ERROR);
 	}
 
 	public void run() {
 		try {
+			Properties kernelprops = ConfigManager.propsKernel;
+			String a1 = "wss://smtp.";
+			String externalurl = kernelprops.getProperty("keycloak-external-url");
+			String a2 = externalurl.substring(externalurl.indexOf(".") + 1);
+			String a3 = "/mocksmtp/websocket";
 
-				String a1="wss://smtp.";
-				//String externalurlvar="https://iam.dev3.mosip.net";
-				//String externalurlvar="https://iam.qatriple.mosip.net";
-				String externalurlvar =ConfigManager.getiam_keyclockurl();
-			    String a2=	externalurlvar.substring(externalurlvar.indexOf(".")+1);
-			    String a3="/mocksmtp/websocket"; 
-				  
-			WebSocket ws = HttpClient
-					.newHttpClient()
-					.newWebSocketBuilder()
-					.buildAsync(URI.create(a1+a2+a3), new WebSocketClient())
-					.join();
-
+			WebSocket ws = HttpClient.newHttpClient().newWebSocketBuilder()
+					.buildAsync(URI.create(a1 + a2 + a3), new WebSocketClient()).join();
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}

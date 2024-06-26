@@ -62,8 +62,7 @@ public class LoginTest extends BaseClass {
 		try {
 		Commons.click(test, driver, By.id("get_otp"));
 
-		otp = MockSMTPListener.getOtp(externalemail);
-	//	otp="111111";
+ 		otp = MockSMTPListener.getOtp(externalemail);
 		System.out.println(otp);
 		for (int i = 0; i <= otp.length() - 1; i++) {
 			Commons.enter(test, driver, By.xpath("//*[@id='otp_verify_input']//div//input[" + (i + 1) + "]"),
@@ -72,8 +71,7 @@ public class LoginTest extends BaseClass {
 		}catch(Exception e) {
 			Thread.sleep(10000);
 			Commons.click(test, driver, By.id("get_otp"));
-
-			//otp = MockSMTPListener.getOtp(externalemail);
+			otp = MockSMTPListener.getOtp(externalemail);
 			otp="111111";
 			System.out.println(otp);
 			for (int i = 0; i <= otp.length() - 1; i++) {
