@@ -41,6 +41,13 @@ input.readonly{
 ::ng-deep .mat-select-panel {
   min-width: auto !important;
 }
+.multiline-mat-option.mat-option {
+  white-space: normal !important;
+  line-height: normal !important;
+  height: unset !important;
+  padding-top: 0.9em !important;
+  padding-bottom: 0.9em !important;
+} 
 .mat-input-element{
   width: 100%;
   padding: 6px 6px;

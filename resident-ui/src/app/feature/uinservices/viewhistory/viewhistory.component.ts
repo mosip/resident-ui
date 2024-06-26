@@ -86,9 +86,12 @@ export class ViewhistoryComponent implements OnInit, OnDestroy {
           this.cols = 1;
         }
         if(active === "medium"){
+          this.cols = 3;
+        }
+        if(active === "large"){
           this.cols = 4;
         }
-        if(active === "large" || active === "ExtraLarge"){
+        if(active === "ExtraLarge"){
           this.cols = 6;
         }
         if(active === "small"){

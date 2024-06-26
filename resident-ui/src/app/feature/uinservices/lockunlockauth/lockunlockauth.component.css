@@ -84,13 +84,26 @@ mat-card-header,
   margin-bottom: 0px;
 }
 
+@media screen and ((min-width:600px) and (max-width:1500px)){
+  .mini-card {
+    width: 98%;
+    height: 180px;
+  }
+  .mini-card-yellow {
+    width: 98%;
+    height: 180px;
+  }
+}
+
 
 @media screen and (max-width:600px){
   .mini-card {
     width: 100%;
+    height: 190px;
   }
   .mini-card-yellow {
     width: 100%;
+    height: 190px;
   }
 }
 
@@ -102,12 +115,15 @@ mat-card-header,
   padding: 10px !important;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
   margin-top: -2px !important;
+  width: 180px;
 }
+
 
 .info-icon{
   color: green !important;
   font-size: 18px; 
   cursor: pointer;
+  
 }
 
 .auth-type-text{

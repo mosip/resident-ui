@@ -35,7 +35,8 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
   clickEventSubscription: Subscription; 
   changedItems:any = [];
   showSpinner:boolean = true;
-  cols : number;
+  cols: number;
+  rowHeight:string;
   userPreferredLangCode = localStorage.getItem("langCode");
   message2:any;
   sitealignment:any = localStorage.getItem('direction');
@@ -50,14 +51,21 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
 
     this.breakPointService.isBreakpointActive().subscribe(active =>{
       if (active) {
-        if(active === "extraSmall" || active === "small"){
+        if(active === "extraSmall"){
           this.cols = 1;
+          this.rowHeight = '230px';
+        }
+        if(active === "small"){
+          this.cols = 1;
+          this.rowHeight = '200px';
         }
         if(active === "medium"){
           this.cols = 2;
+          this.rowHeight = '200px';
         }
         if(active === "ExtraLarge" || active === "large"){
           this.cols = 3;
+          this.rowHeight = '195px';
         }
       }
     });

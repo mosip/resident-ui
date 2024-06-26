@@ -95,6 +95,7 @@ export class AuthInterceptor implements HttpInterceptor {
           this.ngOnInit();
           if (err instanceof HttpErrorResponse) {
             if (err.status === 401 && err.statusText === "Unauthorized") {
+             this.router.navigate(['dashboard'])
              if (window.location.href.includes('uinservices')) {
               window.location.reload()
               this.router.navigate(['dashboard'])

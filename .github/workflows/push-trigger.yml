@@ -17,9 +17,7 @@ on:
       - '!release-branch'
       - release-*
       - master
-      - develop
-      - develop-java21
-      - develop-*
+      - develop*
       - 1*
       - MOSIP*
 

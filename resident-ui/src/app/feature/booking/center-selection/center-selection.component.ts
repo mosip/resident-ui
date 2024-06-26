@@ -140,13 +140,13 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
       this.searchInput();
   }
 
-  openKeyboard() {
+  openKeyboard(id) {
     if (this.keyboardService.isOpened) {
       this.keyboardService.dismiss();
       this.keyboardRef = undefined;
     } else {
       this.keyboardRef = this.keyboardService.open(defaultJson.keyboardMapping[this.langCode]);
-      document.getElementById("search").focus();
+      document.getElementById(id).focus();
     }
   }
 
@@ -332,6 +332,8 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
     this.searchText = "";
     this.selectedCentre = null;
     this.isBlankSpace = true;
+    if (this.keyboardService.isOpened) 
+      this.keyboardService.dismiss();
   }
 
   plotOnMap() {
