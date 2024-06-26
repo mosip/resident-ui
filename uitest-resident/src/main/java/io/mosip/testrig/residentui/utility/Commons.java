@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -389,7 +390,18 @@ public class Commons extends BaseClass{
 		logger.info("clickSpan" + var );
 	}
 
+	public static String generateRandomAlphabetString() {
+		String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+		Random random = new Random();
+		StringBuilder stringBuilder = new StringBuilder(15);
 
+		for (int i = 0; i < 15; i++) {
+			int index = random.nextInt(alphabet.length());
+			stringBuilder.append(alphabet.charAt(index));
+		}
+
+		return stringBuilder.toString();
+	}
 
 
 
