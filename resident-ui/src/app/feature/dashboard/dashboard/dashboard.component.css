@@ -115,7 +115,7 @@ div.item-card:hover{
 }
 
 .mat-card-title {
-  text-align: left; 
+  /* text-align: left;  */
   font-size: 22px;
   color: #464A8C;
   font-weight: bold;

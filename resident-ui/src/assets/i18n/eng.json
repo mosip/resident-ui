@@ -245,8 +245,8 @@
         "inputAppId": "EID",
         "inputHistory": "History Type",
         "inputStatus": "Status",
-        "inputFrom": "From (dd/MMM/yyyy)",
-        "inputTo": "To (dd/MMM/yyyy)",
+        "inputFrom": "From (DD/MMM/YYYY)",
+        "inputTo": "To (DD/MMM/YYYY)",
         "searchBtn": "Go",
         "description": "Description",
         "timestamp": "Timestamp",
@@ -418,6 +418,7 @@
         "InvalidFormatMsg": "The file type that you are trying to upload is not supported. Please upload a different file type.",
         "InvalidFileSize": "The document you are trying to upload exceeds the file size limit of 2mb. Please upload a document within 2mb.",
         "sameNameInputErrorMsg": "The $NAME you have entered already exists. Please enter a new $NAME to proceed.",
+        "enteredOnlyNums": "This input field only accepts letters",
         "sameDobInputErrorMsg": "The DOB you have entered already exists. Please enter a new DOB to proceed.",
         "sameGenderInputErrorMsg": "The gender you have chosen already exists. Please choose a new gender to proceed.",
         "EnterAllAddress":"Please ",
@@ -437,7 +438,7 @@
             "descriptionDetails": "We have found an existing Data Update Request which is still in progress. In order to raise a new request, you will have to delete the existing request.",
             "viewMore":"View More",
             "viewLess":"View Less",
-            "warnMsg":"Are you sure you want to cancel the existing Data Update Request to update your?",
+            "warnMsg":"Are you sure you want to cancel the existing request to update the chosen data?",
             "warnMsgTwo":"You cannot cancel this request since it is still in Pending state. Please try after sometime."
         },
         "draftCanceled":"Your existing Data Update Request has been successfully canceled. You can now proceed to raise another Data Update request."
@@ -462,7 +463,7 @@
         "partnerName": "Partner name",
         "partnerLogo": "Partner logo",
         "transactionDate": "Transaction Date",
-        "downloadbuttonLabel": "Download",
+        "downloadbuttonLabel": "Download Acknowledgement",
         "summary": "Summary",
         "attributeList": "Attribute List",
         "downloadVIDCard": "Download VID card",
@@ -581,7 +582,7 @@
             "You are responsible for any changes made to your already existing personal data or uploaded document to support the same."
         ],
         "agreeLabel": "I agree to the terms and conditions to share my credentials with the chosen partner",
-        "agreeLabelForUpdateData": "I agree to the terms and conditions to update demograohic data",
+        "agreeLabelForUpdateData": "I agree to the terms and conditions to update demographic data",
         "personalisedcardConditions": {
             "title": "Download Your Personalised Card",
             "wishes": "Dear Resident,",
@@ -636,8 +637,8 @@
             "confirmationMessage": " Are you sure you want to save the changes made in Authentication types?"
         },
         "updateMyData": {
-            "emailSuccessMsg": "Your Email ID has been successfully updated against the Event ID: $eventId.",
-            "phoneNumberSuccessMsg": "your phone number has been successfully updated against the event ID: $eventId.",
+            "emailSuccessMsg": "Your request to change your Email ID has been submitted against the Event ID: $eventId.",
+            "phoneNumberSuccessMsg": "Your request to change your phone number has been submitted against the Event ID: $eventId.",
             "newDataUpdatedSuccessMsg": "Your request to change your $dataType data has been submitted against the Event ID: $eventId.",
             "updateNotificationData":"Your request to change your notification language has been submitted against the Event ID: $eventId."
         }
@@ -650,9 +651,9 @@
         "readMoreLabel": "Read More...",
         "readLessLabel": "Read Less...",
         "revokevid": {
-            "Perpetual": "A perpetual VID has no expiry date and no limit on the number of transactions that can be performed using this VID. One UIN can be associated with only $instancesVID perpetual VID at a time.",
-            "Temporary": "A temporary VID is valid for $expiryTime minutes and only $transactionLimit transaction can be performed using this VID. One UIN can be associated with $instancesVID temporary VIDs at a time.",
-            "OneTimeUse": "A one-time VID's has no expiry date but only $transactionLimit transaction can be performed using this VID. One UIN can be associated with $instancesVID one-time VID at a time."
+            "Perpetual": "A perpetual VID has no expiry date and no limit on the number of transactions that can be performed using this VID. One UIN can be associated with only $instancesVID perpetual $VID at a time.",
+            "Temporary": "A temporary VID is valid for $expiryTime minutes and only $transactionLimit transaction can be performed using this VID. One UIN can be associated with $instancesVID temporary $VID at a time.",
+            "OneTimeUse": "A one-time VID's has no expiry date but only $transactionLimit transaction can be performed using this VID. One UIN can be associated with $instancesVID one-time $VID at a time."
         },
         "secureMyID": {
             "Email OTP Authentication": "On locking/unlocking 'Email OTP Authentication', any Authentication attempt made using an email OTP will be disabled/ enabled.",
@@ -680,7 +681,8 @@
             "userId": "The email ID/ phone number you have entered is invalid. Please enter a valid email ID/ phone number.",
             "otp": "Invalid OTP entered. Please try again with a valid OTP.",
             "channel": "Invalid UIN/ VID entered. Please enter a valid UIN/ VID and try again.",
-            "identity/preferredLang": "Invalid preferred language. please give valid data."
+            "identity/preferredLang": "Invalid preferred language. please give valid data.",
+            "identity/dateOfBirth": "Please enter valid date of birth."
         },
         "RES-SER-459": "The entered EID is not associated with the UIN/ VID used to log in.",
         "RES-SER-412": "Unable to access API resource.",

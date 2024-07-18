@@ -41,6 +41,13 @@ input.readonly{
 ::ng-deep .mat-select-panel {
   min-width: auto !important;
 }
+.multiline-mat-option.mat-option {
+  white-space: normal !important;
+  line-height: normal !important;
+  height: unset !important;
+  padding-top: 0.9em !important;
+  padding-bottom: 0.9em !important;
+} 
 .mat-input-element{
   width: 100%;
   padding: 6px 6px;
@@ -56,14 +63,9 @@ input.readonly{
   width: 85%;
 }
 
-label{
-  font-size: 15px;
-}
-
 .mat-tab-group{
   margin-top: -20px;
 }
-
 
 
 .mat-card-header .mat-card-title {
@@ -505,12 +507,14 @@ label{
   margin-right: 12px;
 }
 .contact-update-each-btn-card{
-  width: 15%; 
+  width: 13%; 
+  margin-right: 12px;
 }
 
 .contact-lable{
   overflow-wrap: break-word;
   color: #000000 !important;
+  margin: 0 2px 0 3px;
 }
 .contact-lable-dummy{
   height: 20px; 
@@ -582,7 +586,7 @@ label{
   .contact-update-sub-card{
     display: flex; 
     flex-direction: row;
-    width: 100%;
+    width: 95%;
   }
   .contact-update-each-sub-card{
     width: 40%;
@@ -662,7 +666,7 @@ label{
     width: 100%;
   }
   .contact-update-each-sub-card{
-    width: 100%; 
+    width: 98%; 
     margin-right: 12px;
     margin-bottom: 12px;
   }

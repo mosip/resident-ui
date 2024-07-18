@@ -291,9 +291,11 @@ p{
 .conditions-card {
   border: 1px solid #D3D3D3;
   border-radius: 10px;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  padding-right: 1rem;
+  padding: .7rem;
+}
+
+ol{
+  padding-inline-start: 30px !important;
 }
 
 .agree-test-card{

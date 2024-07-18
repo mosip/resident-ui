@@ -26,11 +26,13 @@ public class TestRunner {
 	public static String perpetualVid="";
 	public static String onetimeuseVid="";
 	public static String temporaryVid="";
-
+	protected static MockSMTPListener mockSMTPListener = null;
 	static TestNG testNg;
 
 	public static void main(String[] args) throws Exception {
-		AdminTestUtil.initialize();
+		AdminTestUtil.initialize();	
+		mockSMTPListener = new MockSMTPListener();
+		mockSMTPListener.run();
 		String identityGenManual=ConfigManager.getidentityGenManual();
 		if(identityGenManual.equals("yes")) {
 			uin=ConfigManager.getuin();
@@ -53,14 +55,14 @@ public class TestRunner {
 
 
 	public static void startTestRunner() throws Exception {
-		
+
 		File homeDir = null;
 		TestNG runner = new TestNG();
 		if(!ConfigManager.gettestcases().equals("")) {
 			XmlSuite suite = new XmlSuite();
 			suite.setName("MySuite");
 			suite.addListener("io.mosip.testrig.residentui.utility.EmailableReport");
-		
+
 			XmlClass getInformation = new XmlClass("io.mosip.testrig.residentui.testcase.GetInformation");
 			XmlClass getMyUIN = new XmlClass("io.mosip.testrig.residentui.testcase.GetMyUIN");
 			XmlClass GetPersonalisedCard = new XmlClass("io.mosip.testrig.residentui.testcase.GetPersonalisedCard");
@@ -72,7 +74,7 @@ public class TestRunner {
 			XmlClass updateMyDataName = new XmlClass("io.mosip.testrig.residentui.testcase.UpdateMyData");
 			XmlClass VerifyEmailIDWIthInvalidVid = new XmlClass("io.mosip.testrig.residentui.testcase.VerifyPhoneNumberEmailID");
 			XmlClass viewMyHistory = new XmlClass("io.mosip.testrig.residentui.testcase.ViewMyHistory");
-			
+
 
 			List<XmlClass> classes = new ArrayList<>();
 			String[] Scenarionames=ConfigManager.gettestcases().split(",");
@@ -87,7 +89,7 @@ public class TestRunner {
 					classes.add(getMyUIN);
 				}
 
-				if(test.equals("GetPersonalisedCard"))
+				if(test.equals("getPersonalisedCard"))
 					classes.add(GetPersonalisedCard);
 
 				if(Scenarioname.contains("logintest"))
@@ -96,7 +98,7 @@ public class TestRunner {
 				if(test.equals("manageMyVid"))
 					classes.add(manageMyVid);
 
-				if(test.equals("SecureMyId"))
+				if(test.equals("secureMyId"))
 					classes.add(SecureMyId);
 
 				if(test.equals("shareMyData"))
@@ -127,48 +129,48 @@ public class TestRunner {
 			runner.setXmlSuites(suites);
 
 		}else {
-		List<String> suitefiles = new ArrayList<String>();
-		String os = System.getProperty("os.name");
-		
-		if (checkRunType().contains("IDE") || os.toLowerCase().contains("windows") == true) {
-			homeDir = new File(getResourcePath() + "/testngFile");
+			List<String> suitefiles = new ArrayList<String>();
+			String os = System.getProperty("os.name");
 
-		} else {
-			homeDir = new File(getResourcePath() + "/testngFile");
+			if (checkRunType().contains("IDE") || os.toLowerCase().contains("windows") == true) {
+				homeDir = new File(getResourcePath() + "/testngFile");
 
-		}
+			} else {
+				homeDir = new File(getResourcePath() + "/testngFile");
 
-		for (File file : homeDir.listFiles()) {
-			if (file.getName().toLowerCase() != null) {
-				suitefiles.add(file.getAbsolutePath());
 			}
+
+			for (File file : homeDir.listFiles()) {
+				if (file.getName().toLowerCase() != null) {
+					suitefiles.add(file.getAbsolutePath());
+				}
+			}
+
+			runner.setTestSuites(suitefiles);
+
 		}
 
-		runner.setTestSuites(suitefiles);
-		
-		}
-		
 		String language=ConfigManager.getloginlang();
-		
-			if(language.equals("sin")) {
-				language="";
-			}
+
+		if(language.equals("sin")) {
+			language="";
+		}
 		System.getProperties().setProperty("testng.outpur.dir", "testng-report");
 		runner.setOutputDirectory("testng-report");
 		System.getProperties().setProperty("emailable.report2.name", "RESIDENT-" + BaseTestCase.environment + "-"
 				+ language + "-run-" + System.currentTimeMillis() + "-report.html");
-		
-		
+
+
 		runner.run();
-		
+
 		MockSMTPListener mockSMTPListener = new MockSMTPListener();
 		mockSMTPListener.bTerminate = true;
 
 		System.exit(0);
-		
+
 	}
 
-public static String getGlobalResourcePath() {
+	public static String getGlobalResourcePath() {
 		if (checkRunType().equalsIgnoreCase("JAR")) {
 			return new File(jarUrl).getParentFile().getAbsolutePath().toString();
 		} else if (checkRunType().equalsIgnoreCase("IDE")) {

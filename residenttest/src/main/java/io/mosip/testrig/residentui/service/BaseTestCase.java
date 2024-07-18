@@ -10,11 +10,12 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.ws.rs.core.MediaType;
-
-import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.json.JSONArray;
 import org.json.simple.JSONObject;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.testrig.residentui.authentication.fw.util.RestClient;
 import io.mosip.testrig.residentui.kernel.util.CommonLibrary;
@@ -178,6 +179,33 @@ public class BaseTestCase {
 		return null;
 
 	}
+	
+	 public static int  getHierarchyNumbers() {
+	        KernelAuthentication kernelAuthLib = new KernelAuthentication();
+	        String token = kernelAuthLib.getTokenByRole("admin");
+	        String url = ApplnURI + props.getProperty("locationHierarchyLevels") + getlang();
+	        Response response = RestClient.getRequestWithCookie(url, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON, "Authorization", token);
+	        
+	        String responseString = response.asString();
+	        ObjectMapper objectMapper = new ObjectMapper();
+	        int maxHierarchyLevel = Integer.MIN_VALUE;
+
+	        try {
+	            JsonNode rootNode = objectMapper.readTree(responseString);
+	            JsonNode locationHierarchyLevels = rootNode.path("response").path("locationHierarchyLevels");
+
+	            for (JsonNode level : locationHierarchyLevels) {
+	                int hierarchyLevel = level.path("hierarchyLevel").asInt();
+	                if (hierarchyLevel > maxHierarchyLevel) {
+	                    maxHierarchyLevel = hierarchyLevel;
+	                }
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return maxHierarchyLevel;
+	    }
+	 
 	public static String getlang() {
 		String language=ConfigManager.getloginlang();
 		if(language.equalsIgnoreCase("sin")) {
