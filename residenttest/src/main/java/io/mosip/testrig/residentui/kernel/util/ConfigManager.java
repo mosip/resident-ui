@@ -7,9 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
-
-import io.mosip.testrig.residentui.utility.Commons;
 import io.mosip.testrig.residentui.utility.TestRunner;
 public class ConfigManager {
 
@@ -77,6 +74,7 @@ public class ConfigManager {
 	private static String Aid = "aid";
 	private static String Headless = "headless";
 	private static String Docker = "docker";
+	private static String PacketUpdateWait = "packetUpdateWait";
 	private static String preconfiguredOtp;
 
 
@@ -185,6 +183,8 @@ public class ConfigManager {
 	private static String docker;
 	private static String threadCount;
 	private static String langselect;
+	private static String packetUpdateWait;
+
 
 	private static String db_port;
 	private static String db_domain;
@@ -407,16 +407,25 @@ public class ConfigManager {
 		
 		headless =System.getenv(Headless) == null ? propsKernel.getProperty(Headless) : System.getenv(Headless);
 		propsKernel.setProperty(Headless, headless);
+		
 		docker =System.getenv(Docker) == null ? propsKernel.getProperty(Docker) : System.getenv(Docker);
 		propsKernel.setProperty(Docker, docker);
 
 		
-
+		packetUpdateWait =System.getenv(PacketUpdateWait) == null ? propsKernel.getProperty(PacketUpdateWait) : System.getenv(PacketUpdateWait);
+		propsKernel.setProperty(Docker, packetUpdateWait);
 
 		testcases =System.getenv(Testcases) == null ? propsKernel.getProperty(Testcases) : System.getenv(Testcases);
 		propsKernel.setProperty(Testcases, testcases);
 
 	}
+	
+	public static int packetUpdateWait() {
+		int wait=0;
+		wait=Integer.parseInt(packetUpdateWait);
+		return wait;
+	}
+	
 	public static String gettestcases() {
 		return testcases;
 	}

@@ -1,6 +1,6 @@
 <!-- Missing Data-->
 <div dir="{{sitealignment}}">
-  <span *ngIf="input.case === 'missingData'">
+  <span *ngIf="input.case === 'missingData'" id="messagePopup">
     <div class="table-container">
       <h2 class="filter-heading">{{ input.title[primaryLangCode] }}</h2>
       <mat-divider></mat-divider>
@@ -31,7 +31,7 @@
 
   <!-- UnlockConfirmation PopUp -->
 
-  <div class="pop-up" *ngIf="input.case === 'UNLOCKCONFIRMATION'">
+  <div class="pop-up" *ngIf="input.case === 'UNLOCKCONFIRMATION'" id="messagePopup">
     <div class="pop-up-header">
       <b mat-dialog-title>{{ input.title }}</b>
       <div mat-dialog-content>
@@ -73,7 +73,7 @@
 
   <!-- Confirmation PopUp -->
 
-  <div class="pop-up" *ngIf="input.case === 'CONFIRMATION'">
+  <div class="pop-up" *ngIf="input.case === 'CONFIRMATION'" id="messagePopup">
     <div class="pop-up-header">
       <b mat-dialog-title>{{ input.title }}</b>
       <div mat-dialog-content>
@@ -92,7 +92,7 @@
 
   <!-- Message PopUp -->
   <div class="pop-up" *ngIf="input.case === 'MESSAGE'" [style.backgroundColor]="popMsgbgColor"
-    [style.color]="popMsgColor" [style.borderColor]="popMsgColor">
+    [style.color]="popMsgColor" [style.borderColor]="popMsgColor" id="messagePopup">
     <div class="infro-card">
       <img alt="" [src]="icon" height="35px" width="35px" class="pop-up-icon" />
       <div class="pop-up-header">
@@ -146,7 +146,7 @@
   </div>
 
   <!-- errorMessageWithClickHere -->
-  <div *ngIf="input.case === 'errorMessageWithClickHere'" class="warning-message-container">
+  <div *ngIf="input.case === 'errorMessageWithClickHere'" class="warning-message-container" id="messagePopup">
     <div style="display: flex; align-items: start;">
       <img alt="" src="./assets/cancel_icon.png" height="35px" width="35px" class="pop-up-icon" />
       <div [style.font-size]="fontSize.lableText" style="margin-left: 12px; margin-top: 8px;">
@@ -163,7 +163,7 @@
   </div>
 
   <!-- Access denied -->
-  <div *ngIf="input.case === 'accessDenied'" class="warning-message-container">
+  <div *ngIf="input.case === 'accessDenied'" class="warning-message-container" id="messagePopup">
     <div style="display: flex; align-items: start;">
       <img alt="" src="./assets/cancel_icon.png" height="35px" width="35px" class="pop-up-icon" />
       <div [style.font-size]="fontSize.lableText" style="margin-left: 12px; margin-top: 8px;">
@@ -180,7 +180,7 @@
 
   <!-- login and logout messages -->
   <div class="pop-up" *ngIf="input.case === 'LoginLogoutSuccessMessages'" [style.backgroundColor]="popMsgbgColor"
-    [style.color]="popMsgColor" [style.borderColor]="popMsgColor">
+    [style.color]="popMsgColor" [style.borderColor]="popMsgColor" id="messagePopup">
     <div class="infro-card">
       <img alt="" [src]="icon" height="35px" width="35px" class="pop-up-icon" />
       <div class="pop-up-header">
@@ -203,7 +203,7 @@
 
   <!-- ERROR -->
 
-  <div class="pop-up" *ngIf="input.case === 'ERROR'">
+  <div class="pop-up" *ngIf="input.case === 'ERROR'" id="messagePopup">
     <div class="infro-card">
       <img alt="" [src]="icon" height="35px" width="35px" class="success-img" />
       <div class="pop-up-header">
@@ -216,7 +216,7 @@
     </div>
   </div>
 
-  <div class="pop-up" *ngIf="input.case === 'STEPS-MESSAGE'">
+  <div class="pop-up" *ngIf="input.case === 'STEPS-MESSAGE'" id="messagePopup">
     <div class="pop-up-header">
       <b mat-dialog-title>{{ createUpdateSteps.title }}</b>
       <div mat-dialog-content>
@@ -230,7 +230,7 @@
     </div>
   </div>
 
-  <div class="pop-up" *ngIf="input.case === 'NOZONE'">
+  <div class="pop-up" *ngIf="input.case === 'NOZONE'" id="messagePopup">
     <div class="pop-up-header">
       <b mat-dialog-title>{{ input.title }}</b>
       <div mat-dialog-content>
@@ -245,7 +245,7 @@
   </div>
 
   <!-- terms and  Conditions for share with partner-->
-  <div [style.font-size]="fontSize.paragraph" style="padding: 1rem;" *ngIf="input.case === 'termsAndConditions'">
+  <div [style.font-size]="fontSize.paragraph" style="padding: 1rem;" *ngIf="input.case === 'termsAndConditions'" id="shareWithPartnerTCPopup">
     <h4>{{ input.title }}</h4>
     <ol class="conditions-card">
       <ng-container *ngFor="let condition of input.conditions">
@@ -265,7 +265,7 @@
   </div>
 
   <!-- termsAndConditionsForUpdateMyData -->
-  <div [style.font-size]="fontSize.paragraph" style="padding: 1rem;" *ngIf="input.case === 'termsAndConditionsForUpdateMyData'">
+  <div [style.font-size]="fontSize.paragraph" style="padding: 1rem;" *ngIf="input.case === 'termsAndConditionsForUpdateMyData'" id="updateMyDataTCPopup">
     <h4>{{ input.title }}</h4>
     <ol class="conditions-card">
       <ng-container *ngFor="let condition of input.conditions">
@@ -286,7 +286,7 @@
 
 
   <!-- In active log out -->
-  <div class="pop-up log-out-warning-popup" *ngIf="input.case === 'LOGOUTWARNINGPOPUP'">
+  <div class="pop-up log-out-warning-popup" *ngIf="input.case === 'LOGOUTWARNINGPOPUP'" id="messagePopup">
     <div class="infro-card">
       <img src="./assets/icons/iconfont/info_black_24dp (1).svg" height="35px" width="35px" class="success-img" alt="" />
       <div style="margin-left: 8px;">
@@ -297,7 +297,7 @@
     </div>
   </div>
 
-  <div class="pop-up inactive-log-out-popup" *ngIf="input.case === 'INACTIVELOGOUTPOPUP'">
+  <div class="pop-up inactive-log-out-popup" *ngIf="input.case === 'INACTIVELOGOUTPOPUP'" id="messagePopup">
     <div class="infro-card">
       <img src="./assets/cancel_icon.png" height="35px" width="35px" class="success-img" alt="" />
       <div style="margin-left: 8px;">
@@ -311,7 +311,7 @@
   </div>
 
   <!-- Track service login after verify phone Number -->
-  <div class="pop-up trackService-log-in-popup" *ngIf="input.case === 'logInForTrackService'">
+  <div class="pop-up trackService-log-in-popup" *ngIf="input.case === 'logInForTrackService'" id="messagePopup">
     <div class="infro-card">
       <img alt="" src="./assets/sucess_icon.png" height="35px" width="35px" class="success-img" />
       <div style="margin-left: 8px;">
@@ -330,7 +330,7 @@
   </div>
 
   <!-- OTP Message-->
-  <div class="pop-up" *ngIf="input.case === 'OTP'">
+  <div class="pop-up" *ngIf="input.case === 'OTP'" id="Otppopup">
     <div class="pop-up-header otp-popup">
       <p class="otp-time-heading">{{'verifyuinvid.subTitle' | translate}}<span class="otp-expire-time">
           0{{otpTimeMinutes}}:{{displaySeconds}}</span>
@@ -358,7 +358,7 @@
   </div>
   
   <!-- show preview image -->
-  <div style="height: 50%;" *ngIf="input.case === 'previewImage'">
+  <div style="height: 50%;" *ngIf="input.case === 'previewImage'" id="imagePreviewPopup">
     <div width="100%" class="preview-file-name-card" >
       <p>{{input.fileName}}</p>
       <span (click)="dismiss()" style="cursor: pointer;">
@@ -369,7 +369,7 @@
   </div>
 
   <!-- message for Language change -->
-  <div class="pop-up log-out-warning-popup lang-change-msg" *ngIf="input.case === 'MESSAGEFORLANGCHANGE'">
+  <div class="pop-up log-out-warning-popup lang-change-msg" *ngIf="input.case === 'MESSAGEFORLANGCHANGE'" id="messagePopup">
     <div class="infro-card">
       <img src="./assets/icons/iconfont/info_black_24dp (1).svg" height="35px" width="35px" class="success-img"
         alt="" />&nbsp;
@@ -392,7 +392,7 @@
   
   <!-- updateMyDataInprogress -->
   <div [style.font-size]="fontSize.lableText" *ngIf="input.case === 'updateMyDataInprogress'"
-    class="data-inprogress-main-card">
+    class="data-inprogress-main-card" id="messagePopup">
     <div width="100%">
       <h4 class="data-inprogress-heading" style="margin: 0;">{{input.message.heading}}</h4>
       <p class="data-inprogress-description">{{input.message.descriptionDetails}}</p>

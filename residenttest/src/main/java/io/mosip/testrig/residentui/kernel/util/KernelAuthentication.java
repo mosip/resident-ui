@@ -1,7 +1,6 @@
 package io.mosip.testrig.residentui.kernel.util;
 
 import java.util.Map;
-import java.util.UUID;
 
 import org.json.simple.JSONObject;
 
@@ -16,8 +15,6 @@ public class KernelAuthentication extends BaseTestCase {
 	static String dataKey = "response";
 	CommonLibrary clib= new CommonLibrary();
 	public final Map<String, String> props = clib.readProperty("Kernel");
-	private String admin_password = props.get("admin_password");
-	private String admin_userName=props.get("admin_userName");
 	private String authenticationInternalEndpoint = props.get("authenticationInternal");
 	private ApplicationLibrary appl=new ApplicationLibrary();
 	

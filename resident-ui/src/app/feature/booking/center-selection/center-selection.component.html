@@ -48,7 +48,7 @@
                           [(ngModel)]="searchText" (input)="searchInput()" (blur)="captureValue($event)"
                           (focus)="captureVirtualKeyboard(search, 0)" id="searchLocationBox" #keyboardRef />
                         <i *ngIf="locationType" style="float: right; color: grey; cursor: pointer;" matSuffix
-                          class="material-icons" (click)="openKeyboard()">keyboard</i>
+                          class="material-icons" (click)="openKeyboard('searchLocationBox')">keyboard</i>
                       </mat-card>
                     </div>
                     <div class="manual-loc-search-btns" > 

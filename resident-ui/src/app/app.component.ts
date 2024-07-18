@@ -206,6 +206,14 @@ export class AppComponent {
     }
   }
 
+  @HostListener("blur", ["$event"])
+  @HostListener("focusout", ["$event"])
+  private _hideKeyboard() {
+    if (this.keyboardService.isOpened) {
+      this.keyboardService.dismiss();
+    }
+  }
+
   @HostListener('mouseover')
   @HostListener('document:mousemove', ['$event'])
   @HostListener('keypress')

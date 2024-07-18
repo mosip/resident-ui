@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.ws.rs.core.MediaType;
-
 import org.apache.log4j.PropertyConfigurator;
 import org.json.JSONArray;
 import org.json.simple.JSONObject;

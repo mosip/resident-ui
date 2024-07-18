@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.ws.rs.core.Response;
-
-import org.apache.log4j.Logger;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;

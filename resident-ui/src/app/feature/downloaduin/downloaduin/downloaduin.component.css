@@ -11,7 +11,7 @@
 }
 
 .book-appointment-back-btn {
-    width: 100px;
+    min-width: 100px;
     height: 36px;
     border: 1px solid #909090;
     border-radius: 5px;

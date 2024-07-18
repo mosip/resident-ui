@@ -17,7 +17,7 @@
 				     <span class="vid-type-card">
 						<h4 [style.font-size]="fontSize.subHeading" style="color: #000000;">{{langJSON[policy.vidType].vidType}}</h4>
 						<span>
-						<mat-icon  [matTooltip]="infoText[policy.vidType].replace('$instancesVID', policy.vidPolicy.instancesAllowed).replace('$expiryTime', policy.vidPolicy.validForInMinutes).replace('$transactionLimit', policy.vidPolicy.transactionsAllowed)" matTooltipPosition="below" matTooltipHideDelay="5000" matTooltipClass="below" class="user-icon" >info</mat-icon> 
+						<mat-icon  [matTooltip]="infoText[policy.vidType].replace('$instancesVID', policy.vidPolicy.instancesAllowed).replace('$expiryTime', policy.vidPolicy.validForInMinutes).replace('$transactionLimit', policy.vidPolicy.transactionsAllowed).replace('$VID', policy.vidPolicy.instancesAllowed > 1 ? 'VID\'s' : 'VID')" matTooltipPosition="below" matTooltipClass="below" class="user-icon" >info</mat-icon> 
 					</span>
 					</span>
 					<button [id]="policy.vidType" mat-raised-button color="primary" class="create-btn" (click)="generateVIDBtn(policy.vidType)"><img style="margin-right: 5px; margin-bottom: 2px;" src="./assets/icons/iconfont/add_circle_black_24dp (1).svg" alt=""/>{{'managemyvid.create' | translate}}</button>

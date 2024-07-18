@@ -19,7 +19,7 @@
 				<td style="padding: 10px;">
 					<label [style.font-size]="fontSize.breadcrumb" class="label-card">{{'trackservicerequest.searchLabel' | translate}}<span
 							style="color: #FF0000; margin-bottom:8px;">*</span>
-						<mat-icon #tooltip="matTooltip" [matTooltip]="infoText" matTooltipPosition="below" matTooltipHideDelay="5000" matTooltipClass="below" class="info-icon">info</mat-icon>
+						<mat-icon #tooltip="matTooltip" [matTooltip]="infoText" matTooltipPosition="below" matTooltipClass="below" class="info-icon">info</mat-icon>
 					</label>
 					<div class="event-id-search-main-card">
 						<span class="event-id-search-card">
@@ -28,6 +28,7 @@
 						  (blur)="captureValue($event)"
                           (focus)="captureVirtualKeyboard(search, 0)" 
 						  #keyboardRef
+						  type="number"
 						  placeholder="{{'trackservicerequest.searchPlaceholder' | translate}}" />
 						  <i style="float: right; color: grey; cursor: pointer;" matSuffix class="material-icons" (click)="openKeyboard()">keyboard</i>
 					    </span>

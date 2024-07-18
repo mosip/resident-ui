@@ -86,9 +86,12 @@ export class ViewhistoryComponent implements OnInit, OnDestroy {
           this.cols = 1;
         }
         if(active === "medium"){
+          this.cols = 3;
+        }
+        if(active === "large"){
           this.cols = 4;
         }
-        if(active === "large" || active === "ExtraLarge"){
+        if(active === "ExtraLarge"){
           this.cols = 6;
         }
         if(active === "small"){
@@ -219,13 +222,11 @@ export class ViewhistoryComponent implements OnInit, OnDestroy {
 
     if(!this.statusHistorySelectedValue){
       this.statusHistorySelectedValue = this.langJSON.viewhistory.status;
-    }else if(this.statusHistorySelectedValue.length > 26){
-      this.statusHistorySelectedValue = this.statusHistorySelectedValue.substring(0,24) + "...";
     }else{
       this.statusHistorySelectedValue = this.statusHistorySelectedValue.replace(/,\s*$/, "");
     }
     
-    if(count === 3){
+    if(count === (this.statusTypeFilter.length - 1)){
       this.isStatusAllValue = !this.isStatusAllValue;
       this.tosslePerOne(this.isStatusAllValue, formControlName);
     }
@@ -269,12 +270,12 @@ export class ViewhistoryComponent implements OnInit, OnDestroy {
     if(!this.serviceHistorySelectedValue){
       this.serviceHistorySelectedValue = this.langJSON.viewhistory.historyType;
     }else if(this.serviceHistorySelectedValue.length > 26){
-      this.serviceHistorySelectedValue = this.serviceHistorySelectedValue.substring(0,24) + "...";
+      this.serviceHistorySelectedValue = this.serviceHistorySelectedValue.substring(0,36) + "...";
     }else{
       this.serviceHistorySelectedValue = this.serviceHistorySelectedValue.replace(/,\s*$/, "");
     }
 
-    if(count === 5){
+    if(count ===  (this.serviceTypeFilter.length - 1)){
       this.isHistoryAllValue = !this.isHistoryAllValue;
       this.historyTosslePerOne(this.isHistoryAllValue, formControlName);
     }

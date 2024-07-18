@@ -245,8 +245,8 @@
         "inputAppId": "EID",
         "inputHistory": "Tipo de historial",
         "inputStatus": "Estado",
-        "inputFrom": "Desde (dd/MMM/aaaa)",
-        "inputTo": "Hasta (dd/MMM/aaaa)",
+        "inputFrom": "Desde (DD/MMM/AAAA)",
+        "inputTo": "Hasta (DD/MMM/AAAA)",
         "searchBtn": "Buscar",
         "description": "Descripción",
         "timestamp": "Marca de tiempo",
@@ -418,6 +418,7 @@
         "InvalidFormatMsg": "El tipo de archivo que estás intentando cargar no es compatible. Por favor, carga un tipo de archivo diferente.",
         "InvalidFileSize": "El documento que estás intentando cargar excede el límite de tamaño de archivo de 2 MB. Por favor, carga un documento dentro de 2 MB.",
         "sameNameInputErrorMsg": "El $NAME que has ingresado ya existe. Por favor, ingresa un nuevo $NAME para continuar.",
+        "enteredOnlyNums": "Este campo de entrada solo acepta letras.",
         "sameDobInputErrorMsg": "La fecha de nacimiento que has ingresado ya existe. Por favor, ingresa una fecha de nacimiento nueva para continuar.",
         "sameGenderInputErrorMsg": "El género que has elegido ya existe. Por favor, elige un género nuevo para continuar.",
         "EnterAllAddress": "Por favor ",
@@ -437,7 +438,7 @@
             "descriptionDetails": "Hemos encontrado una solicitud de actualización de datos existente que aún está en curso. Para generar una nueva solicitud, deberá eliminar la solicitud existente.",
             "viewMore":"Ver más",
             "viewLess":"Ver menos",
-            "warnMsg":"¿Está seguro de que desea cancelar la Solicitud de actualización de datos existente para actualizar la suya?",
+            "warnMsg":"¿Está seguro de que desea cancelar la solicitud existente para actualizar los datos elegidos?",
             "warnMsgTwo":"No puede cancelar esta solicitud ya que todavía está en estado Pendiente. Inténtalo después de un tiempo."
         },
         "draftCanceled":"Su solicitud de actualización de datos existente se canceló exitosamente. Ahora puede proceder a generar otra solicitud de Actualización de datos."
@@ -462,7 +463,7 @@
         "partnerName": "Nombre del socio",
         "partnerLogo": "Logotipo del socio",
         "transactionDate": "Fecha de la transacción",
-        "downloadbuttonLabel": "Descargar",
+        "downloadbuttonLabel": "Descargar Acuse de recibo",
         "summary": "Resumen",
         "attributeList": "Lista de atributos",
         "downloadVIDCard": "Descargar tarjeta VID",
@@ -581,7 +582,7 @@
             "Eres responsable de cualquier cambio realizado en tus datos personales ya existentes o en el documento cargado para respaldarlo."
         ],
         "agreeLabel": "Acepto los términos y condiciones para compartir mis credenciales con el socio elegido",
-        "agreeLabelForUpdateData": "Acepto los términos y condiciones para actualizar los datos demográficos",
+        "agreeLabelForUpdateData": "Acepto los términos y condiciones para actualizar datos demográficos",
         "personalisedcardConditions": {
             "title": "Descarga tu tarjeta personalizada",
             "wishes": "Estimado residente,",
@@ -636,8 +637,8 @@
             "confirmationMessage": "¿Estás seguro de que quieres guardar los cambios realizados en los tipos de autenticación?"
         },
         "updateMyData": {
-            "emailSuccessMsg": "Tu ID de correo electrónico se ha actualizado correctamente para el ID de evento: $eventId.",
-            "phoneNumberSuccessMsg": "Tu número de teléfono se ha actualizado correctamente para el ID de evento: $eventId.",
+            "emailSuccessMsg": "Su solicitud para cambiar su ID de correo electrónico se envió con el ID del evento: $eventId.",
+            "phoneNumberSuccessMsg": "Su solicitud para cambiar su número de teléfono se envió con el ID del evento: $eventId.",
             "newDataUpdatedSuccessMsg": "Se ha enviado su solicitud para cambiar sus datos de $dataType con éxito. Se ha registrado con el ID del evento: $eventId.",
             "updateNotificationData": "Se ha enviado su solicitud para cambiar su idioma de notificación con éxito. Se ha registrado con el ID del evento: $eventId."
         }
@@ -650,9 +651,9 @@
         "readMoreLabel": "Leer más...",
         "readLessLabel": "Leer menos...",
         "revokevid": {
-            "Perpetual": "Un VID perpetuo no tiene fecha de vencimiento y no tiene límite en el número de transacciones que se pueden realizar con este VID. Un UIN puede estar asociado solo con un VID perpetuo $instancesVID a la vez.",
-            "Temporary": "Un VID temporal es válido por $expiryTime minutos y solo se pueden realizar $transactionLimit transacciones utilizando este VID. Un UIN puede estar asociado con $instancesVID VID temporales a la vez.",
-            "OneTimeUse": "Un VID de un solo uso no tiene fecha de vencimiento, pero solo se pueden realizar $transactionLimit transacciones utilizando este VID. Un UIN puede estar asociado con un VID de un solo uso $instancesVID a la vez."            
+            "Perpetual": "Un VID perpetuo no tiene fecha de vencimiento ni límite en la cantidad de transacciones que se pueden realizar utilizando este VID. Un UIN se puede asociar solo con $instancesVID $VID perpetuo a la vez.",
+            "Temporary": "Un VID temporal es válido por $expiryTime minutos y solo se puede realizar la transacción $transactionLimit utilizando este VID. Se puede asociar un UIN con $instancesVID $VID temporal a la vez.",
+            "OneTimeUse": "Un VID único no tiene fecha de vencimiento, pero solo se puede realizar la transacción $transactionLimit utilizando este VID. Se puede asociar un UIN con $instancesVID una vez $VID a la vez."            
         },
         "secureMyID": {
             "Email OTP Authentication": "Al bloquear/desbloquear 'Autenticación por correo electrónico con OTP', cualquier intento de autenticación realizado utilizando un OTP por correo electrónico se deshabilitará/habilitará.",
@@ -680,7 +681,8 @@
             "userId": "El correo electrónico/número de teléfono ingresado no es válido. Por favor, ingresa un correo electrónico/número de teléfono válido.",
             "otp": "OTP ingresado inválido. Por favor, intenta nuevamente con un OTP válido.",
             "channel": "UIN/VID ingresado inválido. Por favor, ingresa un UIN/VID válido y vuelve a intentarlo.",
-            "identity/preferredLang": "Idioma preferido inválido. Por favor, ingresa datos válidos."
+            "identity/preferredLang": "Idioma preferido inválido. Por favor, ingresa datos válidos.",
+            "identity/dateOfBirth": "Por favor ingrese una fecha de nacimiento válida."
         },
         "RES-SER-459": "El EID ingresado no está asociado con el UIN/VID utilizado para iniciar sesión.",
         "RES-SER-412": "No se puede acceder al recurso API.",

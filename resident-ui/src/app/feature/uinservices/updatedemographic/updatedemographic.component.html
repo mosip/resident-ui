@@ -13,7 +13,7 @@
   <mat-spinner></mat-spinner>
 </div>
 <div *ngIf="!isLoading && langJson" class="main-contianer">
-  <mat-card *ngIf="userInfo && !showPreviewPage && (buildJSONData | json) != '{}'">
+  <mat-card *ngIf="userInfo && !showPreviewPage && (buildJSONData | json) != '{}'" [ngStyle]="{'padding-bottom' : (keyboardService.isOpened) ? '200px' : ''}">
     <h1 [style.font-size]="fontSize.heading" style="font-weight: 600;color: #505050;">{{langJson.title}}</h1>
     <mat-tab-group animationDuration="0ms" [selectedIndex]="matTabIndex" (selectedTabChange)="logChange($event)">
       <mat-tab class="mat-tab-local" label="{{'updatedemographic.identity' | translate}}">
@@ -45,11 +45,11 @@
                           <!-- number of attems mobile and tab code -->
                           <tr>
                             <td class="width-of-input">
-                              <label [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][0]}}</label>
+                              <label style="margin: 0 5px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][0]}}</label>
                             </td>
                             <td width="3%" class="ele-for-lap-tab-card"></td>
                             <td class="width-of-input ele-for-lap-tab-card">
-                              <label  [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}</label>
+                              <label style="margin: 0 5px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}</label>
                             </td>
                           </tr>
                           <tr>
@@ -105,7 +105,7 @@
                           </tr>
                           <!-- input field for mobile view -->
                           <tr>
-                            <td class="ele-for-mob-card"><span [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}</span>
+                            <td class="ele-for-mob-card"><span style="margin: 0 5px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}</span>
                             </td>
                           </tr>
                           <tr>
@@ -156,17 +156,17 @@
                           <!-- number of attems mobile and tab code -->
                           <tr>
                             <td class="width-of-input">
-                              <span [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                              <div style="margin: 0 3px 0 2px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
                                 {{field.labelName[eachLang][0]}}
                                 <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
-                              </span>
+                              </p></div>
                             </td>
                             <td width="3%" class="ele-for-lap-tab-card"></td>
                             <td class="width-of-input ele-for-lap-tab-card">
-                              <span [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                              <div style="margin: 0 3px 0 -2px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
                                 {{field.labelName[eachLang][1]}}
                                 <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
-                              </span>
+                              </p></div> 
                             </td>
                           </tr>
                           <tr *ngFor="let item of buildJSONData[field.attributeName], let i = index">
@@ -186,7 +186,7 @@
                                   (click)="isUpdatedataInProgress($event, 'textField')"
                                   [disabled]="attributeUpdateCountRemainLimit[field.attributeName] === 0"
                                   #keyboardRef />
-                                <i matSuffix class="material-icons mat-keyboard-icon"
+                                <i *ngIf="attributeUpdateCountRemainLimit[field.attributeName] !== 0" matSuffix class="material-icons mat-keyboard-icon"
                                   (click)="openKeyboard(field.attributeName+item.language, item.language)">keyboard</i>
                               </div>
 
@@ -214,21 +214,23 @@
                               </div>
                             </td>
                           </tr>
-                          <tr *ngIf="isSameData[field.attributeName]" class="ele-for-lap-tab-card">
+                          <tr *ngIf="isSameData[field.attributeName] || enteredOnlyNumbers" class="ele-for-lap-tab-card">
                             <td></td>
                             <td></td>
                             <td>
-                              <span class="warning-message">
+                              <span class="warning-message" *ngIf="isSameData[field.attributeName]">
                                 {{langJson.sameNameInputErrorMsg.replace("$NAME",langJson[field.attributeName]).replace("$NAME",langJson[field.attributeName])}}</span>
+                                <span class="warning-message" *ngIf="enteredOnlyNumbers">
+                                  {{langJson.enteredOnlyNums}}</span>
                             </td>
                           </tr>
                           <!-- input field for mobile view -->
                           <tr>
-                            <td class=" ele-for-mob-card">
-                              <span [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                            <td class="ele-for-mob-card">
+                              <div style="margin: 0 3px 0 -2px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
                                 {{field.labelName[eachLang][1]}}
                                 <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
-                              </span>
+                              </p></div>
                             </td>
                           </tr>
                           <tr *ngFor="let item of buildJSONData[field.attributeName]">
@@ -243,7 +245,7 @@
                                   (click)="isUpdatedataInProgress($event, 'textField')"
                                   [disabled]="attributeUpdateCountRemainLimit[field.attributeName] === 0"
                                   #keyboardRef />
-                                <i matSuffix class="material-icons mat-keyboard-icon"
+                                <i *ngIf="attributeUpdateCountRemainLimit[field.attributeName] !== 0" matSuffix class="material-icons mat-keyboard-icon"
                                   (click)="openKeyboard(field.attributeName+item.language+'Mobile', item.language)">keyboard</i>
                               </div>
                             </td>
@@ -279,17 +281,17 @@
                           <!-- number of attems mobile and tab code -->
                           <tr>
                             <td class="width-of-input">
-                              <span [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                              <div style="margin: 0 2px 0 3px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
                                 {{field.labelName[eachLang][0]}}
                                 <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
-                              </span>
+                              </p></div>
                             </td>
                             <td width="3%" class="ele-for-lap-tab-card"></td>
                             <td [style.font-size]="fontSize.paragraph" class="width-of-input ele-for-lap-tab-card">
-                              <span *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                              <div style="margin: 0 2px 0 3px;"><p style="display: inline;" *ngFor="let eachLang of getUserPerfLang; let langI = index">
                                 {{field.labelName[eachLang][1]}}
                                 <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
-                              </span>
+                              </p></div>
                             </td>
                           </tr>
                           <tr *ngFor="let item of buildJSONData[field.attributeName], let i = index">
@@ -352,10 +354,10 @@
                           <!-- input field for mobile view -->
                           <tr>
                             <td class="ele-for-mob-card">
-                              <span [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                              <div style="margin: 0 2px 0 3px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
                                 {{field.labelName[eachLang][1]}}
                                 <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
-                              </span>
+                              </p></div>
                             </td>
                           </tr>
                           <tr *ngFor="let item of buildJSONData[field.attributeName]">
@@ -393,13 +395,13 @@
                       <td class="main-table-data">
                         <table class="file-Upload-card">
                           <tr>
-                            <td width="100%" colspan="3"><label [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][0]}}</label></td>
+                            <td width="100%" colspan="3"><label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][0]}}</label></td>
                           </tr>
                           <tr>
-                            <td class="width-of-input"><label [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}<span
+                            <td class="width-of-input"><label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}<span
                                   style="color: red;">*</span></label></td>
                             <td width="3%"></td>
-                            <td class="width-of-input"><label [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][2]}}</label></td>
+                            <td class="width-of-input"><label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][2]}}</label></td>
                           </tr>
                           <tr>
                             <td class="width-of-input">
@@ -408,7 +410,7 @@
                                 [value]="proofOfIdentity['documenttype'] ? proofOfIdentity['documenttype'] : '' "
                                 id="{{field.attributeName}}"
                                 (selectionChange)="captureDropDownValue($event, field.attributeName, supportedLanguages[0], '')">
-                                <mat-option style="min-width: 25.2rem;"
+                                <mat-option class="multiline-mat-option"
                                   *ngFor="let data of dropDownValues[field.attributeName]" [value]="data.code">{{
                                   data.name }}</mat-option>
                               </mat-select>
@@ -455,7 +457,7 @@
                                   <span [style.font-size]="fontSize.lableText" 
                                     style="margin-top: 4px;padding-left: 5px; font-weight: 600;">{{langJson.uploadImage}}</span>
                                 </label>
-                                <h3 [style.font-size]="fontSize.lableText">{{langJson.or}}</h3>
+                                <h3 style="margin-right: 8px;" [style.font-size]="fontSize.lableText">{{langJson.or}}</h3>
                                 &nbsp;
                                 <h3 [style.font-size]="fontSize.lableText">{{langJson.dropImage}}</h3>
                               </div>
@@ -528,7 +530,7 @@
           </tr>
         </table>
         <div class="submit-btn-card">
-          <button [style.font-size]="fontSize.subHeading" [disabled]="previewDisabled" (click)="previewBtn('identity')" mat-raised-button color="primary"
+          <button [style.font-size]="fontSize.subHeading" [disabled]="previewDisabled || enteredOnlyNumbers" (click)="previewBtn('identity')" mat-raised-button color="primary"
             id="previewBtn">{{langJson.preview}}</button>
         </div>
       </mat-tab>
@@ -546,17 +548,17 @@
                           <table width="100%">
                             <tr>
                               <td class="width-of-input" >
-                                <span [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                <div style="margin: 0 2px 0 3px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
                                   {{field.labelName[eachLang][0]}}
                                   <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
-                                </span>
+                                </p></div>
                               </td>
                               <td width="3%" class="ele-for-lap-tab-card"></td>
                               <td class="width-of-input ele-for-lap-tab-card">
-                                <span [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                <div style="margin: 0 2px 0 3px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
                                   {{field.labelName[eachLang][1]}}
                                   <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
-                                </span>
+                                </p></div>
                               </td>
                             </tr>
                             <tr *ngFor="let item of buildJSONData[field.attributeName] let i = index"
@@ -592,10 +594,10 @@
                             <!-- input field for mobile view -->
                             <tr class="ele-for-mob-card">
                               <td class="width-of-input">
-                                <span [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                <div style="margin: 0 2px 0 3px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
                                   {{field.labelName[eachLang][1]}}
                                   <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
-                                </span>
+                                </p></div>
                               </td>
                             </tr>
                             <tr class="ele-for-mob-card" *ngFor="let item of buildJSONData[field.attributeName]">
@@ -629,27 +631,27 @@
                           <table width="100%">
                             <tr *ngIf="typeOf(userInfo[field.attributeName]) !== 'string'">
                               <td class="width-of-input">
-                                <span [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                <div style="margin: 0 2px 0 3px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
                                   {{field.labelName[eachLang][0]}}
                                   <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
-                                </span>
+                                </p></div>
                               </td>
                               <td width="3%" class="ele-for-lap-tab-card"></td>
                               <td class="width-of-input ele-for-lap-tab-card">
-                                <span [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                <div style="margin: 0 2px 0 3px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
                                   {{field.labelName[eachLang][1]}}
                                   <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
-                                </span>
+                                </p></div>
                               </td>
                             </tr>
                             <tr *ngIf="typeOf(userInfo[field.attributeName]) === 'string'">
                               <td class="width-of-input">
-                                <label [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][0]}}</label>
+                                <label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][0]}}</label>
                               </td>
 
                               <td width="3%" class="ele-for-lap-tab-card"></td>
                               <td class="width-of-input ele-for-lap-tab-card">
-                                <label [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}</label>
+                                <label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}</label>
                               </td>
                             </tr>
                             <ng-container *ngIf="typeOf(userInfo[field.attributeName]) !== 'string'">
@@ -714,13 +716,13 @@
                             <!-- input field for mobile view -->
                             <tr class="ele-for-mob-card">
                               <td class="width-of-input" *ngIf="typeOf(userInfo[field.attributeName]) !== 'string'">
-                                <span [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
+                                <div style="margin: 0 2px 0 3px;"><p style="display: inline;" [style.font-size]="fontSize.paragraph" *ngFor="let eachLang of getUserPerfLang; let langI = index">
                                   {{field.labelName[eachLang][1]}}
                                   <span style="margin-left: -3px;" *ngIf="langI < getUserPerfLang?.length - 1">/</span>
-                                </span>
+                                </p></div>
                               </td>
                               <td class="width-of-input" *ngIf="typeOf(userInfo[field.attributeName]) === 'string'">
-                                <label [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}</label>
+                                <label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}</label>
                               </td>
                             </tr>
                             <tr *ngIf="typeOf(userInfo[field.attributeName]) !== 'string'">
@@ -777,20 +779,20 @@
                         <td class="main-table-data" width="100%">
                           <table>
                             <tr>
-                              <td width="100%" colspan="3"><label [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][0]}}</label></td>
+                              <td width="100%" colspan="3"><label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][0]}}</label></td>
                             </tr>
                             <tr>
-                              <td class="width-of-input"><label [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}<span
+                              <td class="width-of-input"><label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}<span
                                     style="color: red;">*</span></label></td>
                               <td width="3%"></td>
-                              <td class="width-of-input"><label [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][2]}}</label></td>
+                              <td class="width-of-input"><label style="margin: 0 2px 0 3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][2]}}</label></td>
                             </tr>
                             <tr>
                               <td class="width-of-input">
                                 <mat-select [style.font-size]="fontSize.paragraph" disableOptionCentering class="enable-dropdown"
                                   [value]="proofOfAddress['documenttype'] ? proofOfAddress['documenttype'] : '' "
                                   placeholder="{{langJson.docTypePlaceholder}}" id="{{field.attributeName}}">
-                                  <mat-option style="min-width: 25.2rem;"
+                                  <mat-option  class="multiline-mat-option"
                                     *ngFor="let data of dropDownValues[field.attributeName]"
                                     (onSelectionChange)="captureAddressDropDownValue($event, field.attributeName)"
                                     [value]="data.code">{{
@@ -839,7 +841,7 @@
                                     <span [style.font-size]="fontSize.lableText"
                                       style="margin-top: 4px;padding-left: 5px; font-weight: 600;">{{langJson.uploadImage}}</span>
                                   </label>
-                                  <h3 [style.font-size]="fontSize.lableText">{{langJson.or}}</h3>
+                                  <h3 style="margin-right: 5px;" [style.font-size]="fontSize.lableText">{{langJson.or}}</h3>
                                   &nbsp;
                                   <h3 [style.font-size]="fontSize.lableText">{{langJson.dropImage}}</h3>
                                 </div>
@@ -973,7 +975,7 @@
               <mat-grid-tile>
                 <div class="mini-card"
                   *ngIf="field.tabgroup === 'notificationLanguage' && field.controlType === 'dropdown'">
-                  <mat-card-title [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][0]}}</mat-card-title>
+                  <mat-card-title style="margin-right:3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][0]}}</mat-card-title>
                   <span *ngIf="buildJSONData[field.attributeName]"><input [style.font-size]="fontSize.paragraph" style="border: none;" type="text"
                       class="readonly" readonly="true" disabled="true"
                       [value]="buildJSONData[field.attributeName].value"></span>
@@ -982,7 +984,7 @@
               <mat-grid-tile>
                 <div class="mini-card"
                   *ngIf="field.tabgroup === 'notificationLanguage' && field.controlType === 'dropdown'">
-                  <mat-card-title [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}</mat-card-title>
+                  <mat-card-title style="margin-right:3px;" [style.font-size]="fontSize.paragraph">{{field.labelName[langCode][1]}}</mat-card-title>
                   <mat-select #matSelect [style.font-size]="fontSize.paragraph" [placeholder]="field.placeHolder[langCode]" disableOptionCentering class="enable-dropdown"
                     [(ngModel)]="selected2" id="{{field.attributeName}}"
                     (selectionChange)="capturePerfLang($event, field.attributeName)"
@@ -995,7 +997,7 @@
             </mat-grid-list>
             <div [ngClass]="langCode === 'ara' ? 'perLang-submit-btn-card-ara' :'perLang-submit-btn-card'"
               *ngIf="langJson">
-              <button [style.font-size]="fontSize.paragraph" [disabled]="!userPrefLang[field.attributeName]" mat-raised-button
+              <button [style.font-size]="fontSize.paragraph" [disabled]="!userPrefLang[field.attributeName] || !disablePrefLangBtn" mat-raised-button
                 (click)="updatenotificationLanguage()" color="primary" id="submit">{{langJson.submit}}</button>
             </div>
           </div>
