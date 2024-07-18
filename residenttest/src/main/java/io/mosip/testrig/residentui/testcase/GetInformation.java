@@ -1,6 +1,5 @@
 package io.mosip.testrig.residentui.testcase;
 
-
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 import io.mosip.testrig.residentui.service.BaseTestCase;
@@ -8,6 +7,7 @@ import io.mosip.testrig.residentui.utility.BaseClass;
 import io.mosip.testrig.residentui.utility.Commons;
 
 @Test(groups = "GI")
+
 public class GetInformation extends BaseClass {
 
 	@Test(groups = "GI")
@@ -20,7 +20,7 @@ public class GetInformation extends BaseClass {
 			Commons.click( driver, By.id("regCenterSearchBtn"));
 			Commons.click( driver, By.id("regCentersDownloadBtn"));
 			Commons.assertCheck(By.id("regCentersDownloadBtn"),"verify if registation center is downloaded");
-		}
-	}
 
+    }
+  }
 }
