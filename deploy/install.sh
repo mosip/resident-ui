@@ -7,7 +7,7 @@ if [ $# -ge 1 ] ; then
 fi
 
 NS=resident
-RESIDENT_UI_CHART_VERSION=0.9.0
+RESIDENT_UI_CHART_VERSION=0.9.0-develop
 
 echo Create $NS namespace
 kubectl create ns $NS
