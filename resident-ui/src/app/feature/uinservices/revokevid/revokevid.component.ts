@@ -296,7 +296,7 @@ export class RevokevidComponent implements OnInit, OnDestroy {
   revokeVIDBtn(vidValue: any,vidType:any){
     this.showDeleteMessage(vidType)
     this.newVidValue = vidValue
-    this.newVidType - vidType
+    this.newVidType = vidType
   }
 
   revokeVID(vidValue: any) {

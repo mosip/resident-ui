@@ -130,7 +130,7 @@ div.item-card:hover{
   border-radius: 25px !important;
 }
 
-@media screen and ((min-width:900px) and (max-width:1250px)){
+@media screen and (min-width:900px) and (max-width:1250px){
   .main-div{
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;

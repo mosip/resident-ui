@@ -34,7 +34,6 @@
 
 .success-msg-description {
   text-align: left;
-  font: normal normal medium 14px/22px Poppins;
   letter-spacing: 0px;
   color: #505050;
   margin-left: 1.5rem;
@@ -43,7 +42,6 @@
 }
 
 .success-msg-text {
-  font: normal normal medium 20px/20px Poppins;
   letter-spacing: 0px;
   color: #03A64A;
   font-size: 21px;

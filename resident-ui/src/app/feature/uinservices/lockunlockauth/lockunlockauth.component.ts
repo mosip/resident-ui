@@ -130,15 +130,15 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
             authTypesJSON["authSubType"] =  authTypes[i].split('-')[1];
 
             if(authTypes[i].split('-')[1]){
-              newAuthlist.find(el => {      
+              newAuthlist.forEach(el => {      
                 if(el.authSubType === authTypes[i].split('-')[1]){
-                  return authTypesJSON["locked"] = el.locked;
+                  authTypesJSON["locked"] = el.locked;
                 }           
               })
             }else{
-              newAuthlist.find(el => {  
+              newAuthlist.forEach(el => {  
                 if(el.authType === authTypes[i]){                  
-                  return authTypesJSON["locked"] = el.locked;
+                  authTypesJSON["locked"] = el.locked;
                 }                    
               })
             }   

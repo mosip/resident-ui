@@ -253,9 +253,9 @@ export class PersonalisedcardComponent implements OnInit, OnDestroy {
             if (data['attributeName'] === item['attributeName']) {
               item['formatOption'][this.langCode].forEach(eachItem => {
                 if (eachItem.value === type['value']) {
-                  return eachItem['checked'] = !eachItem['checked']
+                  return eachItem['checked'] = !eachItem['checked'];
                 } else {
-                  return eachItem['checked'] = eachItem['checked']
+                  return eachItem['checked'];
                 }
               })
             }

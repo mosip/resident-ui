@@ -195,9 +195,6 @@ export class AppComponent {
 
   preventBack() {
     window.history.forward();
-    window.onunload = function() {
-      null;
-    };
   }
 
   @HostListener('document:keydown.escape', ['$event']) onKeydownHandler(event: KeyboardEvent) {

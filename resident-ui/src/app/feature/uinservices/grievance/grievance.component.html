@@ -23,7 +23,7 @@
             <label class="label">{{grievanceData.alternateemailidlabel}}</label>
             <div class="input-card">
               <input [style.font-size]="fontSize.lableText" id="alternateEmailID" [attr.maxLength]="emailCharLimit" placeholder="{{grievanceData.alternateEmailPlaceholder}}" type="text" name="alternateEmailId" (blur)="captureValue($event, 'alternateEmailId')" (focus)="captureVirtualKeyboard(search, 0)"  #keyboardRef/>
-              <i matSuffix class="material-icons mat-keyboard-icon" (click)="openKeyboard('alternateEmailID')">keyboard</i>
+              <em matSuffix class="material-icons mat-keyboard-icon" (click)="openKeyboard('alternateEmailID')">keyboard</em>
             </div>
           </div>
           <div class="each-property-card">
@@ -34,7 +34,7 @@
             <label class="label">{{grievanceData.alternatephonenumberlabel}}</label>
               <div class="input-card">
                 <input [style.font-size]="fontSize.lableText" id="alternatePhoneNumber" [attr.maxLength]="phoneCharLimit" placeholder={{grievanceData.alternatePhoneNoPlaceholder}} type="text" name="alternatePhoneNo" (blur)="captureValue($event, 'alternatePhoneNumber')" (focus)="captureVirtualKeyboard(search, 1)"  #keyboardRef/>
-                <i matSuffix class="material-icons mat-keyboard-icon" (click)="openKeyboard('alternatePhoneNumber')">keyboard</i>
+                <em matSuffix class="material-icons mat-keyboard-icon" (click)="openKeyboard('alternatePhoneNumber')">keyboard</em>
               </div>
             </div >
           <div class="each-property-card">
@@ -46,7 +46,7 @@
             <div class="message-input-card">
               <div class="comment-input-sub-card">
                 <textarea [style.font-size]="fontSize.lableText" id="userComment" [attr.maxLength]="totalCommentCount" (input)="countCharacters($event, 'message')" (blur)="countCharacters($event,'message')" (focus)="captureVirtualKeyboard(search, 2)"  #keyboardRef placeholder={{grievanceData.EnterMsgPlaceholder}} rows="4" cols="60" name="message" ></textarea>
-                <i matSuffix class="material-icons mat-keyboard-icon" (click)="openKeyboard('userComment')">keyboard</i>
+                <em matSuffix class="material-icons mat-keyboard-icon" (click)="openKeyboard('userComment')">keyboard</em>
               </div>
                 <span [style.font-size]="fontSize.breadcrumb" class="input-count" >{{grievanceData.TotalCharacters}}: {{totalCommentCount}}</span>
               <span [style.font-size]="fontSize.breadcrumb" class="input-count" >{{grievanceData.remainingCharacters}}: {{remainingChars}}</span>
