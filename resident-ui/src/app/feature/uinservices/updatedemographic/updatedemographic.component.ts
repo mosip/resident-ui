@@ -690,7 +690,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
     })
     let self = this;
     if (formControlName !== "proofOfIdentity") {
-      if (event.value.toLowerCase() !== currentValueCode.toLocaleLowerCase()) {
+      if (event.value !== currentValueCode) {
         this.isSameData[formControlName] = false;
         this.userInfoClone[formControlName] = []
         this.getUserPerfLang.forEach(item => {
