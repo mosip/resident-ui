@@ -56,13 +56,13 @@ mat-card-title {
   width: 24.5%;
 }
 
-@media screen and ((min-width:1230px) and (max-width:1900px)){
+@media screen and (min-width:1230px) and (max-width:1900px){
   .each-service-card{
     width: 32.5%;
   }
 }
 
-@media screen and ((min-width:900px) and (max-width:1229px)) {
+@media screen and (min-width:900px) and (max-width:1229px) {
   .each-service-card{
     width: 48.5%;
   }

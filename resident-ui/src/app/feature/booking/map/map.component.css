@@ -4,7 +4,7 @@
     height: 90%;
 }
 
-@media screen and ((min-width:601px) and (max-width: 780px)){
+@media screen and (min-width:601px) and (max-width: 780px){
     .map {
         height: 84%;
     }

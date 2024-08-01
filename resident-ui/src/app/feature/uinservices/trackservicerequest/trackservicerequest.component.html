@@ -30,7 +30,7 @@
 						  #keyboardRef
 						  type="number"
 						  placeholder="{{'trackservicerequest.searchPlaceholder' | translate}}" />
-						  <i style="float: right; color: grey; cursor: pointer;" matSuffix class="material-icons" (click)="openKeyboard()">keyboard</i>
+						  <em style="float: right; color: grey; cursor: pointer;" matSuffix class="material-icons" (click)="openKeyboard()">keyboard</em>
 					    </span>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<button [style.font-size]="fontSize.paragraph" [disabled]="disableTrackBtn" id="getEIDStatusbtn" mat-raised-button class="track-btn"
@@ -85,7 +85,7 @@
 				</tr>
 				<!-- Authentication Request -->
 				<tr [style.font-size]="fontSize.breadcrumb" *ngIf="eidStatus.info.eventTypeEnum === 'AUTHENTICATION_REQUEST' "
-					style="padding:10px; padding:10px; border-top: 1px solid silver;">
+					style="padding:10px; border-top: 1px solid silver;">
 					<td><label>{{'trackservicerequest.partnerLogo' | translate}} </label></td>
 					<td><label>{{'trackservicerequest.partnerName' | translate}} </label></td>
 				</tr>
@@ -95,7 +95,7 @@
 				</tr>
 				<!-- Manage my VID	 -->
 				<tr [style.font-size]="fontSize.breadcrumb" *ngIf="eidStatus.info.eventTypeEnum === 'GENERATE_VID' "
-					style="padding:10px; padding:10px; border-top: 1px solid silver;">
+					style="padding:10px; border-top: 1px solid silver;">
 					<td><label>{{'trackservicerequest.vidType' | translate}} </label></td>
 					<td><label>{{'trackservicerequest.vid' | translate}} </label></td>
 				</tr>
@@ -105,7 +105,7 @@
 				</tr>
 				<!-- Share credential with partner	 -->
 				<tr [style.font-size]="fontSize.breadcrumb" *ngIf="eidStatus.info.eventTypeEnum === 'SHARE_CRED_WITH_PARTNER' "
-					style="padding:10px; padding:10px; border-top: 1px solid silver;">
+					style="padding:10px; border-top: 1px solid silver;">
 					<td style="width:25%"><label>{{'trackservicerequest.partnerLogo' | translate}} </label></td>
 					<td style="width:25%"><label>{{'trackservicerequest.partnerName' | translate}} </label></td>
 					<td style="width:25%"><label>{{'trackservicerequest.attributeList' | translate}} </label></td>
@@ -128,7 +128,7 @@
 				</div>
 				<button [style.font-size]="fontSize.paragraph" id="downloadAcknowledgementbtn" style="cursor: pointer;" class="download-btn"
 				    (click)="downloadAcknowledgement()"><img class="save-icon"
-						src="./assets/images/save.png" />{{'trackservicerequest.downloadbuttonLabel' |
+						src="./assets/images/save.png" alt=""/>{{'trackservicerequest.downloadbuttonLabel' |
 					translate}}</button>
 			</div>
 			<div *ngIf="eidStatus.info.eventTypeEnum === 'VID_CARD_DOWNLOAD' "
@@ -141,14 +141,14 @@
 				</div>
 				<button [style.font-size]="fontSize.paragraph" id="downloadAcknowledgementbtn" style="cursor: pointer;" class="download-btn"
 					(click)="downloadAcknowledgement()"><img class="save-icon"
-						src="./assets/images/save.png" />{{'trackservicerequest.downloadbuttonLabel' |
+						src="./assets/images/save.png" alt=""/>{{'trackservicerequest.downloadbuttonLabel' |
 					translate}}</button>
 			</div>
 			<div *ngIf="eidStatus.info.eventTypeEnum !== 'UPDATE_MY_UIN' && eidStatus.info.eventTypeEnum !== 'VID_CARD_DOWNLOAD' "
 				style="display: flex; justify-content: flex-end; width: 100%; margin-top: 1rem;">
 				<button [style.font-size]="fontSize.paragraph" id="downloadAcknowledgementbtn" style="cursor: pointer;" class="download-btn"
 					(click)="downloadAcknowledgement()"><img class="save-icon"
-						src="./assets/images/save.png" />{{'trackservicerequest.downloadbuttonLabel' |
+						src="./assets/images/save.png" alt=""/>{{'trackservicerequest.downloadbuttonLabel' |
 					translate}}</button>
 			</div>
 

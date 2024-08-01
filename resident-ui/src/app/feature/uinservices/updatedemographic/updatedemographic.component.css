@@ -127,7 +127,6 @@ input.readonly{
    align-items: center;
    border: dashed 1px #03A64A;
    margin-bottom: 1rem;
-   display: flex;
    flex-grow: 1;
 }
 .files-list .single-file .preview {
@@ -175,7 +174,6 @@ input.readonly{
   align-items: center;
   border: solid 1px #000000;
   margin-bottom: 1rem;
-  display: flex;
   flex-grow: 1;
   border-radius: 4px;
 }
@@ -536,7 +534,7 @@ input.readonly{
   font-size: var(--fs) !important;
 }
 
-@media screen and ((min-width:950px) and (max-width:1300px)){
+@media screen and (min-width:950px) and (max-width:1300px){
   .number-of-attems-main-card{
     width: 80%;
   }
@@ -551,7 +549,7 @@ input.readonly{
   }
 }
 
-@media screen and ((min-width:824px) and (max-width:959px)) {
+@media screen and (min-width:824px) and (max-width:959px) {
   .main-contianer{
     padding: 0.5rem 3rem 0 3rem; 
   }
@@ -579,7 +577,7 @@ input.readonly{
   }
 }
 
-@media screen and ((min-width:550px) and (max-width:820px)) {
+@media screen and (min-width:550px) and (max-width:820px) {
   .contact-update-card{
     flex-direction: column;
   }
@@ -624,7 +622,7 @@ input.readonly{
 
 }
 
-@media screen and ((min-width:550px) and (max-width:749px)) {
+@media screen and (min-width:550px) and (max-width:749px) {
   .width-of-input{
     width: 36%;
   }

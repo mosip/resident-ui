@@ -84,7 +84,7 @@ mat-card-header,
   margin-bottom: 0px;
 }
 
-@media screen and ((min-width:600px) and (max-width:1500px)){
+@media screen and (min-width:600px) and (max-width:1500px){
   .mini-card {
     width: 98%;
     height: 180px;
