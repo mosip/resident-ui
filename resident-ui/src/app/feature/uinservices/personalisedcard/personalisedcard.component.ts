@@ -47,7 +47,7 @@ export class PersonalisedcardComponent implements OnInit, OnDestroy {
   formatLabels: any;
   formatCheckBoxClicked: boolean = false;
   isLoading: boolean = true;
-  selectedOprionsFormOptions: object = {};
+  selectedOptionsFromOptions: object = {};
   sitealignment:string = localStorage.getItem('direction');
 
   constructor(private autoLogout: AutoLogoutService, private interactionService: InteractionService,
@@ -151,6 +151,76 @@ export class PersonalisedcardComponent implements OnInit, OnDestroy {
       });
   }
 
+  createDefaultValue(data: any) {
+    let value = "";
+    if (this.userInfo[data.attributeName]) {
+      this.userInfo[data.attributeName].forEach(eachItem => {
+        if (eachItem.language === this.langCode) {
+          value = eachItem.value
+        }
+      });
+    } else {
+      value = this.createCheckedVal(data);
+    }
+    return value
+  }
+
+   // Method to create preview data with formates
+   createCheckedVal(data:any){
+    let finalvalue = "";
+    
+    data.formatOption[this.langCode].forEach(item => {
+      if (item.value !== data.attributeName && item.checked) {
+        if (this.userInfo[item.value])
+          if (typeof this.userInfo[item.value] === "string") {
+            finalvalue += this.userInfo[item.value]
+          } else {
+            this.userInfo[item.value].forEach(eachVal => {
+              if (eachVal.language === this.langCode)
+                data.attributeName === 'fullAddress' ? finalvalue += eachVal.value + ", " : finalvalue += eachVal.value + " ";
+            });
+          }
+      }
+    })
+
+    return finalvalue.replace(/[, \s]+$/, "");
+  }
+
+  // Method to Uncheck default value checkbox
+  checkDefaultVal(data: any, $event:any) {
+    let unCheckedValues = 0;
+    let unCheckFullAddress = () => {
+      data.formatOption[this.langCode].forEach(item => {
+        if (item.value === data.attributeName) {
+          item['checked'] = false;
+        }
+      })
+    }
+
+    for (let item of data.formatOption[this.langCode]) {
+      if (!item.checked && item.value !== data.attributeName) {
+        unCheckFullAddress();
+        break;
+      } else {
+        item.checked = true;
+      }
+    }
+
+    for (let eachItem of data.formatOption[this.langCode]) {
+      if (!eachItem.checked) {
+        unCheckedValues += 1
+      }
+    }
+    if (unCheckedValues === data.formatOption[this.langCode].length) {
+      data.checked = false;
+      delete this.dataDisplay[data.attributeName];
+      data.formatOption[this.langCode].forEach(item => {
+        item.checked = true;
+      })
+      $event.closeMenu();
+    }
+  }
+
   captureCheckboxValue($event: any, data: any, type: any) {
     this.buildHTML = "";
     if (type === "datacheck") {
@@ -166,39 +236,7 @@ export class PersonalisedcardComponent implements OnInit, OnDestroy {
           }
         } else {
           if (data.formatRequired) {
-            if (data.attributeName === "fullAddress") {
-              this.fullAddress = ""
-              this.schema.forEach(item => {
-                if (item.attributeName === data.attributeName) {
-                  this.formatLabels = item.formatOption[this.langCode]
-                }
-              })
-
-              this.formatLabels.forEach(item => {
-                if (this.userInfo[item.value] !== undefined) {
-                  if (typeof this.userInfo[item.value] !== "string") {
-                    this.userInfo[item.value].forEach(eachLang => {
-                      if (eachLang.language === this.langCode) {
-                        this.fullAddress = eachLang.value + ", " + this.fullAddress;
-                      }
-                    })
-                  } else {
-                    this.fullAddress = this.fullAddress + this.userInfo[item.value];
-                  }
-                }
-              })
-
-              if (this.fullAddress.endsWith(', ')) {
-                this.fullAddress = this.fullAddress.replace(/^./, "");
-              };
-              value = this.fullAddress;
-            } else {
-              this.userInfo[data.attributeName].forEach(eachItem => {
-                if (eachItem.language === this.langCode) {
-                  value = eachItem.value
-                }
-              });
-            }
+            value = this.createDefaultValue(data)
           } else {
             this.userInfo[data.attributeName].forEach(eachItem => {
               if (eachItem.language === this.langCode) {
@@ -219,7 +257,7 @@ export class PersonalisedcardComponent implements OnInit, OnDestroy {
         if (item.attributeName === data.attributeName) {
           let newItem = { ...item, checked: !item.checked }
           if (!newItem.checked && newItem['formatOption']) {
-            newItem['formatOption'][this.langCode] = this.selectedOprionsFormOptions[data.attributeName]
+            newItem['formatOption'][this.langCode] = this.selectedOptionsFromOptions[data.attributeName]
           }
           return newItem
         } else {
@@ -238,8 +276,6 @@ export class PersonalisedcardComponent implements OnInit, OnDestroy {
         this.dataDisplay[data.attributeName] = { "label": data.label[this.langCode], "attributeName": data['attributeName'], "isMasked": $event.checked, "value": value };
       } else {
         let value = "";
-        let allValue = "";
-        let self = this;
         if (typeof this.userInfo[data.attributeName] === "string") {
           data.formatOption[this.langCode].forEach(item => {
             item.checked = !item.checked
@@ -247,7 +283,6 @@ export class PersonalisedcardComponent implements OnInit, OnDestroy {
               value = moment(this.userInfo[data.attributeName]).format(item["value"]);
             }
           })
-
         } else {
           this.schema = this.schema.map(item => {
             if (data['attributeName'] === item['attributeName']) {
@@ -262,77 +297,14 @@ export class PersonalisedcardComponent implements OnInit, OnDestroy {
             return item
           })
 
-          if (data.attributeName === "fullAddress") {
-            let selectedValuesCount = 0;
-            if (type["value"] !== 'fullAddress') {
-              this.schema.map(eachItem => {
-                if (data['attributeName'] === eachItem['attributeName']) {
-                  eachItem['formatOption'][this.langCode].forEach((item) => {
-                    if (item.checked) {
-                      if (self.userInfo[item.value] !== undefined) {
-                        if (item.value === "postalCode") {
-                          allValue = allValue + self.userInfo[item.value];
-                        } else {
-                          this.userInfo[item.value].forEach(eachLang => {
-                            if (eachLang.language === this.langCode) {
-                              allValue = allValue + eachLang.value + ", ";
-                            }
-                          })
-                        }
-                      }
-                    }
-                    return "";
-                  });
-                }
-              });
-
-              let unCheckFullAddress = () => {
-                data.formatOption[this.langCode].forEach(item => {
-                  if (item.value === "fullAddress") {
-                    item['checked'] = false;
-                  }
-                })
-              }
-
-              for (let item of data.formatOption[this.langCode]) {
-                if (!item.checked && item.value !== "fullAddress") {
-                  unCheckFullAddress();
-                  break;
-                } else {
-                  item.checked = true;
-                }
-              }
-
-              allValue = allValue.replace(/,(\s+)?$/, "");
-              value = allValue;
-            } else {
-              value = this.fullAddress
-              data.formatOption[this.langCode].forEach(item => {
-                item.checked = true;
-              })
-            }
-
-            for (let eachItem of data.formatOption[this.langCode]) {
-              if (!eachItem.checked) {
-                selectedValuesCount += 1
-              }
-            }
-
-            if (selectedValuesCount === data.formatOption[this.langCode].length) {
-              data.checked = false;
-              delete this.dataDisplay[data.attributeName];
-              data.formatOption[this.langCode].forEach(item => {
-                item.checked = true;
-              })
-              $event.closeMenu();
-            }
-          } else {
-            data.checked = false;
-            delete this.dataDisplay[data.attributeName];
+          if (type.value === data.attributeName) {
+            value = this.createDefaultValue(data)
             data.formatOption[this.langCode].forEach(item => {
-              item.checked = true;
+              item.checked = true
             })
-            $event.closeMenu();
+          } else {
+            value = this.createCheckedVal(data);
+            this.checkDefaultVal(data, $event);
           }
         }
         if (data.checked) {
@@ -354,7 +326,7 @@ export class PersonalisedcardComponent implements OnInit, OnDestroy {
         let formatOptions = data['formatOption'][this.langCode].map(eachItem => {
           return { ...eachItem }
         })
-        this.selectedOprionsFormOptions[data['attributeName']] = formatOptions;
+        this.selectedOptionsFromOptions[data['attributeName']] = formatOptions;
       }
     }
   }

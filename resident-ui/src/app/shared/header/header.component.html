@@ -21,7 +21,7 @@
           {{item.label}}</button>
       </mat-menu>
 
-      <mat-list-item *ngIf="activeUrl !== '#/dashboard/expired' ">
+      <mat-list-item *ngIf="activeUrl !== '#/dashboard/expired' && showLangDropDown === 'true'">
         <button [style.font-size]="fontSize.lableText" id="languages" mat-button [matMenuTriggerFor]="languages"> <span class="mat-button-wrapper"><mat-icon>g_translate</mat-icon>
           <span class="selected-lang">{{selectedLanguage}}</span> <mat-icon>keyboard_arrow_down</mat-icon></span></button>
       </mat-list-item>

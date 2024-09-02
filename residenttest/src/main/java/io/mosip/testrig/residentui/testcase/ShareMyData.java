@@ -23,7 +23,7 @@ public class ShareMyData extends BaseClass {
 		Commons.clickWebelement( driver, By.id("shareBtn"));
 		Commons.clickWebelement( driver, By.id("confirmShareInfo"));
 		Commons.clickWebelement( driver, By.id("shareInfoBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if The data chosen by you has been successfully shared with the chosen partner against the Event Id");
+		Commons.assertCheck(By.id("messagePopup"),"verify if The data chosen by you has been successfully shared with the chosen partner against the Event Id");
 		Commons.clickWebelement( driver, By.id("dismissBtn"));
 
 		Commons.clickWebelement( driver, By.id("uinservices/sharewithpartner"));
@@ -55,7 +55,6 @@ public class ShareMyData extends BaseClass {
 		Commons.clickWebelement( driver, By.id("shareBtn"));
 		Commons.clickWebelement( driver, By.id("confirmShareInfo"));
 		Commons.clickWebelement( driver, By.id("shareInfoBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if The data chosen by you has been successfully shared with the chosen partner against the Event Id");
 		Commons.clickWebelement( driver, By.id("dismissBtn"));
 
 		Commons.clickWebelement( driver, By.id("uinservices/sharewithpartner"));
@@ -69,18 +68,18 @@ public class ShareMyData extends BaseClass {
 		Commons.clickWebelement( driver, By.id("gender"));
 		Commons.clickWebelement( driver, By.id("photo"));
 		Commons.clickWebelement( driver, By.id("shareBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if The data chosen by you has been successfully shared with the chosen partner against the Event Id");
+		Commons.assertCheck(By.id("messagePopup"),"verify if The data chosen by you has been successfully shared with the chosen partner against the Event Id");
 		Commons.clickWebelement( driver, By.id("dismissBtn"));
 
 		Commons.enter( driver, By.id("sharingReasonPlaceholder"), data);
 		Commons.clickWebelement( driver, By.id("shareBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if The data chosen by you has been successfully shared with the chosen partner against the Event Id");
+		Commons.assertCheck(By.id("messagePopup"),"verify if The data chosen by you has been successfully shared with the chosen partner against the Event Id");
 		Commons.clickWebelement( driver, By.id("dismissBtn"));
 		driver.findElement(By.id("sharingReasonPlaceholder")).clear();
 
 		Commons.dropdown( driver, By.id("partnerDetails"));
 		Commons.clickWebelement( driver, By.id("shareBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if The data chosen by you has been successfully shared with the chosen partner against the Event Id");
+		Commons.assertCheck(By.id("messagePopup"),"verify if The data chosen by you has been successfully shared with the chosen partner against the Event Id");
 		Commons.clickWebelement( driver, By.id("dismissBtn"));
 
 	}

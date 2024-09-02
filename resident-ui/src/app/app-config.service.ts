@@ -70,6 +70,8 @@ export class AppConfigService {
         this.appConfig["mosip.resident.zoom"] = responseData["mosip.resident.zoom"];
         this.appConfig["mosip.resident.maxZoom"] = responseData["mosip.resident.maxZoom"];
         this.appConfig["mosip.resident.minZoom"] = responseData["mosip.resident.minZoom"];
+        this.appConfig["resident.update-uin.machine-zone-code"] = responseData["resident.update-uin.machine-zone-code"];
+        this.appConfig["resident-multi-language-enable"] = responseData["resident-multi-language-enable"];
         localStorage.setItem("isDataLoaded", 'true')
       },
       (error) => {

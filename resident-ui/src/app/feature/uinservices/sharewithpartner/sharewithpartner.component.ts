@@ -39,7 +39,6 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
   showAcknowledgement: boolean = false;
   aidStatus: any;
   clickEventSubscription: Subscription;
-  buildHTML: any;
   userInfo: any;
   message: any;
   formatData: any;
@@ -61,6 +60,7 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
   selectedOprionsFormOptions: object = {};
   sitealignment:string = localStorage.getItem('direction');
+  selectedFormats:string = "";
 
   private keyboardRef: MatKeyboardRef<MatKeyboardComponent>;
   @ViewChildren('keyboardRef', { read: ElementRef })
@@ -213,8 +213,84 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
       });
   }
 
+  // Method to create default format preview data
+  createDefaultValue(data: any) {
+    let value = "";
+    if (this.userInfo[data.attributeName]) {
+      this.userInfo[data.attributeName].forEach(eachItem => {
+        if (eachItem.language === this.langCode) {
+          value = eachItem.value
+        }
+      });
+    } else {
+      value = this.createCheckedVal(data);
+    }
+    return value
+  }
+
+  // Method to create preview data with formates
+  createCheckedVal(data:any){
+    let finalvalue = "";
+    this.selectedFormats = "";
+    data.formatOption[this.langCode].forEach(item => {
+      if (item.value !== data.attributeName && item.checked) {
+        if (this.userInfo[item.value])
+          if (typeof this.userInfo[item.value] === "string") {
+            finalvalue += this.userInfo[item.value]
+          } else {
+            this.userInfo[item.value].forEach(eachVal => {
+              if (eachVal.language === this.langCode)
+                data.attributeName === 'fullAddress' ? finalvalue += eachVal.value + ", " : finalvalue += eachVal.value + " ";
+            });
+          }
+      }
+    })
+
+    data.formatOption[this.langCode].forEach(item =>{
+      if (item.checked && item.value !== 'fullAddress') {
+        this.selectedFormats += item.value + ",";
+      }
+    })
+    this.selectedFormats = this.selectedFormats.replace(/.$/, '');
+    return finalvalue.replace(/[, \s]+$/, "");
+  }
+
+  // Method to Uncheck default value checkbox
+  checkDefaultVal(data: any, $event:any) {
+    let unCheckedValues = 0;
+    let unCheckFullAddress = () => {
+      data.formatOption[this.langCode].forEach(item => {
+        if (item.value === data.attributeName) {
+          item['checked'] = false;
+        }
+      })
+    }
+
+    for (let item of data.formatOption[this.langCode]) {
+      if (!item.checked && item.value !== data.attributeName) {
+        unCheckFullAddress();
+        break;
+      } else {
+        item.checked = true;
+      }
+    }
+
+    for (let eachItem of data.formatOption[this.langCode]) {
+      if (!eachItem.checked) {
+        unCheckedValues += 1
+      }
+    }
+    if (unCheckedValues === data.formatOption[this.langCode].length) {
+      data.checked = false;
+      delete this.sharableAttributes[data.attributeName];
+      data.formatOption[this.langCode].forEach(item => {
+        item.checked = true;
+      })
+      $event.closeMenu();
+    }
+  }
+
   captureCheckboxValue($event: any, data: any, type: string) {
-    this.buildHTML = "";
     if (type === "datacheck") {
       if (data.attributeName.toString() in this.sharableAttributes) {
         delete this.sharableAttributes[data.attributeName];
@@ -227,49 +303,17 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
             value = this.userInfo[data.attributeName];
           }
         } else {
-            if (data.formatRequired) {
-              if (data.attributeName === "fullAddress") {
-                this.fullAddress = ""
-
-                this.schema.forEach(item => {
-                  if (item.attributeName === data.attributeName) {
-                    this.formatLabels = item.formatOption[this.langCode]
-                  }
-                })
-                
-                this.formatLabels.forEach(item => {
-                  if (this.userInfo[item.value] !== undefined) {
-                    if (typeof this.userInfo[item.value] !== "string") {
-                      this.userInfo[item.value].forEach(eachLang => {
-                        if (eachLang.language === this.langCode) {
-                          this.fullAddress = this.fullAddress + ", " + eachLang.value
-                        }
-                      })
-                    } else {
-                      this.fullAddress = this.fullAddress +", " + this.userInfo[item.value]
-                    }
-                  }
-                })
-
-
-                this.fullAddress = this.fullAddress.replace(/^./, "");
-                value = this.fullAddress
-              } else {
-                this.userInfo['fullName'].forEach(item =>{
-                  if(item.language === this.langCode){
-                    value = item.value
-                  }
-                });
+          if (data.formatRequired) {
+            value = this.createDefaultValue(data)
+          } else {
+            this.userInfo[data.attributeName].forEach(item =>{
+              if(item.language === this.langCode){
+                value = item.value
               }
-            } else {
-              this.userInfo[data.attributeName].forEach(item =>{
-                if(item.language === this.langCode){
-                  value = item.value
-                }
-              });
-            }
+            });
+          }
         }
-
+       
         if (data.formatRequired) {
           this.sharableAttributes[data.attributeName] = { "label": data.label[this.langCode], "attributeName": data['attributeName'], "isMasked": false, "format": data['defaultFormat'], "value": value };
         } else {
@@ -300,15 +344,13 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
         this.sharableAttributes[data.attributeName] = { "label": data.label[this.langCode], "attributeName": data['attributeName'], "isMasked": !this.sharableAttributes[data.attributeName]['isMasked'], "value": value };
       } else {
         let value = "";
-        let allValues = "";
-        let self = this;
-        let selectedFormats = "";
+        
         if (typeof this.userInfo[data.attributeName] === "string") {
           data.formatOption[this.langCode].forEach(eachItem => {
             eachItem.checked = !eachItem.checked
             if (eachItem.checked) {
               value = moment(this.userInfo[data.attributeName]).format(eachItem["value"]);
-              selectedFormats = type['label']
+              this.selectedFormats = type['label']
             }
           })
         } else {
@@ -325,90 +367,18 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
             return eachItem
           })
 
-          if (data.attributeName === "fullAddress") {
-            let selectedValuesCount = 0;
-            if (type["value"] !== 'fullAddress') {
-              this.schema.map(eachItem => {
-                if (data['attributeName'] === eachItem['attributeName']) {
-                  eachItem['formatOption'][this.langCode].forEach((item) => {
-                    if (item.checked) {
-                      if (self.userInfo[item.value] !== undefined) {
-                        if (item.value === "postalCode") {
-                          allValues = allValues + self.userInfo[item.value];
-                        } else {
-                          this.userInfo[item.value].forEach(eachLang => {
-                              if (eachLang.language === this.langCode) {
-                                allValues = allValues + eachLang.value + ", ";
-                              }
-                          })
-                        }
-                      }
-                    }
-                    return "";
-                  });
-                }
-              });
-              
-              let unCheckFullAddress = () =>{
-                data.formatOption[this.langCode].forEach(eachItem =>{
-                  if(eachItem.value === "fullAddress"){
-                    eachItem['checked'] = false;
-                  }
-                })
-              }
-              
-              for(let item of data.formatOption[this.langCode]){
-                if(!item.checked && item.value !== "fullAddress"){
-                    unCheckFullAddress();
-                    break;
-                }else{
-                  item.checked = true;
-                }
-              }
-
-              data.formatOption[this.langCode].forEach(item =>{
-                if (item.checked && item.value !== 'fullAddress') {
-                  selectedFormats += item.value + ",";
-                }
-              })
-
-              selectedFormats = selectedFormats.replace(/.$/, '');
-              allValues = allValues.replace(/,(\s+)?$/, "");
-              value = allValues;
-            } else {
-              value = this.fullAddress
-              data.formatOption[this.langCode].forEach(item => {
-                item.checked = true;
-              })
-              selectedFormats = data.defaultFormat;
-            }
-
-            for (let eachItem of data.formatOption[this.langCode]) {
-              if (!eachItem.checked) {
-                selectedValuesCount += 1
-              }
-            }
-
-            if (selectedValuesCount === data.formatOption[this.langCode].length) {
-              data.checked = false;
-              delete this.sharableAttributes[data.attributeName];
-              data.formatOption[this.langCode].forEach(item => {
-                item.checked = true;
-              })
-              $event.closeMenu();
-            }
-
-          } else {
-            data.checked = false;
-            delete this.sharableAttributes[data.attributeName];
+          if (type['value'] === data.attributeName) {
+            value = this.createDefaultValue(data)
             data.formatOption[this.langCode].forEach(item => {
-              item.checked = true;
+              item.checked = true
             })
-            $event.closeMenu();
+          } else {
+            value = this.createCheckedVal(data);
+            this.checkDefaultVal(data, $event);
           }
         }
         if (data.checked) {
-          this.sharableAttributes[data.attributeName] = { "label": data.label[this.langCode], "attributeName": data['attributeName'], "isMasked": false, "format": selectedFormats, "value": value };
+          this.sharableAttributes[data.attributeName] = { "label": data.label[this.langCode], "attributeName": data['attributeName'], "isMasked": false, "format": this.selectedFormats, "value": value };
         }
       }
     }
@@ -428,17 +398,6 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
       }
     }
 
-    let row = "";
-    let rowImage = ""
-
-    for (const key in this.sharableAttributes) {
-      if (key === "photo") {
-        rowImage = "<tr><td><img src=' " + this.sharableAttributes[key].value + "' alt='' style='margin-left:48%;' width='70px' height='70px'/></td></tr>";
-      } else {
-        row = row + "<tr><td style='font-weight:600;'>" + this.sharableAttributes[key].attributeName + ":</td><td>" + this.sharableAttributes[key].value + "</td></tr>";
-      }
-    }
-    this.buildHTML = `<html><head></head><body><table>` + rowImage + row + `</table></body></html>`;
   }
 
   captureDropDownValue(event: any) {
@@ -492,7 +451,7 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
           this.router.navigate(["uinservices/dashboard"])
         } else {
           this.isLoading = false;
-          this.showErrorPopup(response["errors"])
+          this.showErrorPopup(response.body["errors"])
         }
       },
         err => {
@@ -555,7 +514,7 @@ export class SharewithpartnerComponent implements OnInit, OnDestroy {
     return dialogRef;
   }
 
-  showErrorPopup(message: string) {
+  showErrorPopup(message: any) {
     let errorCode = message[0]['errorCode']
     setTimeout(() => {
         this.dialog
