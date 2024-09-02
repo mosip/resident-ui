@@ -28,7 +28,7 @@ public class UpdateMyData extends BaseClass {
 		Commons.clickWebelement( driver, By.id("submitBtn"));
 		Commons.clickWebelement( driver, By.id("confirmUpdateData"));
 		Commons.clickWebelement( driver, By.id("updateMyDataBtn"));	
-		Commons.assertCheck(By.id("dismissBtn"),"verify if Your update has been successfully updated against the Event");
+		Commons.assertCheck(By.id("messagePopup"),"verify if Your update has been successfully updated against the Event");
 		Commons.clickWebelement( driver, By.id("dismissBtn"));
 	}
 
@@ -53,7 +53,7 @@ public class UpdateMyData extends BaseClass {
 		Commons.clickWebelement( driver, By.id("submitBtn"));
 		Commons.clickWebelement( driver, By.id("confirmUpdateData"));
 		Commons.clickWebelement( driver, By.id("updateMyDataBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if Your update has been successfully updated against the Event");
+		Commons.assertCheck(By.id("messagePopup"),"verify if Your update has been successfully updated against the Event");
 		Commons.clickWebelement( driver, By.id("dismissBtn"));
 
 	}
@@ -70,7 +70,7 @@ public class UpdateMyData extends BaseClass {
 		System.out.println(otp);
 		Commons.enter( driver, By.id("otp-input"), otp);
 		Commons.clickWebelement( driver, By.id("submitOtpBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if Your Email ID has been successfully updated against the Event");
+		Commons.assertCheck(By.id("messagePopup"),"verify if Your Email ID has been successfully updated against the Event");
 		Commons.clickWebelement( driver, By.id("dismissBtn"));
 
 	}
@@ -82,7 +82,7 @@ public class UpdateMyData extends BaseClass {
 		Commons.clickWebelement( driver, By.xpath("//div[@id='mat-tab-label-0-3']"));
 		Commons.dropdown( driver, By.id("preferredLang"));
 		Commons.clickWebelement( driver, By.id("submit"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if Your Language has been successfully updated against the Event");
+		Commons.assertCheck(By.id("messagePopup"),"verify if Your Language has been successfully updated against the Event");
 
 	}
 
@@ -105,7 +105,7 @@ public class UpdateMyData extends BaseClass {
 		Commons.clickWebelement( driver, By.id("submitBtn"));
 		Commons.clickWebelement( driver, By.id("confirmUpdateData"));
 		Commons.clickWebelement( driver, By.id("updateMyDataBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if Your update has been successfully updated against the Event");
+		Commons.assertCheck(By.id("messagePopup"),"verify if Your update has been successfully updated against the Event");
 		Commons.clickWebelement( driver, By.id("dismissBtn"));
 
 	}

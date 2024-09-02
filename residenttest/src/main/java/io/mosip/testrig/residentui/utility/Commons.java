@@ -30,7 +30,7 @@ public class Commons extends BaseClass{
 
 	public  static void click(WebDriver driver, By by) throws IOException, InterruptedException {
 		logger.info("Clicking " + by );
-
+		wait(1000);
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 			wait.until(ExpectedConditions.elementToBeClickable(by));		
@@ -199,6 +199,8 @@ public class Commons extends BaseClass{
 	public static void assertCheck(By by,String message) throws IOException {
 		try {
 			wait(2000);
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+			wait.until(ExpectedConditions.presenceOfElementLocated(by));
 			boolean isDisplayed = Commons.isDisplayed(driver, by);
 			Assert.assertTrue(isDisplayed,message);
 

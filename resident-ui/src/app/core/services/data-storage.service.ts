@@ -172,7 +172,7 @@ export class DataStorageService {
   }
 
   getProfileInfo(langCode) {
-    return this.httpClient.get(this.BASE_URL + '/profile?languageCode=' +  langCode);
+    return this.httpClient.get(this.BASE_URL + '/profile');
   }
 
   getServiceHistory(request: any, filters: any,pageSize1:any) {

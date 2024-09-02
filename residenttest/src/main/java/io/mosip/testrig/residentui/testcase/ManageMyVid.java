@@ -19,11 +19,11 @@ public class ManageMyVid extends BaseClass {
 		Commons.click( driver, By.id("NoBtn"));		
 		Commons.click( driver, By.id("Temporary"));
 		Commons.click( driver, By.id("vidWarningBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if Your VID has been successfully created against the Event ID");
+		Commons.assertCheck(By.id("messagePopup"),"verify if Your VID has been successfully created against the Event ID");
 		Commons.click( driver, By.id("dismissBtn"));
 		Commons.click( driver, By.xpath("(//*[@id='download0'])[2]"));
 		Commons.click( driver, By.id("vidDownloadBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if Your request to download the VID card has been successfully processed");
+		Commons.assertCheck(By.id("messagePopup"),"verify if Your request to download the VID card has been successfully processed");
 		Commons.click( driver, By.id("dismissBtn"));
 		Commons.click( driver, By.xpath("(//*[@id='delete0'])[2]"));
 		Commons.click( driver, By.id("vidDeleteBtn"));
@@ -31,15 +31,15 @@ public class ManageMyVid extends BaseClass {
 		Commons.click( driver, By.id("dismissBtn"));
 		Commons.click( driver, By.id("OneTimeUse"));
 		Commons.click( driver, By.id("vidWarningBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if Your VID has been successfully created against the Event ID");
+		Commons.assertCheck(By.id("messagePopup"),"verify if Your VID has been successfully created against the Event ID");
 		Commons.click( driver, By.id("dismissBtn"));
 		Commons.click( driver, By.xpath("(//*[@id='download0'])[2]"));
 		Commons.click( driver, By.id("vidDownloadBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if Your request to download the VID card has been successfully processed");
+		Commons.assertCheck(By.id("messagePopup"),"verify if Your request to download the VID card has been successfully processed");
 		Commons.click( driver, By.id("dismissBtn"));
 		Commons.click( driver, By.xpath("(//*[@id='delete0'])[2]"));
 		Commons.click( driver, By.id("vidDeleteBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"Your VID has been successfully deleted against the Event ID");
+		Commons.assertCheck(By.id("messagePopup"),"Your VID has been successfully deleted against the Event ID");
 		Commons.click( driver, By.id("dismissBtn"));
 		    
 	}

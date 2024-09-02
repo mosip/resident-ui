@@ -268,8 +268,6 @@ public class BaseTestCase {
 			String url = ApplnURI + "/v1/auditmanager/actuator/info";
 			try {
 				response = RestClient.getRequest(url, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON);
-				//	GlobalMethods.reportResponse(response.getHeaders().asList().toString(), url, response);
-
 				responseJson = new org.json.JSONObject(response.getBody().asString());
 
 				targetEnvVersion = responseJson.getJSONObject("build").getString("version");
@@ -278,9 +276,34 @@ public class BaseTestCase {
 				logger.error(GlobalConstants.EXCEPTION_STRING_2 + e);
 			}
 		}
-		return targetEnvVersion.contains("1.2");
+		
+		// Compare the version numbers, ignoring any suffix like "-SNAPSHOT"
+	    return isVersionGreaterOrEqual(targetEnvVersion, "1.2");
 	}
+	
+	private static boolean isVersionGreaterOrEqual(String version1, String version2) {
+	    // Remove any suffixes like "-SNAPSHOT" from the versions
+	    version1 = version1.split("-")[0];
+	    version2 = version2.split("-")[0];
 
+	    String[] v1 = version1.split("\\.");
+	    String[] v2 = version2.split("\\.");
+
+	    int length = Math.max(v1.length, v2.length);
+
+	    for (int i = 0; i < length; i++) {
+	        int v1Part = i < v1.length ? Integer.parseInt(v1[i]) : 0;
+	        int v2Part = i < v2.length ? Integer.parseInt(v2[i]) : 0;
+
+	        if (v1Part < v2Part) {
+	            return false;
+	        } else if (v1Part > v2Part) {
+	            return true;
+	        }
+	    }
+	    return true; // versions are equal
+	}
+	
 	private static Properties getLoggerPropertyConfig() {
 		Properties logProp = new Properties();
 		logProp.setProperty("log4j.rootLogger", "INFO, Appender1,Appender2");

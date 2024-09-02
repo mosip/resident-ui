@@ -48,6 +48,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   selectedfontsize:any = localStorage.getItem('selectedfontsize');
   selectedLangData:any;
   isAuthorized:boolean = false;
+  showLangDropDown:any;
 
   constructor(
     private router: Router,
@@ -79,6 +80,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   getConfigData(){
     if(localStorage.getItem('isDataLoaded') === 'true'){
       let supportedLanguages = this.appConfigService.getConfig()['supportedLanguages'].split(','); 
+      this.showLangDropDown = this.appConfigService.getConfig()['resident-multi-language-enable'];
+      
       if(supportedLanguages.length > 1){
         supportedLanguages.forEach((language) => {
           this.selectLanguagesArr.push({

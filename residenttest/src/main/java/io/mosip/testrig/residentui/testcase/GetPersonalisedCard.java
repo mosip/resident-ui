@@ -16,7 +16,7 @@ public class GetPersonalisedCard extends BaseClass {
 		Commons.clickWebelement( driver, By.id("dateOfBirth"));
 		Commons.clickWebelement( driver, By.id("UIN"));
 		Commons.click( driver, By.id("downloadFileBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if personalisedcard is downloaded");
+		Commons.assertCheck(By.id("messagePopup"),"verify if personalisedcard is downloaded");
 
 		Commons.click( driver, By.id("dismissBtn"));
 		Commons.click( driver, By.id("uinservices/personalisedcard"));
@@ -26,7 +26,7 @@ public class GetPersonalisedCard extends BaseClass {
 		Commons.clickWebelement( driver, By.id("perpetualVID"));
 		Commons.clickWebelement( driver, By.id("phone"));
 		Commons.click( driver, By.id("downloadFileBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if personalisedcard is downloaded");
+		Commons.assertCheck(By.id("messagePopup"),"verify if personalisedcard is downloaded");
 
 		Commons.click( driver, By.id("dismissBtn"));
 		Commons.click( driver, By.id("uinservices/personalisedcard"));
@@ -40,7 +40,7 @@ public class GetPersonalisedCard extends BaseClass {
 		Commons.clickWebelement( driver, By.id("gender"));
 		Commons.clickWebelement( driver, By.id("photo"));
 		Commons.click( driver, By.id("downloadFileBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if personalisedcard is downloaded");
+		Commons.assertCheck(By.id("messagePopup"),"verify if personalisedcard is downloaded");
 
 		Commons.click( driver, By.id("dismissBtn"));
 		Commons.click( driver, By.id("uinservices/personalisedcard"));
@@ -54,7 +54,7 @@ public class GetPersonalisedCard extends BaseClass {
 		Commons.clickWebelement( driver, By.id("gender"));
 		Commons.clickWebelement( driver, By.id("photo"));
 		Commons.click( driver, By.id("downloadFileBtn"));
-		Commons.assertCheck(By.id("dismissBtn"),"verify if personalisedcard is downloaded");
+		Commons.assertCheck(By.id("messagePopup"),"verify if personalisedcard is downloaded");
 
 		Commons.click( driver, By.id("dismissBtn"));
 		

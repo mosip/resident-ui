@@ -164,7 +164,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.defaultJsonValue = { ...defaultJson }
-    this.initialLocationCode = "MOR";
+    this.initialLocationCode = this.appConfigService.getConfig()["resident.update-uin.machine-zone-code"];
     this.locCode = 5;
     this.translateService.use(localStorage.getItem("langCode"));
     this.supportedLanguages = ["eng"];
@@ -493,7 +493,8 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
       let filedNameForuserInput = (item.charAt(0).toLocaleLowerCase() + item.slice(1)).replace(" ", "")
       if (typeof this.userInputValues[filedNameForuserInput] !== 'string') {
         this.getUserPerfLang.forEach(lang => {
-          this.userInputValues[filedNameForuserInput][lang] = ''
+          if(this.userInputValues[filedNameForuserInput])
+            this.userInputValues[filedNameForuserInput][lang] = ''
         })
       } else {
         this.userInputValues[filedNameForuserInput] = ''
@@ -690,10 +691,9 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
     let genders = this.dropDownValues.gender
     let currentValueCode
     genders[language].forEach(item => {
-      if (item.value === currentValue) {
-        currentValueCode = item.code
-      }
-    })
+      currentValueCode = item.value === currentValue ? item.code : currentValue
+    });
+  
     let self = this;
     if (formControlName !== "proofOfIdentity") {
       if (event.value !== currentValueCode) {
@@ -702,7 +702,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
         this.getUserPerfLang.forEach(item => {
           let newData
           genders[item].forEach(eachGender => {
-            if (eachGender.code === event.value) {
+            if (eachGender.code.toLowerCase() === event.value.toLowerCase()) {
               newData = { "language": item, "value": eachGender.value }
               this.userInputValues[formControlName][item] = eachGender.code;
             }
