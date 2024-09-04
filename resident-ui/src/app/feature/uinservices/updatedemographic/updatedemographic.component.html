@@ -679,6 +679,23 @@
                                     </mat-select>
                                   </span>
                                 </td>
+                                <td class="sub-table-row each-Hierarchy-td width-of-input ele-for-lap-tab-card"
+                                  *ngIf="dynamicDropDown[field.name]">
+                                  <span [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'">
+                                    <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
+                                      placeholder="{{field.placeHolder[item.language]}}"
+                                      [ngClass]="dynamicDropDown[field.name]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
+                                      [(value)]="userInputValues[field.attributeName][item.language]"
+                                      id="{{field.name}}{{item.language}}"
+                                      (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
+                                      (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
+                                      <mat-option *ngFor="let data of dynamicDropDown[field.name][item.language]"
+                                        [value]="data.code">
+                                        {{ data.name }}
+                                      </mat-option>
+                                    </mat-select>
+                                  </span>
+                                </td>
                               </tr>
                             </ng-container>
                             <tr *ngIf="typeOf(userInfo[field.attributeName]) === 'string'">
@@ -696,6 +713,19 @@
                                   (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
                                   (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
                                   <mat-option *ngFor="let data of dynamicDropDown[field.attributeName].eng" [value]="data.code">
+                                    {{ data.name }}
+                                  </mat-option>
+                                </mat-select>
+                              </td>
+                              <td class="sub-table-row each-Hierarchy-td width-of-input ele-for-lap-tab-card"
+                                *ngIf="dynamicDropDown[field.name]">
+                                <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
+                                  placeholder="{{langJson.select}} {{field.labelName[langCode][1]}}"
+                                  [ngClass]="dynamicDropDown[field.name]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
+                                  [(value)]="userInputValues[field.attributeName]" id="{{field.name}}"
+                                  (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
+                                  (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
+                                  <mat-option *ngFor="let data of dynamicDropDown[field.name].eng" [value]="data.code">
                                     {{ data.name }}
                                   </mat-option>
                                 </mat-select>
@@ -728,8 +758,8 @@
                             <tr *ngIf="typeOf(userInfo[field.attributeName]) !== 'string'">
                               <td class="ele-for-mob-card"
                                 *ngFor="let item of buildJSONData[field.attributeName], let i = index">
-                                <span class="sub-table-row each-Hierarchy-td" *ngIf="dynamicDropDown[field.name]">
-                                  <span [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'">
+                                <span class="sub-table-row each-Hierarchy-td">
+                                  <span [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'" *ngIf="dynamicDropDown[field.name]">
                                     <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
                                       placeholder="{{field.placeHolder[item.language]}}"
                                       [ngClass]="dynamicDropDown[field.name]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
@@ -738,6 +768,20 @@
                                       (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
                                       (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
                                       <mat-option *ngFor="let data of dynamicDropDown[field.name][item.language]"
+                                        [value]="data.code">
+                                        {{ data.name }}
+                                      </mat-option>
+                                    </mat-select>
+                                  </span>
+                                  <span [ngClass]="item.language === 'ara' ? 'dir-rtl' :'dir-ltl'" *ngIf="dynamicDropDown[field.attributeName]">
+                                    <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
+                                      placeholder="{{field.placeHolder[item.language]}}"
+                                      [ngClass]="dynamicDropDown[field.attributeName]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
+                                      [(value)]="userInputValues[field.attributeName][item.language]"
+                                      id="{{field.name}}{{item.language}}"
+                                      (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
+                                      (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
+                                      <mat-option *ngFor="let data of dynamicDropDown[field.attributeName][item.language]"
                                         [value]="data.code">
                                         {{ data.name }}
                                       </mat-option>
@@ -752,8 +796,8 @@
                               </td>
                             </tr>
                             <tr *ngIf="typeOf(userInfo[field.attributeName]) === 'string'">
-                              <td class="sub-table-row each-Hierarchy-td ele-for-mob-card"
-                                *ngIf="dynamicDropDown[field.name]">
+                              <td class="sub-table-row each-Hierarchy-td ele-for-mob-card">
+                                <span *ngIf="dynamicDropDown[field.name]">
                                 <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
                                   placeholder="{{langJson.select}} {{field.labelName[langCode][1]}}"
                                   [ngClass]="dynamicDropDown[field.name]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
@@ -764,6 +808,19 @@
                                     {{ data.name }}
                                   </mat-option>
                                 </mat-select>
+                                </span>
+                                <span *ngIf="dynamicDropDown[field.attributeName]">
+                                  <mat-select #matSelect [style.font-size]="fontSize.paragraph" disableOptionCentering
+                                    placeholder="{{langJson.select}} {{field.labelName[langCode][1]}}"
+                                    [ngClass]="dynamicDropDown[field.attributeName]?.length === 0 ? 'disable-dropdown' : 'enable-dropdown'"
+                                    [(value)]="userInputValues[field.attributeName]" id="{{field.name}}"
+                                    (selectionChange)="loadLocationDataDynamically($event, field.locationHierarchyLevel,field.attributeName,typeOf(userInfo[field.attributeName]))"
+                                    (click)="isUpdatedataInProgress(matSelect, 'dropDownField')">
+                                    <mat-option *ngFor="let data of dynamicDropDown[field.attributeName].eng" [value]="data.code">
+                                      {{ data.name }}
+                                    </mat-option>
+                                  </mat-select>
+                                  </span>
                                 <span *ngIf="locationFieldNameList?.length">
                                   <p [style.font-size]="fontSize.warningMessages" *ngIf="locationFieldNameList[field.locationHierarchyLevel-1] === fieldName"
                                     class="warning-message">{{langJson.EnterAllAddress}} {{field.placeHolder[langCode]}}
