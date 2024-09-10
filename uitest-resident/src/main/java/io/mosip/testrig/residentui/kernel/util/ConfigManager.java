@@ -814,6 +814,10 @@ public class ConfigManager {
 		return prop;
 	}
 
+	public static String getimagename() {
+		propsKernel = getproperty(TestRunner.getResourcePath() + "/" + "/config/Kernel.properties");
+		return propsKernel.getProperty("image");
+	}
 	public static String getAuthDemoServiceUrl() {
 		return ConfigManager.getAuthDemoServiceBaseUrl() + ":" + ConfigManager.getAuthDemoServicePort();
 	}
