@@ -25,7 +25,7 @@ public class LoginTest extends BaseClass {
 		Commons.enter( driver, By.id("Otp_mosip-vid"), TestRunner.perpetualVid);
 		Commons.click( driver, By.id("get_otp"));
 		if(!Commons.isDisplayed(driver, By.id("otp_verify_input"))) {
-			Commons.wait(60000);
+			Commons.wait(120000);
 			Commons.click( driver, By.id("get_otp"));
 		}
 		otp = MockSMTPListener.getOtp(externalemail);
