@@ -4,6 +4,7 @@ package io.mosip.testrig.residentui.testcase;
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
+import io.mosip.testrig.residentui.fw.util.AdminTestUtil;
 import io.mosip.testrig.residentui.kernel.util.ConfigManager;
 import io.mosip.testrig.residentui.utility.BaseClass;
 import io.mosip.testrig.residentui.utility.Commons;
@@ -18,7 +19,12 @@ public class UpdateMyData extends BaseClass {
 		Commons.wait(ConfigManager.packetUpdateWait()*60000);
 		LoginTest.loginTest();
 		Commons.clickWebelement( driver, By.id("uinservices/updatedemographic"));
-		Commons.enter( driver, By.id("fullName"+BaseClass.envsupportlang()), Commons.generateRandomAlphabetString());
+		String name = AdminTestUtil.getValueFromAuthActuator("json-property", "name");
+		name = name.replace("[", "").replace("]", "").replace("\"", "");
+		String[] names=name.split(",");
+		for(String Name:names) {
+			Commons.enter( driver, By.id(Name+BaseClass.envsupportlang()), Commons.generateRandomAlphabetString());
+		}	
 		Commons.dropdown( driver, By.id("gender"));
 		Commons.enter( driver, By.id("proofOfIdentityvalue"), data);
 		Commons.dropdown( driver, By.id("proofOfIdentity"));
