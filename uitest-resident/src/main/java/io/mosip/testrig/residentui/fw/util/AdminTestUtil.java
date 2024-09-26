@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -121,11 +122,18 @@ try {
 		
 	}
 	public static String buildaddIdentityRequestBody(String schemaJson, String uin, String rid) {
-    	org.json.JSONObject schemaresponseJson = new org.json.JSONObject(schemaJson);
+    	JSONObject schemaresponseJson = new JSONObject(schemaJson);
     	
-		org.json.JSONObject schemaData = (org.json.JSONObject) schemaresponseJson.get("response");
-		Double schemaVersion = (Double) schemaData.get("idVersion");
-		String schemaJsonData = schemaData.getString("schemaJson");
+		JSONObject schemaData = (JSONObject) schemaresponseJson.get("response");
+		Double schemaVersion = null;
+		Object idVersion = schemaData.get("idVersion");
+		if (idVersion instanceof BigDecimal) {
+		    schemaVersion = ((BigDecimal) idVersion).doubleValue();
+		} else if (idVersion instanceof Double) {
+		    schemaVersion = (Double) idVersion;
+		} else {
+		    throw new ClassCastException("Unsupported type for idVersion: " + idVersion.getClass().getName());
+		}		String schemaJsonData = schemaData.getString("schemaJson");
 		String schemaFile = schemaJsonData.toString();
 		
 		JSONObject schemaFileJson = new JSONObject(schemaFile); // jObj
