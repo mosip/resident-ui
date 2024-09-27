@@ -1,4 +1,4 @@
 #!/bin/bash
 
 java --version
-java -jar residentui-*-jar-with-dependencies.jar
+java -jar uitest-resident-*-jar-with-dependencies.jar
