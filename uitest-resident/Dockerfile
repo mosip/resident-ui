@@ -1,4 +1,4 @@
-FROM selenium/standalone-chrome:latest
+FROM syedsalman041997/uitest-resident:selenium-chrome-java17
 
 USER root
 
