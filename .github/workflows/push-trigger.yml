@@ -23,7 +23,7 @@ on:
 
 jobs:
   build-resident-ui:
-    uses: mosip/kattu/.github/workflows/npm-build.yml@master-java21
+    uses: mosip/kattu/.github/workflows/npm-build.yml@master
     with:
       SERVICE_LOCATION: ./resident-ui
       BUILD_ARTIFACT: resident-ui
@@ -41,7 +41,7 @@ jobs:
             BUILD_ARTIFACT: 'resident-ui'
       fail-fast: false
     name: ${{ matrix.SERVICE_NAME }}
-    uses: mosip/kattu/.github/workflows/docker-build.yml@master-java21
+    uses: mosip/kattu/.github/workflows/docker-build.yml@master
     with:
       SERVICE_LOCATION: ${{ matrix.SERVICE_LOCATION }}
       SERVICE_NAME: ${{ matrix.SERVICE_NAME }}
@@ -56,7 +56,7 @@ jobs:
   sonar-analysis:
     needs: build-resident-ui
     if: "${{ github.event_name != 'pull_request' }}"
-    uses: mosip/kattu/.github/workflows/npm-sonar-analysis.yml@master-java21
+    uses: mosip/kattu/.github/workflows/npm-sonar-analysis.yml@master
     with:
       SERVICE_LOCATION: resident-ui
       SONAR_URL: 'https://sonarcloud.io'
@@ -66,7 +66,7 @@ jobs:
       ORG_KEY: ${{ secrets.ORG_KEY }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
   build-maven-uitest-resident:
-    uses: mosip/kattu/.github/workflows/maven-build.yml@master-java21
+    uses: mosip/kattu/.github/workflows/maven-build.yml@master
     with:
       SERVICE_LOCATION: ./uitest-resident
       BUILD_ARTIFACT: uitest-resident
