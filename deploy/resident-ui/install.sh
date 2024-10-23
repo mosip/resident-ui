@@ -8,6 +8,7 @@ fi
 
 NS=resident
 RESIDENT_UI_CHART_VERSION=0.0.1-develop
+COPY_UTIL=../copy_cm_func.sh
 
 echo Create $NS namespace
 kubectl create ns $NS
@@ -18,12 +19,13 @@ function installing_resident_ui() {
   helm repo update
 
   echo Copy configmaps
-  sed -i 's/\r$//' copy_cm.sh
-  ./copy_cm.sh
+  $COPY_UTIL configmap global default $NS
+  $COPY_UTIL configmap artifactory-share artifactory $NS
+  $COPY_UTIL configmap config-server-share config-server $NS
 
   echo Copy secrets
-  sed -i 's/\r$//' copy_secrets.sh
-  ./copy_secrets.sh
+  $COPY_UTIL secret keycloak-client-secrets keycloak $NS
+
   echo Setting up dummy values for Resident OIDC Client ID
   kubectl create secret generic resident-oidc-onboarder-key -n $NS --from-literal=resident-oidc-clientid='' --dry-run=client -o yaml | kubectl apply -f -
   ./copy_cm_func.sh secret resident-oidc-onboarder-key resident config-server
