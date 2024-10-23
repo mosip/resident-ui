@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 
 import javax.ws.rs.core.MediaType;
@@ -41,6 +43,9 @@ public class AdminTestUtil extends BaseTestCase {
 	public static String propsHealthCheckURL = TestRunner.getResourcePath() + "/"
 			+ "config/healthCheckEndpoint.properties";
 	private static String serverComponentsCommitDetails;
+	private static final Map<String, String> actuatorValueCache = new HashMap<>();
+	public static JSONArray authActuatorResponseArray = null;
+	
 	public static String getUnUsedUIN(String role){
 		
 		return JsonPrecondtion
@@ -117,11 +122,18 @@ try {
 		
 	}
 	public static String buildaddIdentityRequestBody(String schemaJson, String uin, String rid) {
-    	org.json.JSONObject schemaresponseJson = new org.json.JSONObject(schemaJson);
+    	JSONObject schemaresponseJson = new JSONObject(schemaJson);
     	
-		org.json.JSONObject schemaData = (org.json.JSONObject) schemaresponseJson.get("response");
-		Double schemaVersion = (Double) schemaData.get("idVersion");
-		String schemaJsonData = schemaData.getString("schemaJson");
+		JSONObject schemaData = (JSONObject) schemaresponseJson.get("response");
+		Double schemaVersion = null;
+		Object idVersion = schemaData.get("idVersion");
+		if (idVersion instanceof BigDecimal) {
+		    schemaVersion = ((BigDecimal) idVersion).doubleValue();
+		} else if (idVersion instanceof Double) {
+		    schemaVersion = (Double) idVersion;
+		} else {
+		    throw new ClassCastException("Unsupported type for idVersion: " + idVersion.getClass().getName());
+		}		String schemaJsonData = schemaData.getString("schemaJson");
 		String schemaFile = schemaJsonData.toString();
 		
 		JSONObject schemaFileJson = new JSONObject(schemaFile); // jObj
@@ -378,5 +390,41 @@ try {
 					logger.error(GlobalConstants.EXCEPTION_STRING_2 + e.getMessage());
 				}
 			}
+		}
+	 
+	 public static String getValueFromAuthActuator(String section, String key) {
+			String url = ApplnURI + propsKernel.getProperty("actuatorIDAEndpoint");
+			String actuatorCacheKey = url + section + key;
+			String value = actuatorValueCache.get(actuatorCacheKey);
+			if (value != null && !value.isEmpty())
+				return value;
+			try {
+				if (authActuatorResponseArray == null) {
+					Response response = null;
+					JSONObject responseJson = null;
+					response = RestClient.getRequest(url, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON);
+
+					responseJson = new JSONObject(response.getBody().asString());
+					authActuatorResponseArray = responseJson.getJSONArray("propertySources");
+				}
+
+				for (int i = 0, size = authActuatorResponseArray.length(); i < size; i++) {
+					JSONObject eachJson = authActuatorResponseArray.getJSONObject(i);
+					if (eachJson.get("name").toString().contains(section)) {
+						value = eachJson.getJSONObject(GlobalConstants.PROPERTIES).getJSONObject(key)
+								.get(GlobalConstants.VALUE).toString();
+						if (ConfigManager.IsDebugEnabled())
+							logger.info("Actuator: " + url + " key: " + key + " value: " + value);
+						break;
+					}
+				}
+				actuatorValueCache.put(actuatorCacheKey, value);
+
+				return value;
+			} catch (Exception e) {
+				logger.error(GlobalConstants.EXCEPTION_STRING_2 + e);
+				return value;
+			}
+
 		}
 }
