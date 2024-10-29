@@ -113,15 +113,9 @@ public class EmailableReport implements IReporter {
 					boolean isStoreSuccess = false;
 					boolean isStoreSuccess2 = false;
 					try {
-						isStoreSuccess = s3Adapter.putObject(ConfigManager.getS3Account(),System.getProperty("modules"), null,
+						isStoreSuccess = s3Adapter.putObject(ConfigManager.getS3Account(),"Residentui", null,
 								null, newString, newReportFile);
 						logger.info("isStoreSuccess:: " + isStoreSuccess);
-
-						/* Need to figure how to handle EXTENT report handling */
-
-
-
-
 
 					} catch (Exception e) {
 						logger.error("error occured while pushing the object" + e.getMessage());
