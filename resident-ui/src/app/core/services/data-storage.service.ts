@@ -171,8 +171,8 @@ export class DataStorageService {
     return this.httpClient.post(this.BASE_URL + '/auth-lock-unlock', request, { observe: 'response'});
   }
 
-  getProfileInfo(langCode) {
-    return this.httpClient.get(this.BASE_URL + '/profile');
+  getProfileInfo(langCode:any) {
+    return this.httpClient.get(this.BASE_URL + '/profile' + '?languageCode=' + langCode);
   }
 
   getServiceHistory(request: any, filters: any,pageSize1:any) {
