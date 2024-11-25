@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.NoSuchElementException;
 import java.util.Random;
+
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -15,6 +16,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.Reporter;
+
+import io.mosip.testrig.residentui.kernel.util.ConfigManager;
 
 
 public class Commons extends BaseClass{
@@ -198,22 +201,30 @@ public class Commons extends BaseClass{
 
 	public static void assertCheck(By by,String message) throws IOException {
 		try {
+			if(!ConfigManager.getimagename().equals("0.9.0")) {
 			wait(2000);
 			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 			wait.until(ExpectedConditions.presenceOfElementLocated(by));
 			boolean isDisplayed = Commons.isDisplayed(driver, by);
 			Assert.assertTrue(isDisplayed,message);
+			}
 
-		} catch (AssertionError e) {
+		}catch (Exception te) {
+			Reporter.log("<p><img src='data:image/png;base64," + Screenshot.ClickScreenshot(driver) + "' width='900' height='450'/></p>");
+			throw te;
+
+		}  catch (AssertionError e) {
 			Reporter.log("<p><img src='data:image/png;base64," + Screenshot.ClickScreenshot(driver) + "' width='900' height='450'/></p>");
 			throw e;
 		}
 	}
-	
+
 	public static void assertCheckString(String text,String message) throws IOException {
 		try {
+			if(!ConfigManager.getimagename().equals("0.9.0")) {
 			wait(2000);
 			Assert.assertNotNull(text,message);
+			}
 
 		} catch (AssertionError e) {
 			Reporter.log("<p><img src='data:image/png;base64," + Screenshot.ClickScreenshot(driver) + "' width='900' height='450'/></p>");

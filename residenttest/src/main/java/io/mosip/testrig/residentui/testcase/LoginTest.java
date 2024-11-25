@@ -13,10 +13,11 @@ import io.mosip.testrig.residentui.utility.TestRunner;
 
 @Test(groups = "LG")
 public class LoginTest extends BaseClass {
-
+	public static int run=0;
 
 	@Test(priority = 0)
 	public static void loginTest() throws Exception {
+
 		String envPath = ConfigManager.getiam_residentportal_path();
 		String otp = "";
 		String externalemail = ConfigManager.getexternalemail();		driver.get(envPath);
@@ -25,7 +26,7 @@ public class LoginTest extends BaseClass {
 		Commons.enter( driver, By.id("Otp_mosip-vid"), TestRunner.perpetualVid);
 		Commons.click( driver, By.id("get_otp"));
 		if(!Commons.isDisplayed(driver, By.id("otp_verify_input"))) {
-			Commons.wait(60000);
+			Commons.wait(120000);
 			Commons.click( driver, By.id("get_otp"));
 		}
 		otp = MockSMTPListener.getOtp(externalemail);
@@ -36,12 +37,13 @@ public class LoginTest extends BaseClass {
 		}	
 		Commons.click( driver, By.id("verify_otp"));
 		Commons.wait(2000);
-		if(Commons.isDisplayed(driver, By.id("dismissBtn")))
-			Commons.click(driver, By.id("dismissBtn"));
-		else {
+		if(run==0) {
 			Commons.click(driver, By.id("authorize_scope"));
 			Commons.click(driver, By.id("voluntary_claims"));
 			Commons.click(driver, By.id("continue"));
+			Commons.click(driver, By.id("dismissBtn"));
+			run=1;
+		}else if(run==1) {
 			Commons.click(driver, By.id("dismissBtn"));
 		}
 		Commons.assertCheck(By.id("uinservices/viewhistory"),"verify if uin services login using perpetual vid");

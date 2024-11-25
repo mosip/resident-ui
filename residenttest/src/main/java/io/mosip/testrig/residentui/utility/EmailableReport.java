@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -111,15 +113,9 @@ public class EmailableReport implements IReporter {
 					boolean isStoreSuccess = false;
 					boolean isStoreSuccess2 = false;
 					try {
-						isStoreSuccess = s3Adapter.putObject(ConfigManager.getS3Account(), BaseTestCase.testLevel, null,
+						isStoreSuccess = s3Adapter.putObject(ConfigManager.getS3Account(),"Residentui", null,
 								null, newString, newReportFile);
 						logger.info("isStoreSuccess:: " + isStoreSuccess);
-
-						/* Need to figure how to handle EXTENT report handling */
-
-
-
-
 
 					} catch (Exception e) {
 						logger.error("error occured while pushing the object" + e.getMessage());
@@ -142,16 +138,12 @@ public class EmailableReport implements IReporter {
 		Properties properties = new Properties();
 		try (InputStream is = EmailableReport.class.getClassLoader().getResourceAsStream("git.properties")) {
 			properties.load(is);
-			Process process = Runtime.getRuntime().exec("git rev-parse --abbrev-ref HEAD");
 
-			// Read the output of the command
-			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			String branch = reader.readLine();
 			return "Commit Id is: " + properties.getProperty("git.commit.id.abbrev") + " & Branch Name is:"
-			+ branch;
+					+ properties.getProperty("git.branch");
 
-		} catch (IOException io) {
-			logger.error(io.getMessage());
+		} catch (IOException e) {
+			logger.error(e.getMessage());
 			return "";
 		}
 
@@ -181,24 +173,31 @@ public class EmailableReport implements IReporter {
 
 	protected void writeStylesheet() {
 		writer.print("<style type=\"text/css\">");
-		writer.print("table {margin-bottom:10px;border-collapse:collapse;empty-cells:show}");
-		writer.print("th,td {border:1px solid #009;padding:.25em .5em}");
-		writer.print("th {vertical-align:bottom}");
-		writer.print("td {vertical-align:top}");
-		writer.print("table a {font-weight:bold}");
-		writer.print(".stripe td {background-color: #E6EBF9}");
-		writer.print(".num {text-align:center}");
-		writer.print(".passedodd td {background-color: #3F3}");
-		writer.print(".passedeven td {background-color: #0A0}");
-		writer.print(".skippedodd td {background-color: #FFA500}");
-		writer.print(".skippedeven td {background-color: #FFA500}");
-		writer.print(".failedodd td,.attn {background-color: #F33}");
-		writer.print(".failedeven td,.stripe .attn {background-color: #D00}");
-		writer.print(".stacktrace {white-space:pre;font-family:monospace}");
-		writer.print(".totop {font-size:85%;text-align:center;border-bottom:2px solid #000}");
-		writer.print(".orange-bg {background-color: #FFA500}");
-		writer.print(".green-bg {background-color: #0A0}");
-		writer.print("</style>");
+	    writer.print("table {margin-bottom:10px;border-collapse:collapse;empty-cells:show;width: 100%;}");
+	    writer.print("th,td {border:1px solid #009;padding:.25em .5em;width: 25%;}");  // Set a fixed width for uniform cell sizes
+	    writer.print("th {vertical-align:bottom}");
+	    writer.print("td {vertical-align:top}");
+	    writer.print("table a {font-weight:bold}");
+	    writer.print(".stripe td {background-color: #E6EBF9}");
+	    writer.print(".num {text-align:center}");
+	    writer.print(".orange-bg {background-color: #FFA500}");
+	    writer.print(".grey-bg {background-color: #808080}");
+	    writer.print(".thich-orange-bg {background-color: #CC5500}");
+	    writer.print(".green-bg {background-color: #0A0}");
+	    writer.print(".attn {background-color: #D00}");
+	    writer.print(".passedodd td {background-color: #3F3}");
+	    writer.print(".passedeven td {background-color: #0A0}");
+	    writer.print(".skippedodd td {background-color: #FFA500}");
+	    writer.print(".skippedeven td,.stripe {background-color: #FFA500}");
+	    writer.print(".failedodd td {background-color: #F33}");
+	    writer.print(".failedeven td,.stripe {background-color: #D00}");
+	    writer.print(".ignoredodd td {background-color: #808080}");
+	    writer.print(".ignoredeven td {background-color: #808080}");
+	    writer.print(".known_issuesodd td {background-color: #CC5500}");
+	    writer.print(".known_issueseven td {background-color: #CC5500}");
+	    writer.print(".stacktrace {white-space:pre;font-family:monospace}");
+	    writer.print(".totop {font-size:85%;text-align:center;border-bottom:2px solid #000}");
+	    writer.print("</style>");
 	}
 
 	protected void writeBody() {
@@ -216,7 +215,21 @@ public class EmailableReport implements IReporter {
 	protected void writeSuiteSummary() {
 		NumberFormat integerFormat = NumberFormat.getIntegerInstance();
 		NumberFormat decimalFormat = NumberFormat.getNumberInstance();
-
+		String formattedDate =null;
+		LocalDate currentDate = LocalDate.now();
+		 String branch = null;
+		
+		try {
+			
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		    formattedDate = currentDate.format(formatter);
+			Process process = Runtime.getRuntime().exec("git rev-parse --abbrev-ref HEAD");
+	        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+	        branch = reader.readLine();
+			}
+			catch (Exception e) {
+				// TODO: handle exception
+			}
 		totalPassedTests = 0;
 		totalSkippedTests = 0;
 		totalFailedTests = 0;
@@ -226,13 +239,15 @@ public class EmailableReport implements IReporter {
 		for (SuiteResult suiteResult : suiteResults) {
 
 			writer.print("<tr><th colspan=\"7\">");
-			writer.print(Utils.escapeHtml(suiteResult.getSuiteName() + "-" + getCommitId()));
-			writer.print("</th></tr>");
+			writer.print(Utils.escapeHtml(suiteResult.getSuiteName() + " ---- " + "Report Date: " + formattedDate
+					+ " ---- " + "Tested Environment: "
+					+ ConfigManager.getiam_apienvuser().replaceAll(".*?\\.([^\\.]+)\\..*", "$1") + " ---- "
+					+ getCommitId()));			writer.print("</th></tr>");
 
 			writer.print("<tr><th colspan=\"7\"><span class=\"not-bold\"><pre>");
 			writer.print(Utils.escapeHtml("Server Component Details " + AdminTestUtil.getServerComponentsDetails()));
 			writer.print("</pre></span>");
-			//			writer.print(GlobalConstants.TRTR);
+			writer.print("</th></tr>");
 
 			writer.print("<tr>");
 			//			writer.print("<th>Test Suite</th>");

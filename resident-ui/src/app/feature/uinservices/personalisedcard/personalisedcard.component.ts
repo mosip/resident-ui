@@ -298,10 +298,10 @@ export class PersonalisedcardComponent implements OnInit, OnDestroy {
           })
 
           if (type.value === data.attributeName) {
-            value = this.createDefaultValue(data)
             data.formatOption[this.langCode].forEach(item => {
               item.checked = true
             })
+            value = this.createDefaultValue(data);
           } else {
             value = this.createCheckedVal(data);
             this.checkDefaultVal(data, $event);

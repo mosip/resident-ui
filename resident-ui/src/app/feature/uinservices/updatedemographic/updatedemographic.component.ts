@@ -790,14 +790,16 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
   }
 
   captureContactValue(event: any, formControlName: any) {
-    if(event.target.value.length){
+    this.userId = event.target.value.trim();
+    this.contactTye = formControlName.attributeName;
+    
+    if(new RegExp(formControlName.validators[0].validator).test(this.userId)){
       this.sendOtpDisable = false;
     }else{
       this.sendOtpDisable = true;
     }
-    this.userId = event.target.value.trim();
-    this.contactTye = formControlName;
-    if(formControlName === "email"){
+    
+    if(formControlName.attributeName === "email"){
       this.userIdEmail = this.userId
     }else{
       this.userIdPhone = this.userId
