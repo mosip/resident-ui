@@ -97,7 +97,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    console.log('Header component')
     this.defaultJsonValue = defaultJson;
     let self = this;
     this.getConfigData();
