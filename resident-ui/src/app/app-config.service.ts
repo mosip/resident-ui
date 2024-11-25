@@ -16,7 +16,7 @@ export class AppConfigService {
       const response = await this.http.get(this.appConfig.baseUrl + '/proxy/config/ui-properties').toPromise();
       const responseData = response["response"];
       localStorage.setItem("langCode", responseData["mosip.mandatory-languages"]);
-      this.appConfig["supportedLanguages"] = responseData["mosip.mandatory-languages"] + ",ara" + ",fra" +","+responseData["mosip.optional-languages"];
+      this.appConfig["supportedLanguages"] = responseData["mosip.mandatory-languages"] + ","+ responseData["mosip.optional-languages"];
       this.appConfig["mosip.iam.adapter.clientid"] = responseData["mosip.iam.adapter.clientid"];
       this.appConfig["mosip.resident.api.id.otp.request"] = responseData["mosip.resident.api.id.otp.request"];
       this.appConfig["mosip.resident.api.version.otp.request"] = responseData["mosip.resident.api.version.otp.request"];
