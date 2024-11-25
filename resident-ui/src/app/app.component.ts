@@ -168,10 +168,7 @@ export class AppComponent {
     if(window.location.href.includes('error=invalid_transaction')){
       this.router.navigate(['error']);
     }
-    
-    if(!localStorage.getItem("langCode")){
-      localStorage.setItem("langCode", "eng");
-    }
+
     this.subscriptions.push(this.autoLogout.currentMessageAutoLogout.subscribe(() => {}));
     this.autoLogout.changeMessage({ timerFired: false });
     this.routerType();

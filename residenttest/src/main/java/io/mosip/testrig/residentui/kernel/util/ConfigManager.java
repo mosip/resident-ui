@@ -123,7 +123,9 @@ public class ConfigManager {
 
 	private static String PACKET_UTILITY_BASE_URL = "packetUtilityBaseUrl";
 	private static String Testcases = "residentscenariosToExecute";
+	private static String Image = "image";
 
+	private static String image;
 	private static String testcases;
 	private static String pms_client_secret;
 	private static String pms_client_id;
@@ -417,6 +419,9 @@ public class ConfigManager {
 
 		testcases =System.getenv(Testcases) == null ? propsKernel.getProperty(Testcases) : System.getenv(Testcases);
 		propsKernel.setProperty(Testcases, testcases);
+		
+		image =System.getenv(Image) == null ? propsKernel.getProperty(Image) : System.getenv(Image);
+		propsKernel.setProperty(Image, image);
 
 	}
 	
@@ -424,6 +429,10 @@ public class ConfigManager {
 		int wait=0;
 		wait=Integer.parseInt(packetUpdateWait);
 		return wait;
+	}
+	
+	public static String getimagename() {
+		return image;
 	}
 	
 	public static String gettestcases() {
@@ -814,6 +823,7 @@ public class ConfigManager {
 		return prop;
 	}
 
+	
 	public static String getAuthDemoServiceUrl() {
 		return ConfigManager.getAuthDemoServiceBaseUrl() + ":" + ConfigManager.getAuthDemoServicePort();
 	}

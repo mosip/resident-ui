@@ -14,8 +14,12 @@ public class ShareMyData extends BaseClass {
 		LoginTest.loginTest();
 
 		Commons.clickWebelement( driver, By.id("uinservices/sharewithpartner"));
+		try {
+			Commons.clickWebelement( driver, By.id("fullName"));
+		}catch(Exception e) {
+			Commons.clickWebelement( driver, By.id("name"));
 
-		Commons.clickWebelement( driver, By.id("name"));
+		}
 		Commons.clickWebelement( driver, By.id("dateOfBirth"));
 		Commons.clickWebelement( driver, By.id("UIN"));
 		Commons.dropdown( driver, By.id("partnerDetails"));
@@ -27,13 +31,18 @@ public class ShareMyData extends BaseClass {
 		Commons.clickWebelement( driver, By.id("dismissBtn"));
 
 		Commons.clickWebelement( driver, By.id("uinservices/sharewithpartner"));
-		Commons.clickWebelement( driver, By.id("name"));
+		try {
+			Commons.clickWebelement( driver, By.id("fullName"));
+		}catch(Exception e) {
+			Commons.clickWebelement( driver, By.id("name"));
+
+		}
 		Commons.clickWebelement( driver, By.id("dateOfBirth"));
 		Commons.clickWebelement( driver, By.id("UIN"));
 		Commons.clickWebelement( driver, By.id("shareBtn"));
 		Commons.clickWebelement( driver, By.id("dismissBtn"));
 
-		// without partner name
+		// without partner fullName
 		Commons.enter( driver, By.id("sharingReasonPlaceholder"), data);
 		Commons.clickWebelement( driver, By.id("shareBtn"));
 		Commons.clickWebelement( driver, By.id("dismissBtn"));
@@ -58,7 +67,12 @@ public class ShareMyData extends BaseClass {
 		Commons.clickWebelement( driver, By.id("dismissBtn"));
 
 		Commons.clickWebelement( driver, By.id("uinservices/sharewithpartner"));
-		Commons.clickWebelement( driver, By.id("name"));
+		try {
+			Commons.clickWebelement( driver, By.id("fullName"));
+		}catch(Exception e) {
+			Commons.clickWebelement( driver, By.id("name"));
+
+		}
 		Commons.clickWebelement( driver, By.id("dateOfBirth"));
 		Commons.clickWebelement( driver, By.id("UIN"));
 		Commons.clickWebelement( driver, By.id("perpetualVID"));

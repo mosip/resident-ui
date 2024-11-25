@@ -60,7 +60,7 @@ public class TestRunner {
 		TestNG runner = new TestNG();
 		if(!ConfigManager.gettestcases().equals("")) {
 			XmlSuite suite = new XmlSuite();
-			suite.setName("MySuite");
+			suite.setName("RESIDENT-UI-AUTOMATION-RUN");
 			suite.addListener("io.mosip.testrig.residentui.utility.EmailableReport");
 
 			XmlClass getInformation = new XmlClass("io.mosip.testrig.residentui.testcase.GetInformation");

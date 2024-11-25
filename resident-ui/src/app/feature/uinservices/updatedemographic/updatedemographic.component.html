@@ -990,9 +990,9 @@
                 <mat-card-subtitle [style.font-size]="fontSize.paragraph" class="contact-lable">{{field.labelName[langCode][1]}}</mat-card-subtitle>
                 <div class="search-input-card" *ngIf="field.attributeName === 'email'">
                   <input [style.font-size]="fontSize.paragraph" class="input" [value]="userIdEmail" matInput type="text" #{{field.attributeName}}
-                    id="{{field.attributeName}}" (input)="captureContactValue($event, field.attributeName)"
+                    id="{{field.attributeName}}" (input)="captureContactValue($event, field )"
                     [placeholder]="field.placeHolder[langCode]"
-                    (blur)="captureContactValue($event, field.attributeName)"
+                    (blur)="captureContactValue($event, field)"
                     (focus)="captureVirtualKeyboard(field.attributeName, buildJSONData[field.attributeName].index)"
                     (click)="isUpdatedataInProgress($event, 'textField')"
                     #keyboardRef />
@@ -1001,9 +1001,9 @@
                 </div>
                 <div class="search-input-card" *ngIf="field.attributeName === 'phone'">
                   <input [style.font-size]="fontSize.paragraph" class="input" [value]="userIdPhone" matInput type="text" #{{field.attributeName}}
-                    id="{{field.attributeName}}" (input)="captureContactValue($event, field.attributeName)"
+                    id="{{field.attributeName}}" (input)="captureContactValue($event, field)"
                     [placeholder]="field.placeHolder[langCode]"
-                    (blur)="captureContactValue($event, field.attributeName)"
+                    (blur)="captureContactValue($event, field)"
                     (focus)="captureVirtualKeyboard(field.attributeName, buildJSONData[field.attributeName].index)"
                     (click)="isUpdatedataInProgress($event, 'textField')"
                     #keyboardRef />

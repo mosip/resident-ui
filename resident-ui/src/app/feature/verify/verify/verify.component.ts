@@ -428,7 +428,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
   onItemSelected(item: any) {
     if (item === "home") {
       this.router.navigate(["dashboard"]);
-    } else if ("back") {
+    } else if (item === "back") {
       this.showOtpPanel = false;
       this.resetBtnDisable = true;
       this.submitBtnDisable = true;
