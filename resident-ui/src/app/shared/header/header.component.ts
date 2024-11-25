@@ -78,42 +78,31 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   getConfigData(){
-    if(localStorage.getItem('isDataLoaded') === 'true'){
-      let supportedLanguages = this.appConfigService.getConfig()['supportedLanguages'].split(','); 
-      this.showLangDropDown = this.appConfigService.getConfig()['resident-multi-language-enable'];
+      let allSupportedLanguages = this.appConfigService.getConfig()['supportedLanguages'].split(','); 
+      let uniqueSupportedLanguages = allSupportedLanguages.filter((item, index) => allSupportedLanguages.indexOf(item) === index);
+      this.showLangDropDown = uniqueSupportedLanguages.length > 1 ? true : false;
       
-      if(supportedLanguages.length > 1){
-        supportedLanguages.forEach((language) => {
+      if(uniqueSupportedLanguages.length > 1){
+        uniqueSupportedLanguages.forEach((language) => {
           this.selectLanguagesArr.push({
            code: language.trim(),
            value: defaultJson.languages[language.trim()].nativeName,
           });
         });
       }
-      
+
       this.translateService.use(localStorage.getItem("langCode")); 
       this.textDir = localStorage.getItem("dir");
       return
-    }else{
-      setTimeout(()=>{ 
-      this.getConfigData()
-      },400)
-    }
   }
 
-
- async ngOnInit() {
+  async ngOnInit() {
+    console.log('Header component')
     this.defaultJsonValue = defaultJson;
     let self = this;
     this.getConfigData();
 
-    if(!localStorage.getItem("langCode")){
-      localStorage.setItem("langCode", "eng");
-      this.selectedLanguage =  defaultJson["languages"]['eng'].nativeName;
-    }else{
-      let key = localStorage.getItem("langCode")
-      this.selectedLanguage =  defaultJson["languages"][key].nativeName;              
-    }
+    this.selectedLanguage =  defaultJson["languages"][this.langCode].nativeName;
     self.getProfileInfo();
 
     await  this.translateService
