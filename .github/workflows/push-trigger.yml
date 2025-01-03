@@ -78,7 +78,7 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
   build-residentuitests-local:
-    needs: build-maven-residenttest
+    needs: build-maven-uitest-resident
     runs-on: ubuntu-latest
     env:
       NAMESPACE: ${{ secrets.dev_namespace_docker_hub }}
