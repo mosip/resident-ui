@@ -15,7 +15,9 @@ export class AppConfigService {
       // Load additional config from remote endpoint
       const response = await this.http.get(this.appConfig.baseUrl + '/proxy/config/ui-properties').toPromise();
       const responseData = response["response"];
-      localStorage.setItem("langCode", responseData["mosip.mandatory-languages"]);
+      if(!localStorage.getItem("langCode")){
+        localStorage.setItem("langCode", responseData["mosip.mandatory-languages"]);
+      }
       this.appConfig["supportedLanguages"] = responseData["mosip.mandatory-languages"] + ","+ responseData["mosip.optional-languages"];
       this.appConfig["mosip.iam.adapter.clientid"] = responseData["mosip.iam.adapter.clientid"];
       this.appConfig["mosip.resident.api.id.otp.request"] = responseData["mosip.resident.api.id.otp.request"];
