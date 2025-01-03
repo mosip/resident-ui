@@ -252,5 +252,3 @@ export class GetuinComponent implements OnInit {
   }
 
 }
-
-

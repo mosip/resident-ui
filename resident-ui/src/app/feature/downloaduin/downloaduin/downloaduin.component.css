@@ -18,6 +18,7 @@
     opacity: 1;
     background-color: transparent;
     text-align: left;
+    font-size: 16px;
     letter-spacing: 0px;
     color: #909090;
     display: flex;
@@ -103,7 +104,7 @@ label {
 }
 
 .button {
-    min-width: 108px;
+    width: 108px;
     height: 36px;
     background-color: #03A64A;
     border-radius: 5px;

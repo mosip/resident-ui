@@ -75,7 +75,6 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
   showBackBtn:boolean = false;
   positions:any;
 
-
   private keyboardRef: MatKeyboardRef<MatKeyboardComponent>;
   @ViewChildren('keyboardRef', { read: ElementRef })
   private attachToElementMesOne: any;
@@ -266,12 +265,12 @@ export class CenterSelectionComponent implements OnInit, OnDestroy {
   }
   
   searchInput(){
-    if(this.searchText.length > 2 && this.searchText.match(/^[a-zA-Z0-9 ]*$/)){
+    if(this.searchText.length > 2 && this.searchText.match(/[\p{Letter}\p{Number}\p{Mark}\s]+/gu)){
       this.isBlankSpace = false;
     }else{
       this.isBlankSpace = true;
     }
-    if(!this.searchText.match(/^[a-zA-Z0-9 ]*$/)){
+    if(!this.searchText.match(/[\p{Letter}\p{Number}\p{Mark}\s]+/gu)){
       this.showWarningMsg = true;
     }else{
       this.showWarningMsg = false;

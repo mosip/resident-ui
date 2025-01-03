@@ -594,8 +594,8 @@
         "manageMyVidMessages": {
             "Perpetual": {
                 "WarningMessageLabel": "La génération d'un nouvel VID perpétuel révoquera l'VID déjà existant.",
-                "confirmationMessageForCreateVid": "Êtes-vous sûr de vouloir créer une carte VID perpétuelle ?",
-                "confirmationMessageForDeleteVid": "Etes-vous sûr de vouloir supprimer la carte VID permanente sélectionnée ?",
+                "confirmationMessageForCreateVid": "Êtes-vous sûr de vouloir créer une carte VID perpétuelle ?",
+                "confirmationMessageForDeleteVid": "Etes-vous sûr de vouloir supprimer la carte VID permanente sélectionnée ?",
                 "confirmationMessageForDownloadVid": "Êtes-vous sûr de vouloir télécharger la carte Perpetual VID ?"
             },
             "Temporary": {
@@ -623,8 +623,8 @@
             "sharedSuccessfully": "Les données choisies par vous ont été partagées avec succès avec le partenaire choisi pour l'ID d'événement : $eventId."
         },
         "verifyChannel": {
-            "warningMsgForEmail": "Votre identifiant de messagerie : $userID est déjà vérifié.",
-            "warningMsgForPhone": "Votre numéro de téléphone : $userID est déjà vérifié.",
+            "warningMsgForEmail": "Votre identifiant de messagerie : $userID est déjà vérifié.",
+            "warningMsgForPhone": "Votre numéro de téléphone : $userID est déjà vérifié.",
             "emailSuccess": "Votre adresse e-mail : $channel a été vérifiée avec succès pour l'ID d'événement : $eventId.",
             "phoneSuccess": "Votre numéro de téléphone : $channel a été vérifié avec succès pour l'ID d'événement : $eventId."
         },

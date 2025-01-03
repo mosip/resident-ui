@@ -13,7 +13,7 @@ COPY_UTIL=../copy_cm_func.sh
 echo Create $NS namespace
 kubectl create ns $NS
 
-function installing_resident_ui() {
+function installing_resident() {
   echo Istio label
   kubectl label ns $NS istio-injection=enabled --overwrite
   helm repo update
@@ -30,8 +30,6 @@ function installing_resident_ui() {
   kubectl create secret generic resident-oidc-onboarder-key -n $NS --from-literal=resident-oidc-clientid='' --dry-run=client -o yaml | kubectl apply -f -
   ./copy_cm_func.sh secret resident-oidc-onboarder-key resident config-server
 
-  kubectl -n config-server set env --keys=resident-oidc-clientid --from secret/resident-oidc-onboarder-key deployment/config-server --prefix=SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_
-  kubectl -n config-server get deploy -o name | xargs -n1 -t kubectl -n config-server rollout status
   echo "Do you have public domain & valid SSL? (Y/n) "
   echo "Y: if you have public domain & valid ssl certificate"
   echo "n: If you don't have a public domain and a valid SSL certificate. Note: It is recommended to use this option only in development environments."
@@ -49,14 +47,12 @@ function installing_resident_ui() {
   API_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-api-internal-host})
   RESIDENT_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-resident-host})
 
-
   echo Installing Resident UI
   helm -n $NS install resident-ui mosip/resident-ui --set resident.apiHost=$API_HOST --set istio.hosts\[0\]=$RESIDENT_HOST --version $RESIDENT_UI_CHART_VERSION
 
   kubectl -n $NS  get deploy -o name |  xargs -n1 -t  kubectl -n $NS rollout status
 
   echo Installed Resident UI
-
 
   echo "resident-ui portal URL: https://$RESIDENT_HOST/"
   return 0
@@ -68,4 +64,4 @@ set -o errexit   ## set -e : exit the script if any statement returns a non-true
 set -o nounset   ## set -u : exit the script if you try to use an uninitialised variable
 set -o errtrace  # trace ERR through 'time command' and other functions
 set -o pipefail  # trace ERR through pipes
-installing_resident_ui   # calling function
+installing_resident   # calling function

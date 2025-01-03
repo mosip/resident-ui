@@ -23,6 +23,7 @@
 
 .login-heading {
     text-align: center;
+    font-size: 20px;
     letter-spacing: 0px;
     color: #000000;
     opacity: 1;
@@ -362,5 +363,3 @@ ul li:last-child hr{
        width: 93%;
     }
 }
-
-

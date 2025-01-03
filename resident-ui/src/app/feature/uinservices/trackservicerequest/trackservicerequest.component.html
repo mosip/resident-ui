@@ -123,12 +123,12 @@
 				<div>
 				<button [style.font-size]="fontSize.paragraph" mat-raised-button id="downloadCardWithNewDataBtn" [disabled]="eidStatus.info.downloadLink === 'NA' || disableDownloadVidBtn" *ngIf="eidStatus.info.eventStatusEnum === 'SUCCESS'" (click)="downloadVIDCard(eidStatus.eventId)" class="download-btn"><img
 						class="save-icon"
-						src="./assets/images/save.png" alt=""/>{{'trackservicerequest.downloadUINCard' |
+						src="./assets/images/save.png" />{{'trackservicerequest.downloadUINCard' |
 					translate}}</button>
 				</div>
 				<button [style.font-size]="fontSize.paragraph" id="downloadAcknowledgementbtn" style="cursor: pointer;" class="download-btn"
-				    (click)="downloadAcknowledgement()"><img alt="" class="save-icon"
-						src="./assets/images/save.png" />{{'trackservicerequest.downloadbuttonLabel' |
+				    (click)="downloadAcknowledgement()"><img class="save-icon"
+						src="./assets/images/save.png" alt=""/>{{'trackservicerequest.downloadbuttonLabel' |
 					translate}}</button>
 			</div>
 			<div *ngIf="eidStatus.info.eventTypeEnum === 'VID_CARD_DOWNLOAD' "

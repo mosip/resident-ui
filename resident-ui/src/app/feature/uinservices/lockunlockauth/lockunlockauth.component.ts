@@ -106,7 +106,6 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
     let authTypes = this.appConfigService.getConfig()["auth.types.allowed"].split(',');
     let authTypesJSON = {};
     let newAuthlist = [];
-    console.log(authTypes)
     this.dataStorageService
     .getAuthlockStatus()
     .subscribe((response) => {
@@ -129,8 +128,9 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
             authTypesJSON = {};
             authTypesJSON["authType"] = authTypes[i].split('-')[0];
             authTypesJSON["authSubType"] =  authTypes[i].split('-')[1];
+
             if(authTypes[i].split('-')[1]){
-              newAuthlist.forEach(el => {   
+              newAuthlist.forEach(el => {      
                 if(el.authSubType === authTypes[i].split('-')[1]){
                   authTypesJSON["locked"] = el.locked;
                 }           

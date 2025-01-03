@@ -278,5 +278,3 @@ export class DialogComponent implements OnInit {
     this.interactionService.sendClickEvent("logOutBtn");
   }
 }
-
-

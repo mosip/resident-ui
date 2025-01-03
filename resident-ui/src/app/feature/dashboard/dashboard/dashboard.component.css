@@ -141,7 +141,7 @@ div.item-card:hover{
 
 }
 
-@media screen and (min-width:460px) and (max-width:900px){
+@media screen and (max-width:899px){
   .main-div{
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 0.4fr 0.4fr 0.4fr 0.5fr;
@@ -158,4 +158,3 @@ div.item-card:hover{
     padding: 8px;
   }
 }
-

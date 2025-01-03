@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 import { AppConfigService } from 'src/app/app-config.service';
-import defaultJson from "src/assets/i18n/default.json";
 
 @Injectable()
 export class LoginRedirectService {
@@ -14,7 +13,7 @@ export class LoginRedirectService {
     if(url.split("#")[1] === "/dashboard"){
       constructurl = url.replace("/dashboard", "/uinservices/dashboard");
     }
-    window.location.href = `${this.appService.getConfig().baseUrl}${this.appService.getConfig().login}v2/` + btoa(constructurl)+"?state="+stateParam+"&ui_locales="+defaultJson["keyboardMapping"][localStorage.getItem("langCode")];
+    window.location.href = `${this.appService.getConfig().baseUrl}${this.appService.getConfig().login}` + btoa(constructurl)+"?state="+stateParam;
     localStorage.setItem("redirectURL", constructurl)
   }
 

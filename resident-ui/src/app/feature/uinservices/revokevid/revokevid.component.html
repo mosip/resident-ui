@@ -32,7 +32,7 @@
 							  </tr>
 							  <tr>
 							    <td colspan="2" >
-							    	<span [style.font-size]="fontSize.paragraph" class="mat-card-header-text"  *ngIf=list.showvid><span style="width: 11rem;">{{list.vid}}</span>&nbsp;&nbsp;&nbsp;<span style="cursor:pointer;" (click)="displayVid(finalTypeList, policy.vidType, list, false)"><img alt="" src="assets\eye_slash.png" style="color: green;width: 18px;"></span></span>
+							    	<span [style.font-size]="fontSize.paragraph" class="mat-card-header-text"  *ngIf=list.showvid><span style="width: 11rem;">{{list.vid}}</span>&nbsp;&nbsp;&nbsp;<span style="cursor:pointer;" (click)="displayVid(finalTypeList, policy.vidType, list, false)"><img src="assets\eye_slash.png" style="color: green;width: 18px;" alt=""></span></span>
 							    	<span [style.font-size]="fontSize.paragraph" class="mat-card-header-text" *ngIf=!list.showvid><span style="width: 11rem;">{{list.maskedVid}}</span>&nbsp;&nbsp;&nbsp;<mat-icon style="color: green;font-size: 18px;cursor:pointer;" (click)="displayVid(finalTypeList, policy.vidType, list, true)">remove_red_eye</mat-icon></span>
 							    </td>
 							  </tr>
@@ -61,7 +61,7 @@
 							    	<span [style.font-size]="fontSize.paragraph" *ngIf="!list.transactionsLeftCount">NA</span>							    	
 							    </td>
 							    <td style="width:50%;float: right;">
-							    	<span (click)="downloadVIDBtn(list.vid,policy.vidType)" style="color: green;font-size: 24px;cursor:pointer;"><img alt="" id="download{{i}}" src="assets\download.png"></span>&nbsp;&nbsp;&nbsp;
+							    	<span (click)="downloadVIDBtn(list.vid,policy.vidType)" style="color: green;font-size: 24px;cursor:pointer;"><img id="download{{i}}" src="assets\download.png" alt=""></span>&nbsp;&nbsp;&nbsp;
 							    	<mat-icon id="delete{{i}}" style="color: #DB4F4F;font-size: 24px;cursor:pointer;" (click)="revokeVIDBtn(list.vid,policy.vidType)">delete</mat-icon>
 							    </td>
 							  </tr>
@@ -74,5 +74,3 @@
 		</table>
 	</mat-card>	
 </div>
-
-
