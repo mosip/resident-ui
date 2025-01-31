@@ -3,5 +3,5 @@ modules:
     enabled: true
     image:
       registry: docker.io
-      repository: mosipqa/residenttest
-      tag: develop
+      repository: mosipid/residenttest
+      tag: 0.9.1
