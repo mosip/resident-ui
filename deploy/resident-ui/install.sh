@@ -7,7 +7,7 @@ if [ $# -ge 1 ] ; then
 fi
 
 NS=resident
-RESIDENT_UI_CHART_VERSION=0.0.1-develop
+CHART_VERSION=0.9.1
 COPY_UTIL=../copy_cm_func.sh
 
 echo Create $NS namespace
@@ -48,7 +48,7 @@ function installing_resident() {
   RESIDENT_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-resident-host})
 
   echo Installing Resident UI
-  helm -n $NS install resident-ui mosip/resident-ui --set resident.apiHost=$API_HOST --set istio.hosts\[0\]=$RESIDENT_HOST --version $RESIDENT_UI_CHART_VERSION
+  helm -n $NS install resident-ui mosip/resident-ui --set resident.apiHost=$API_HOST --set istio.hosts\[0\]=$RESIDENT_HOST --version $CHART_VERSION
 
   kubectl -n $NS  get deploy -o name |  xargs -n1 -t  kubectl -n $NS rollout status
 
