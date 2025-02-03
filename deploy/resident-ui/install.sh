@@ -7,7 +7,7 @@ if [ $# -ge 1 ] ; then
 fi
 
 NS=resident
-CHART_VERSION=0.9.1
+CHART_VERSION=0.9.1-develop
 COPY_UTIL=../copy_cm_func.sh
 
 echo Create $NS namespace
