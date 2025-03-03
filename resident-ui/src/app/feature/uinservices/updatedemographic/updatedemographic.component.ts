@@ -110,6 +110,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
   enteredOnlyNumbers:boolean = false;
   disablePrefLangBtn:boolean = false;
   firstInputLang:any = {};
+  draftInterval: any;
 
 
   private keyboardRef: MatKeyboardRef<MatKeyboardComponent>;
@@ -196,25 +197,34 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
   };
 
   getPendingDrafts(){
-    this.dataStorageService.getPendingDrafts(this.langCode).subscribe((response) =>{
+    this.dataStorageService.getPendingDrafts(this.langCode).subscribe((response) => {
       if(!this.schema)
         this.getUpdateMyDataSchema();
       if(response['response']){
         if(!response['response'].drafts.length){
           this.cancellable = false;
+          clearTimeout(this.draftInterval);
+          const popupElement = document.getElementById('draftCancelPopup');
+          if (this.dialog && popupElement) {
+            this.dialog.closeAll();
+            this.popupForInprogressData(true);
+          }
         }else{
           this.cancellable = true;
           this.draftsDetails = response['response'].drafts;
+          this.draftInterval = setTimeout(() => {
+            this.getPendingDrafts();
+          }, 2000);
         }
       }else{
         this.showErrorPopup(response['errors']);
       };
     })
   }
- 
+
   isUpdatedataInProgress(event, fieldType) {
     if(this.cancellable){
-      this.popupForInprogressData();
+      this.popupForInprogressData(false);
       if(fieldType === 'textField'){
         document.getElementById(event.target.id).blur();
       }else if(fieldType === 'datePickerField'){
@@ -253,7 +263,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
           this.getUserInfo();
         });
     })
-  
+
   }
 
 
@@ -1191,37 +1201,42 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
       });
   }
 
-  popupForInprogressData() {
+  popupForInprogressData(dataUpdated) {
     setTimeout(() => {
+      let statusMsg = ""
+      if(!dataUpdated){
+        statusMsg = this.draftsDetails[0].cancellable ? this.langJson.pendingDrafts.warnMsg : this.langJson.pendingDrafts.warnMsgTwo;
+      }else{
+        statusMsg = this.langJson.pendingDrafts.warnMsgThree
+      }
       const dialogRef = this.dialog.open(DialogComponent, {
-          width: '750px',
-          data: {
-            case: 'updateMyDataInprogress',
-            message: this.langJson.pendingDrafts,
-            draftsDetails: this.draftsDetails,
-            confirmBtn: this.popupMessages.genericmessage.confirm,
-            cancelBtn: this.popupMessages.genericmessage.cancel
-          }
-        });
-      
-        dialogRef.afterClosed().subscribe(res =>{
-        if(res){
+        width: '750px',
+        data: {
+          case: 'updateMyDataInprogress',
+          message: this.langJson.pendingDrafts,
+          statusMsg,
+          draftsDetails: this.draftsDetails,
+          confirmBtn: this.popupMessages.genericmessage.confirm,
+          cancelBtn: this.popupMessages.genericmessage.cancel
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(res => {
+        if (res) {
           this.dataStorageService.discardPendingDrafts(res)
-          .subscribe((response) =>{
-            if(response['response']){
-              this.message = this.langJson.draftCanceled  
-              this.showMessage(this.message, this.draftsDetails);
-              this.cancellable = false;
-            }else{
-              this.showErrorPopup(response['errors'])
-            }
-          })
-        }else{
-          this.getPendingDrafts();
+            .subscribe((response) => {
+              if (response['response']) {
+                this.message = this.langJson.draftCanceled
+                this.showMessage(this.message, this.draftsDetails);
+                this.cancellable = false;
+              } else {
+                this.showErrorPopup(response['errors'])
+              }
+            })
         }
       })
       return dialogRef;
-    },400)
+    }, 400)
   }
 
   onItemSelected(item: any) {

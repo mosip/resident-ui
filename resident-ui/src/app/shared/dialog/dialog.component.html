@@ -392,7 +392,7 @@
   
   <!-- updateMyDataInprogress -->
   <div [style.font-size]="fontSize.lableText" *ngIf="input.case === 'updateMyDataInprogress'"
-    class="data-inprogress-main-card" id="messagePopup">
+    class="data-inprogress-main-card" id="draftCancelPopup">
     <div width="100%">
       <h4 class="data-inprogress-heading" style="margin: 0;">{{input.message.heading}}</h4>
       <p class="data-inprogress-description">{{input.message.descriptionDetails}}</p>
@@ -411,8 +411,7 @@
           </p>
           <div class="confirm-card">
             <div class="Confirmation-card">
-              <p *ngIf="draft.cancellable">{{input.message.warnMsg}}</p>
-              <p *ngIf="!draft.cancellable">{{input.message.warnMsgTwo}}</p>
+              <p >{{input.statusMsg}}</p>
             </div>
             <button *ngIf="draft.cancellable" mat-button [mat-dialog-close]="draft.eid" class="data-inprogress-btns confirm-btn">{{input.confirmBtn}}</button>
           </div>

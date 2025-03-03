@@ -439,7 +439,8 @@
             "viewMore":"View More",
             "viewLess":"View Less",
             "warnMsg":"Are you sure you want to cancel the existing request to update the chosen data?",
-            "warnMsgTwo":"You cannot cancel this request since it is still in Pending state. Please try after sometime."
+            "warnMsgTwo":"You can not cancel this request since it is still in Pending state. Please try after sometime.",
+            "warnMsgThree":"Your request to update data has been processed. You can now proceed to raise another request to update your data."
         },
         "draftCanceled":"Your existing Data Update Request has been successfully canceled. You can now proceed to raise another Data Update request."
     },
