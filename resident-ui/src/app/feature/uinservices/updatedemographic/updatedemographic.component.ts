@@ -106,11 +106,12 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
   oldSelectedIndex:any;
   isSameData: any = {};
   cancellable:boolean = false;
-  draftsDetails:any;
+  draftsDetails:any = [];
   enteredOnlyNumbers:boolean = false;
   disablePrefLangBtn:boolean = false;
   firstInputLang:any = {};
   draftInterval: any;
+  isDraftEmpty: boolean;
 
 
   private keyboardRef: MatKeyboardRef<MatKeyboardComponent>;
@@ -197,24 +198,29 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
   };
 
   getPendingDrafts(){
+    const popupElement = document.getElementById('draftCancelPopup');
     this.dataStorageService.getPendingDrafts(this.langCode).subscribe((response) => {
       if(!this.schema)
         this.getUpdateMyDataSchema();
       if(response['response']){
         if(!response['response'].drafts.length){
-          this.cancellable = false;
+          this.isDraftEmpty = false;
           clearTimeout(this.draftInterval);
-          const popupElement = document.getElementById('draftCancelPopup');
           if (this.dialog && popupElement) {
             this.dialog.closeAll();
             this.popupForInprogressData(true);
           }
         }else{
-          this.cancellable = true;
+          this.isDraftEmpty = true;
           this.draftsDetails = response['response'].drafts;
+          if(this.dialog && popupElement && ((this.draftsDetails[0].cancellable && !this.cancellable) || (!this.draftsDetails[0].cancellable && this.cancellable))){
+            this.dialog.closeAll();
+            this.popupForInprogressData(false);
+          }
           this.draftInterval = setTimeout(() => {
             this.getPendingDrafts();
           }, 2000);
+          this.cancellable = this.draftsDetails[0].cancellable;
         }
       }else{
         this.showErrorPopup(response['errors']);
@@ -223,7 +229,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
   }
 
   isUpdatedataInProgress(event, fieldType) {
-    if(this.cancellable){
+    if(this.isDraftEmpty){
       this.popupForInprogressData(false);
       if(fieldType === 'textField'){
         document.getElementById(event.target.id).blur();
@@ -1203,7 +1209,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
 
   popupForInprogressData(dataUpdated) {
     setTimeout(() => {
-      let statusMsg = ""
+      let statusMsg = "";
       if(!dataUpdated){
         statusMsg = this.draftsDetails[0].cancellable ? this.langJson.pendingDrafts.warnMsg : this.langJson.pendingDrafts.warnMsgTwo;
       }else{
