@@ -1241,8 +1241,10 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
           draftsDetails: this.draftsDetails,
           confirmBtn: this.popupMessages.genericmessage.confirm,
           cancelBtn: this.popupMessages.genericmessage.cancel
+
         },
         disableClose: true
+        }
       });
 
       dialogRef.afterClosed().subscribe(res => {
