@@ -394,8 +394,8 @@
   <div [style.font-size]="fontSize.lableText" *ngIf="input.case === 'updateMyDataInprogress'"
     class="data-inprogress-main-card" id="draftCancelPopup">
     <div width="100%">
-      <h4 class="data-inprogress-heading" style="margin: 0;">{{input.message.heading}}</h4>
-      <p class="data-inprogress-description">{{input.message.descriptionDetails}}</p>
+      <h4 *ngIf="input.statusMsg.descriptionDetails" class="data-inprogress-heading" style="margin: 0;">{{input.message.heading}}</h4>
+      <p *ngIf="input.statusMsg.descriptionDetails" class="data-inprogress-description">{{input.statusMsg.descriptionDetails}}</p>
       <div class="data-inprogress-details-card" *ngFor="let draft of input.draftsDetails; let i = index">
         <div class="intro-details">
           <p class="eid-date-card">
@@ -403,7 +403,8 @@
             <strong class="eid-date">{{draft.createdDTimes | date:'dd/MM/yyyy'}}</strong>
           </p>
           <p class="eid-date-card">
-            <strong class="eid-date">{{input.message.descriptionText}}{{draft.description}}</strong>
+            <strong *ngIf="!input.statusMsg.successdesc" class="eid-date">{{input.message.descriptionText}}{{draft.description}}</strong>
+            <strong *ngIf="input.statusMsg.successdesc" class="eid-date">{{input.message.descriptionText}}{{input.statusMsg.successdesc}}</strong>
             <span (click)="showInprogressDataDetails('viewMore', i, draft.eid)" *ngIf="!isInprogressDetialsShow || selectedIndex !== i"
               class="eid-number">{{input.message.viewMore}}</span>
             <span (click)="showInprogressDataDetails('viewLess', i, '')" *ngIf="isInprogressDetialsShow && selectedIndex === i"
@@ -411,7 +412,7 @@
           </p>
           <div class="confirm-card">
             <div class="Confirmation-card">
-              <p >{{input.statusMsg}}</p>
+              <p >{{input.statusMsg.warnMsg}}</p>
             </div>
             <button *ngIf="draft.cancellable" mat-button [mat-dialog-close]="draft.eid" class="data-inprogress-btns confirm-btn">{{input.confirmBtn}}</button>
           </div>

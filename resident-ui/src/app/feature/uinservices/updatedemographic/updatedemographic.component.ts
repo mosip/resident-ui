@@ -204,22 +204,26 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
         this.getUpdateMyDataSchema();
       if(response['response']){
         if(!response['response'].drafts.length){
+          if( this.dialog){
+            this.dialog.closeAll();
+            clearTimeout(this.draftInterval);
+          }
+          
           this.isDraftEmpty = false;
-          clearTimeout(this.draftInterval);
-          if (this.dialog && popupElement) {
-            this.dialog.closeAll();
-            this.popupForInprogressData(true);
-          }
         }else{
-          this.isDraftEmpty = true;
-          this.draftsDetails = response['response'].drafts;
-          if(this.dialog && popupElement && ((this.draftsDetails[0].cancellable && !this.cancellable) || (!this.draftsDetails[0].cancellable && this.cancellable))){
-            this.dialog.closeAll();
-            this.popupForInprogressData(false);
-          }
           this.draftInterval = setTimeout(() => {
             this.getPendingDrafts();
           }, 2000);
+          this.isDraftEmpty = true;
+          this.draftsDetails = response['response'].drafts;
+          if(this.dialog && popupElement && (this.draftsDetails[0].cancellable && !this.cancellable)){
+            this.dialog.closeAll();
+            this.popupForInprogressData(false);
+          }else if(this.dialog && popupElement && (!this.draftsDetails[0].cancellable && this.cancellable)){
+            this.dialog.closeAll();
+            this.popupForInprogressData(true);
+            this.isDraftEmpty = false;
+          }
           this.cancellable = this.draftsDetails[0].cancellable;
         }
       }else{
@@ -1209,11 +1213,24 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
 
   popupForInprogressData(dataUpdated) {
     setTimeout(() => {
-      let statusMsg = "";
+      let statusMsg = {};
       if(!dataUpdated){
-        statusMsg = this.draftsDetails[0].cancellable ? this.langJson.pendingDrafts.warnMsg : this.langJson.pendingDrafts.warnMsgTwo;
+        if(this.draftsDetails[0].cancellable){
+          statusMsg = {
+            descriptionDetails: this.langJson.pendingDrafts.descriptionDetails,
+            warnMsg: this.langJson.pendingDrafts.warnMsg
+          }
+        }else{
+          statusMsg = {
+            descriptionDetails: this.langJson.pendingDrafts.descriptionDetailsTwo,
+            warnMsg: this.langJson.pendingDrafts.warnMsgTwo
+          }
+        }
       }else{
-        statusMsg = this.langJson.pendingDrafts.warnMsgThree
+        statusMsg = {
+          warnMsg: this.langJson.pendingDrafts.warnMsgThree,
+          successdesc: this.langJson.pendingDrafts.successdesc
+        }
       }
       const dialogRef = this.dialog.open(DialogComponent, {
         width: '750px',
@@ -1224,7 +1241,8 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
           draftsDetails: this.draftsDetails,
           confirmBtn: this.popupMessages.genericmessage.confirm,
           cancelBtn: this.popupMessages.genericmessage.cancel
-        }
+        },
+        disableClose: true
       });
 
       dialogRef.afterClosed().subscribe(res => {
