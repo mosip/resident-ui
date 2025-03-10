@@ -104,7 +104,6 @@ export class DialogComponent implements OnInit {
 
   async ngOnInit() {
     this.input = this.data;
-    console.log(this.input)
     this.translateService
     .getTranslation(localStorage.getItem("langCode"))
     .subscribe(response => {
