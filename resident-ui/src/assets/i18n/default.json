@@ -29,6 +29,11 @@
       "name": "Kannada",
       "nativeName": "ಕನ್ನಡ",
       "locale": "kn_IN"
+    },
+    "spa": {
+      "name": "Spanish",
+      "nativeName": "Español",
+      "locale": "es_ES"
     }
   },
   "keyboardMapping" :{
@@ -37,6 +42,7 @@
     "ara": "ar",
     "hin": "hi",
     "tam": "ta",
-    "kan": "kn"
+    "kan": "kn",
+    "spa": "es"
   }
 }
