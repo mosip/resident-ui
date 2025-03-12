@@ -205,10 +205,11 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
       if(response['response']){
         if(!response['response'].drafts.length){
           if( this.dialog){
-            this.dialog.closeAll();
+            if(this.dialog && popupElement){
+              this.dialog.closeAll();
+            }
             clearTimeout(this.draftInterval);
           }
-          
           this.isDraftEmpty = false;
         }else{
           this.draftInterval = setTimeout(() => {
@@ -1247,12 +1248,15 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
 
       dialogRef.afterClosed().subscribe(res => {
         if (res) {
+          clearTimeout(this.draftInterval);
+          this.isDraftEmpty = false;
           this.dataStorageService.discardPendingDrafts(res)
             .subscribe((response) => {
               if (response['response']) {
                 this.message = this.langJson.draftCanceled
-                this.showMessage(this.message, this.draftsDetails);
+                this.showMessage(this.message, this.draftsDetails[0].eid);
                 this.cancellable = false;
+                this.draftsDetails = [];
               } else {
                 this.showErrorPopup(response['errors'])
               }
