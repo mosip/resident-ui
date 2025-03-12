@@ -436,10 +436,12 @@
             "heading": "Demande existante trouvée, action requise!",
             "descriptionText": "Description: ",
             "descriptionDetails": "Nous avons trouvé une demande de mise à jour des données existante qui est toujours en cours. Afin de soulever une nouvelle demande, vous devrez supprimer la demande existante.",
+            "descriptionDetailsTwo": "Nous avons trouvé une demande de mise à jour des données existante qui est toujours en cours. Afin de créer une nouvelle demande, vous pouvez annuler la demande existante après un certain temps.",
             "viewMore":"Voir plus",
             "viewLess":"Voir moins",
             "warnMsg":"Êtes-vous sûr de vouloir annuler la demande existante de mise à jour des données choisies?",
-            "warnMsgTwo":"Vous ne pouvez pas annuler cette demande car elle est toujours à l'état En attente. S'il vous plaît, essayez après un certain temps."
+            "warnMsgTwo":"Vous ne pouvez pas annuler cette demande puisqu'elle est en cours. S'il vous plaît, essayez après un certain temps.",
+            "warnMsgThree":"Votre demande de mise à jour des données a été traitée. Cet onglet se fermera automatiquement une fois que nous aurons terminé votre demande de mise à jour des données."
         },
         "draftCanceled":"Votre demande de mise à jour de données existante a été annulée avec succès. Vous pouvez maintenant procéder à une autre demande de mise à jour des données."
     },
