@@ -106,10 +106,12 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
   oldSelectedIndex:any;
   isSameData: any = {};
   cancellable:boolean = false;
-  draftsDetails:any;
+  draftsDetails:any = [];
   enteredOnlyNumbers:boolean = false;
   disablePrefLangBtn:boolean = false;
   firstInputLang:any = {};
+  draftInterval: any;
+  isDraftEmpty: boolean;
 
 
   private keyboardRef: MatKeyboardRef<MatKeyboardComponent>;
@@ -196,25 +198,43 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
   };
 
   getPendingDrafts(){
-    this.dataStorageService.getPendingDrafts(this.langCode).subscribe((response) =>{
+    const popupElement = document.getElementById('draftCancelPopup');
+    this.dataStorageService.getPendingDrafts(this.langCode).subscribe((response) => {
       if(!this.schema)
         this.getUpdateMyDataSchema();
       if(response['response']){
         if(!response['response'].drafts.length){
-          this.cancellable = false;
+          if( this.dialog){
+            this.dialog.closeAll();
+            clearTimeout(this.draftInterval);
+          }
+          
+          this.isDraftEmpty = false;
         }else{
-          this.cancellable = true;
+          this.draftInterval = setTimeout(() => {
+            this.getPendingDrafts();
+          }, 2000);
+          this.isDraftEmpty = true;
           this.draftsDetails = response['response'].drafts;
+          if(this.dialog && popupElement && (this.draftsDetails[0].cancellable && !this.cancellable)){
+            this.dialog.closeAll();
+            this.popupForInprogressData(false);
+          }else if(this.dialog && popupElement && (!this.draftsDetails[0].cancellable && this.cancellable)){
+            this.dialog.closeAll();
+            this.popupForInprogressData(true);
+            this.isDraftEmpty = false;
+          }
+          this.cancellable = this.draftsDetails[0].cancellable;
         }
       }else{
         this.showErrorPopup(response['errors']);
       };
     })
   }
- 
+
   isUpdatedataInProgress(event, fieldType) {
-    if(this.cancellable){
-      this.popupForInprogressData();
+    if(this.isDraftEmpty){
+      this.popupForInprogressData(false);
       if(fieldType === 'textField'){
         document.getElementById(event.target.id).blur();
       }else if(fieldType === 'datePickerField'){
@@ -253,7 +273,7 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
           this.getUserInfo();
         });
     })
-  
+
   }
 
 
@@ -1191,37 +1211,56 @@ export class UpdatedemographicComponent implements OnInit, OnDestroy {
       });
   }
 
-  popupForInprogressData() {
+  popupForInprogressData(dataUpdated) {
     setTimeout(() => {
-      const dialogRef = this.dialog.open(DialogComponent, {
-          width: '750px',
-          data: {
-            case: 'updateMyDataInprogress',
-            message: this.langJson.pendingDrafts,
-            draftsDetails: this.draftsDetails,
-            confirmBtn: this.popupMessages.genericmessage.confirm,
-            cancelBtn: this.popupMessages.genericmessage.cancel
+      let statusMsg = {};
+      if(!dataUpdated){
+        if(this.draftsDetails[0].cancellable){
+          statusMsg = {
+            descriptionDetails: this.langJson.pendingDrafts.descriptionDetails,
+            warnMsg: this.langJson.pendingDrafts.warnMsg
           }
-        });
-      
-        dialogRef.afterClosed().subscribe(res =>{
-        if(res){
-          this.dataStorageService.discardPendingDrafts(res)
-          .subscribe((response) =>{
-            if(response['response']){
-              this.message = this.langJson.draftCanceled  
-              this.showMessage(this.message, this.draftsDetails);
-              this.cancellable = false;
-            }else{
-              this.showErrorPopup(response['errors'])
-            }
-          })
         }else{
-          this.getPendingDrafts();
+          statusMsg = {
+            descriptionDetails: this.langJson.pendingDrafts.descriptionDetailsTwo,
+            warnMsg: this.langJson.pendingDrafts.warnMsgTwo
+          }
+        }
+      }else{
+        statusMsg = {
+          warnMsg: this.langJson.pendingDrafts.warnMsgThree,
+          successdesc: this.langJson.pendingDrafts.successdesc
+        }
+      }
+      const dialogRef = this.dialog.open(DialogComponent, {
+        width: '750px',
+        data: {
+          case: 'updateMyDataInprogress',
+          message: this.langJson.pendingDrafts,
+          statusMsg,
+          draftsDetails: this.draftsDetails,
+          confirmBtn: this.popupMessages.genericmessage.confirm,
+          cancelBtn: this.popupMessages.genericmessage.cancel
+        },
+        disableClose: true
+      });
+
+      dialogRef.afterClosed().subscribe(res => {
+        if (res) {
+          this.dataStorageService.discardPendingDrafts(res)
+            .subscribe((response) => {
+              if (response['response']) {
+                this.message = this.langJson.draftCanceled
+                this.showMessage(this.message, this.draftsDetails);
+                this.cancellable = false;
+              } else {
+                this.showErrorPopup(response['errors'])
+              }
+            })
         }
       })
       return dialogRef;
-    },400)
+    }, 400)
   }
 
   onItemSelected(item: any) {
