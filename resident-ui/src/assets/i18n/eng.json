@@ -436,10 +436,13 @@
             "heading": "Existing request found, action required!",
             "descriptionText": "Description: ",
             "descriptionDetails": "We have found an existing Data Update Request which is still in progress. In order to raise a new request, you will have to delete the existing request.",
+            "descriptionDetailsTwo": "We have found an existing Data Update Request which is still in progress. In order to raise a new request, you can cancel the existing request after sometime.",
+            "successdesc": "Data was updated successfully",
             "viewMore":"View More",
             "viewLess":"View Less",
             "warnMsg":"Are you sure you want to cancel the existing request to update the chosen data?",
-            "warnMsgTwo":"You cannot cancel this request since it is still in Pending state. Please try after sometime."
+            "warnMsgTwo":"You cannot cancel this request since it is in progress. Please try after sometime.",
+            "warnMsgThree":"Your request to update data has been processed. This tab will auto close once we are done with your data update request."
         },
         "draftCanceled":"Your existing Data Update Request has been successfully canceled. You can now proceed to raise another Data Update request."
     },

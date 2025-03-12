@@ -435,12 +435,14 @@
         "pendingDrafts":{
             "heading": "Se encontró una solicitud existente; se requiere acción.",
             "descriptionText": "Descripción: ",
-            "descriptionDetails": "Hemos encontrado una solicitud de actualización de datos existente que aún está en curso. Para generar una nueva solicitud, deberá eliminar la solicitud existente.",
+            "descriptionDetails": "Hemos encontrado una solicitud de actualización de datos existente que aún está en progreso. Para generar una nueva solicitud, deberá eliminar la solicitud existente.",
+            "descriptionDetailsTwo": "Hemos encontrado una solicitud de actualización de datos existente que aún está en progreso. Para generar una nueva solicitud, puede cancelar la solicitud existente después de un tiempo.",
             "viewMore":"Ver más",
             "viewLess":"Ver menos",
             "warnMsg":"¿Está seguro de que desea cancelar la solicitud existente para actualizar los datos elegidos?",
-            "warnMsgTwo":"No puede cancelar esta solicitud ya que todavía está en estado Pendiente. Inténtalo después de un tiempo."
-        },
+            "warnMsgTwo":"No puede cancelar esta solicitud ya que está en curso. Inténtalo después de un tiempo.",
+            "warnMsgThree":"Su solicitud de actualización de datos ha sido procesada. Esta pestaña se cerrará automáticamente una vez que hayamos terminado con su solicitud de actualización de datos."
+          },
         "draftCanceled":"Su solicitud de actualización de datos existente se canceló exitosamente. Ahora puede proceder a generar otra solicitud de Actualización de datos."
     },
     "trackservicerequest": {
