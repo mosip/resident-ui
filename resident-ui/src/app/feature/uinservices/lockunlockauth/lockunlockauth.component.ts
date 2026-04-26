@@ -229,7 +229,12 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
 
     // AC10: read exclusion-supported auth types from config
     const exclusionConfig = this.appConfigService.getConfig()["resident.auth-types-groups.exclusion-for-resident-login"];
-    const exclusionSupportedTypes: string[] = exclusionConfig ? JSON.parse(exclusionConfig) : [];
+    let exclusionSupportedTypes: string[] = [];
+    try {
+      exclusionSupportedTypes = exclusionConfig ? JSON.parse(exclusionConfig) : [];
+    } catch (e) {
+      exclusionSupportedTypes = [];
+    }
 
     // AC9: read resident partner ID from config, not hardcoded
     const residentPartnerId = this.appConfigService.getConfig()["mosip-resident-service-partner-id"] || "resident-partner";
