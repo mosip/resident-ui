@@ -226,17 +226,37 @@ export class LockunlockauthComponent implements OnInit, OnDestroy {
   updateAuthlockStatus(){
     this.showSpinner = true;
     let buildfinaldata = [];
-    this.authlist.forEach(item =>{
-      if(item.authSubType){
-        if(this.changedItems.includes(item.authSubType)){
-            buildfinaldata.push(item)
+
+    // AC10: read exclusion-supported auth types from config
+    const exclusionConfig = this.appConfigService.getConfig()["resident.auth-types-groups.exclusion-for-resident-login"];
+    let exclusionSupportedTypes: string[] = [];
+    try {
+      exclusionSupportedTypes = exclusionConfig ? JSON.parse(exclusionConfig) : [];
+    } catch (e) {
+      exclusionSupportedTypes = [];
+    }
+
+    // AC9: read resident partner ID from config, not hardcoded
+    const residentPartnerId = this.appConfigService.getConfig()["mosip-resident-service-partner-id"] || "resident-partner";
+
+    this.authlist.forEach(item => {
+      const authKey = item.authSubType
+        ? `${item.authType}-${item.authSubType}`
+        : item.authType;
+
+      const isChanged = item.authSubType
+        ? this.changedItems.includes(item.authSubType)
+        : this.changedItems.includes(item.authType);
+
+      if (isChanged) {
+        // AC8: attach lockExcludedAuthPartners only when locking and auth type supports exclusion
+        const enrichedItem = { ...item };
+        if (item.locked && exclusionSupportedTypes.includes(authKey)) {
+          enrichedItem["lockExcludedAuthPartners"] = [residentPartnerId];
         }
-      }else{
-        if(this.changedItems.includes(item.authType)){
-          buildfinaldata.push(item)
-        }
+        buildfinaldata.push(enrichedItem);
       }
-    })
+    });
 
     const request = {
       "id": "mosip.resident.auth.lock.unlock",
