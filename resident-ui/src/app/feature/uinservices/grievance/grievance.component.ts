@@ -35,6 +35,7 @@ export class GrievanceComponent implements OnInit {
   source2: string;
   phoneCharLimit: any;
   emailCharLimit: any;
+  eventIdValidation: any;
   userPreferredLangCode = localStorage.getItem("langCode");
   message2:any;
   subscriptions: Subscription[] = [];
@@ -72,11 +73,15 @@ export class GrievanceComponent implements OnInit {
       this.emailCharLimit = this.appConfigService.getConfig()["resident.grievance-redressal.alt-email.chars.limit"];
     }, 400);
 
+    this.eventIdValidation = this.appConfigService.getConfig()["resident.validation.event-id.regex"];
+
     this.route.queryParams
       .subscribe(params => {
         this.source1 = params.source1
         this.source2 = params.source2
-        this.userFormData.eventId = params.eid;
+        const eid = params.eid;
+        this.userFormData.eventId =
+          eid && this.eventIdValidation && new RegExp(this.eventIdValidation).test(eid) ? eid : null;
       }
       );
 
