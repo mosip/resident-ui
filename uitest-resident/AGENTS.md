@@ -4,11 +4,14 @@ Parent guide: [`../AGENTS.md`](../AGENTS.md)
 
 ## Purpose
 
-A Maven-based Selenium WebDriver test module ("Admin Automation") that
-drives a deployed Resident UI instance through Chrome to cover CRUD
+A Maven-based Selenium WebDriver test module that drives a deployed
+Resident UI instance through Chrome to cover CRUD
 (create/read/update/delete) flows end-to-end against a real environment.
 This is not a unit-test module — it needs a running target environment
-and a Chrome driver.
+and a Chrome driver. `uitest-resident/README.md`'s title ("Admin
+Automation") is stale — the Java package is `io.mosip.testrig.residentui.*`
+and the tests exercise Resident UI flows, not an admin console; don't be
+misled by the README title.
 
 ## Layout
 

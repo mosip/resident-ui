@@ -51,15 +51,10 @@ first. See the module `AGENTS.md` files for full command lists:
 
 ```bash
 # Angular app
-cd resident-ui
-npm install
-npm run build
-npm test
-npm run lint
+(cd resident-ui && npm install && npm run build && npm test && npm run lint)
 
 # Selenium test rig
-cd uitest-resident
-mvn clean install
+(cd uitest-resident && mvn clean install)
 ```
 
 ## Configuration
@@ -102,10 +97,10 @@ resident-ui/                    (repo root)
 └── .github/workflows/           CI (build, docker, sonar, codeql, release)
 ```
 
-The two nested directories with the same name pattern
-(`resident-ui/resident-ui/` for the app, `resident-ui/uitest-resident/`
-for the tests) are easy to confuse — always check which directory you are
-in before running `npm` or `mvn` commands.
+The two module directories at the repo root, `resident-ui/` (the Angular
+app) and `uitest-resident/` (the Selenium test rig), are easy to confuse
+— always check which directory you are in before running `npm` or `mvn`
+commands.
 
 ## Development Workflow
 

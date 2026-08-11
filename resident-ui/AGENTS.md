@@ -40,8 +40,7 @@ live reload (see the `start` script in `package.json`).
 
 ## Build & Test Commands
 
-All commands run from this directory (`resident-ui/resident-ui/` from the
-repo root):
+All commands run from this directory (`resident-ui/` from the repo root):
 
 ```bash
 npm install         # install dependencies
@@ -81,8 +80,7 @@ ng build --configuration production
 
 ## Development Workflow
 
-1. `cd resident-ui/resident-ui` (from repo root) or just `resident-ui`
-   if you are already inside the outer `resident-ui/` checkout.
+1. `cd resident-ui` (from repo root).
 2. `npm install`.
 3. Make your change under `src/app/...`.
 4. Run `npm run lint` and `npm test` before committing.
