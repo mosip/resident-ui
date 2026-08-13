@@ -92,7 +92,7 @@ ng build --configuration production
 ### Do
 
 1. Run `npm install` / `npm run build` / `npm test` / `npm run lint`
-   from inside this `resident-ui/resident-ui/` directory, never the repo
+   from inside this `resident-ui/` directory, never the repo
    root.
 2. Treat `src/assets/config.json` as the file to change for API
    endpoint/base URL config — not `environment.ts`.

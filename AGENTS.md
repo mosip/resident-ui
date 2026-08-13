@@ -51,7 +51,7 @@ first. See the module `AGENTS.md` files for full command lists:
 
 ```bash
 # Angular app
-(cd resident-ui && npm install && npm run build && npm test && npm run lint)
+(cd resident-ui && npm install && npm run build && npm test -- --watch=false && npm run lint)
 
 # Selenium test rig
 (cd uitest-resident && mvn clean install)
