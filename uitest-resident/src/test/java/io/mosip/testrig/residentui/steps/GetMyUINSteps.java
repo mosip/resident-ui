@@ -20,11 +20,11 @@ public class GetMyUINSteps {
 
     @When("the user requests the UIN card with their VID and OTP")
     public void requestUinCard() {
-        String email = ResidentTestData.loginEmail;
         page().enterVid(ResidentTestData.perpetualVid);
         NotificationListener.markRequestStart();
         page().requestOtp();
-        String otp = NotificationListener.getOtp(email);
+        // Poll both emails — Update My Data may have already switched loginEmail this run.
+        String otp = ResidentTestData.getOtpFromCurrentOrPreviousEmail();
         NotificationListener.markRequestRemove();
         if (otp == null || otp.isEmpty()) throw new IllegalStateException("OTP not received for Get My UIN");
         page().enterOtp(otp);

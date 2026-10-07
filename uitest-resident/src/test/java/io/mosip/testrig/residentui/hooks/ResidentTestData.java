@@ -62,6 +62,16 @@ public class ResidentTestData {
             oneTimeVid = ResidentUtil.generateVID(uin, "onetimeuse"); // API's vidType enum value — "ONCE" is rejected
             loginEmail = ResidentConfigManager.getproperty("email"); // matches buildAddIdentityRequest()
             logger.info("Generated UIN ...{}", uin.length() > 4 ? uin.substring(uin.length() - 4) : uin);
+
+            long settleMillis = ResidentConfigManager.getIdentitySettleMillis();
+            if (settleMillis > 0) {
+                logger.info("Waiting {} ms for the new identity to propagate through MOSIP before logging in", settleMillis);
+                try {
+                    Thread.sleep(settleMillis);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
         }
         ready.set(true);
     }

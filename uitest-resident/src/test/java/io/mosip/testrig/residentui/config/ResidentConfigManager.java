@@ -2,6 +2,7 @@ package io.mosip.testrig.residentui.config;
 
 import io.mosip.testrig.apirig.utils.ConfigManager;
 import io.mosip.testrig.uitestrig.core.UiConfigManager;
+import io.mosip.testrig.uitestrig.listeners.CucumberHooks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +40,19 @@ public class ResidentConfigManager extends UiConfigManager {
         // ConfigManager.init(): loads Kernel.properties first (layer 1), then putAll(moduleProps)
         // so layers 2-4 override Kernel; env vars (layer 5) override everything inside init().
         ConfigManager.init(moduleProps);
+
+        bridgeScenarioToRun();
+    }
+
+    /** Bridges resident.properties' scenarioToRun into the system property CucumberHooks reads.
+     *  A -DscenarioToRun=... passed directly on the command line still wins over the file. */
+    private static void bridgeScenarioToRun() {
+        if (System.getProperty(CucumberHooks.SCENARIO_FILTER_PROPERTY) != null) return;
+        String scenarioToRun = getproperty("scenarioToRun");
+        if (scenarioToRun != null && !scenarioToRun.isBlank()) {
+            System.setProperty(CucumberHooks.SCENARIO_FILTER_PROPERTY, scenarioToRun.trim());
+            logger.info("Running a single scenario (scenarioToRun): {}", scenarioToRun.trim());
+        }
     }
 
     private static Map<String, Object> loadProperties(String resourcePath) {
@@ -73,5 +87,20 @@ public class ResidentConfigManager extends UiConfigManager {
     public static int getPacketUpdateWaitMinutes() {
         String val = getproperty("packetUpdateWait");
         return (val == null || val.isBlank()) ? 2 : Integer.parseInt(val.trim());
+    }
+
+    /** Delay between each parallel worker thread's first scenario, to avoid bursting the
+     *  environment's auth rate limit when several threads start at the same instant. */
+    public static long getScenarioStaggerMillis() {
+        String val = getproperty("scenarioStaggerMillis");
+        return (val == null || val.isBlank()) ? 3000L : Long.parseLong(val.trim());
+    }
+
+    /** A freshly-generated identity's "ACTIVATED" response only confirms the request was
+     *  accepted, not that MOSIP's async pipeline has finished — logging in too soon gets
+     *  rejected and retried against an identity the auth service isn't ready for yet. */
+    public static long getIdentitySettleMillis() {
+        String val = getproperty("identitySettleMillis");
+        return (val == null || val.isBlank()) ? 30000L : Long.parseLong(val.trim());
     }
 }

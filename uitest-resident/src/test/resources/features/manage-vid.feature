@@ -10,7 +10,7 @@ Feature: Manage My VID
     And the user regenerates the Perpetual VID
     And the user declines downloading the Perpetual VID card
 
-  Scenario: Generate, download and delete a Temporary VID
+  Scenario: Generate download and delete a Temporary VID
     When the user navigates to Manage My VID
     And the user generates a Temporary VID
     Then a success popup should confirm VID creation
@@ -19,7 +19,7 @@ Feature: Manage My VID
     When the user deletes the Temporary VID
     Then a success popup should confirm VID deletion
 
-  Scenario: Generate, download and delete a One-Time VID
+  Scenario: Generate download and delete a One-Time VID
     When the user navigates to Manage My VID
     And the user generates a One-Time VID
     Then a success popup should confirm VID creation
