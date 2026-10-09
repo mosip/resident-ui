@@ -5,7 +5,7 @@ import com.microsoft.playwright.Page;
 import io.mosip.testrig.uitestrig.pages.BasePage;
 import io.mosip.testrig.uitestrig.reporting.UiExtentReportManager;
 import io.mosip.testrig.residentui.config.ResidentUtil;
-import org.testng.Assert;
+import org.junit.jupiter.api.Assertions;
 
 public class GetInformationPage extends BasePage {
 
@@ -30,7 +30,7 @@ public class GetInformationPage extends BasePage {
             waitForNetworkIdle();
             Download download = assertions().awaitDownload(
                     () -> click("#regCentersDownloadBtn", "Click the registration centers 'Download' button"));
-            Assert.assertNull(download.failure(),
+            Assertions.assertNull(download.failure(),
                     "Download failed for hierarchy level " + i + ": " + download.failure());
             succeededDownloads++;
         }
@@ -43,7 +43,7 @@ public class GetInformationPage extends BasePage {
 
     public void assertAllDownloadsSucceeded() {
         int expectedTotal = ResidentUtil.getHierarchyNumbers();
-        Assert.assertEquals(succeededDownloads, expectedTotal,
+        Assertions.assertEquals(expectedTotal, succeededDownloads,
                 "Expected " + expectedTotal + " successful downloads but got " + succeededDownloads);
         UiExtentReportManager.logPass("Verified all " + expectedTotal
                 + " registration center hierarchy levels downloaded successfully");
