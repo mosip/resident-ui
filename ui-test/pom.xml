@@ -234,6 +234,26 @@
 	</build>
 
 	<profiles>
+		<!-- GitHub Actions' generic build-and-package CI job runs `mvn package`, which includes
+		     the test phase. This suite's "tests" are live Playwright scenarios against a real
+		     MOSIP environment, driven by resident.properties — a file that is intentionally
+		     never committed (it holds real secrets). That CI job has no such config, so running
+		     the suite there always fails with a config-not-found NPE, unrelated to code
+		     correctness. GitHub Actions sets env.CI=true by default on its runners, so this
+		     profile activates there and skips test execution; local/Docker runs (which do supply
+		     real config via `mvn test`) don't set that variable and are unaffected. -->
+		<profile>
+			<id>skip-tests-in-ci</id>
+			<activation>
+				<property>
+					<name>env.CI</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<properties>
+				<skipTests>true</skipTests>
+			</properties>
+		</profile>
 		<profile>
 			<id>selenium-tests</id>
 			<build>
