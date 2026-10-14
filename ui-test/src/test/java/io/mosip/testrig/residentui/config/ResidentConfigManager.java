@@ -76,7 +76,6 @@ public class ResidentConfigManager extends UiConfigManager {
     }
 
     public static String getExternalEmail()     { return getproperty("externalemail"); }
-    public static String getTempEmail()         { return getproperty("tempemail"); }
     public static String getUin()               { return getproperty("uin"); }
     public static String getPerpetualVid()      { return getproperty("perpetualvid"); }
     public static String getTemporaryVid()      { return getproperty("temporaryvid"); }

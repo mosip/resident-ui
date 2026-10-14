@@ -24,6 +24,11 @@ public class GetMyUINPage extends BasePage {
 
     public void requestOtp() {
         click("#getUinSendOtpBtn", "Click the 'Send OTP' button");
+        // Confirms the OTP panel actually rendered before the caller starts polling SMTP for
+        // an OTP that may never have been sent — any failure here (backend error popup, etc.)
+        // surfaces immediately with its own screenshot, instead of waiting out the full SMTP
+        // poll timeout first.
+        waitForVisible("#otp-input", "Wait for the OTP input to appear after Send OTP");
     }
 
     public void enterOtp(String otp) {
