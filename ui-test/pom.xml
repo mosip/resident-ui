@@ -172,6 +172,9 @@
 				</executions>
 				<configuration>
 					<dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+					<!-- The Dockerfile's `mvn test-compile` build context only copies pom.xml/src/
+					     entrypoint.sh, not .git — skip quietly there instead of failing the build. -->
+					<failOnNoGitDirectory>false</failOnNoGitDirectory>
 				</configuration>
 			</plugin>
 			<plugin>
