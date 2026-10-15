@@ -70,7 +70,7 @@ jobs:
   build-maven-uitest-resident:
     uses: mosip/kattu/.github/workflows/maven-build.yml@master-java21
     with:
-      SERVICE_LOCATION: ./uitest-resident
+      SERVICE_LOCATION: ./ui-test
       BUILD_ARTIFACT: uitest-resident
     secrets:
       OSSRH_USER: ${{ secrets.OSSRH_USER }}
@@ -85,7 +85,7 @@ jobs:
     env:
       NAMESPACE: ${{ secrets.dev_namespace_docker_hub }}
       SERVICE_NAME: uitest-resident
-      SERVICE_LOCATION: uitest-resident
+      SERVICE_LOCATION: ui-test
       BUILD_ARTIFACT: uitest-resident-local
     steps:
       - uses: actions/checkout@v3
@@ -142,7 +142,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - SERVICE_LOCATION: 'uitest-resident'
+          - SERVICE_LOCATION: 'ui-test'
             SERVICE_NAME: 'uitest-resident'
             BUILD_ARTIFACT: 'uitest-resident-local'
       fail-fast: false
@@ -162,7 +162,7 @@ jobs:
   #  needs: build-uitest-resident-local
   #  uses: mosip/kattu/.github/workflows/maven-publish-to-nexus.yml@master
   #  with:
-  #    SERVICE_LOCATION: uitest-resident
+  #    SERVICE_LOCATION: ui-test
   #  secrets:
   #    OSSRH_USER: ${{ secrets.OSSRH_USER }}
   #    OSSRH_SECRET: ${{ secrets.OSSRH_SECRET }}
@@ -175,7 +175,7 @@ jobs:
     if: "${{  github.event_name != 'pull_request' }}"
     uses: mosip/kattu/.github/workflows/maven-sonar-analysis.yml@master-java21
     with:
-      SERVICE_LOCATION: uitest-resident
+      SERVICE_LOCATION: ui-test
       SONAR_URL: 'https://sonarcloud.io'
       PROJECT_KEY: 'mosip_uitest-resident'
     secrets:

@@ -1,0 +1,7 @@
+# Known Issues — Resident Portal UI Automation
+# Format:  bugId------Scenario name exactly as written in the feature file
+# Comments begin with #.  Empty lines are ignored.
+#
+# Example:
+#   RES-1234------Verify OTP login with perpetual VID
+#   RES-1235------Verify temporary VID generation and deletion
