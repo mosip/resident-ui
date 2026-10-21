@@ -49,14 +49,15 @@ Five-layer property loading (lowest → highest), done in `ResidentConfigManager
 1. `Kernel.properties` (apitest-commons jar — MOSIP-wide defaults)
 2. `uitest.properties` (uitest-commons jar — UI/browser defaults)
 3. `valueMapping.properties` (this module — default identity field values for dynamic UIN generation)
-4. `resident.properties` (this module — env-specific overrides; **never commit this file**, it holds
-   real secrets)
+4. `resident.properties` (this module — env-specific overrides; tracked in git with blank
+   defaults — fill in real URLs/secrets locally, **never commit real values back into it**)
 5. Environment variables
 
-`resident.properties.sample` is the committed, secrets-free template — copy it to
-`resident.properties` (gitignored) and fill in real values locally. It documents its own layering
-rules in its header comment — only declare a key there if it's genuinely absent upstream, blank
-upstream, or an intentional override.
+`resident.properties` documents its own layering rules in its header comment — only declare a key
+there if it's genuinely absent upstream, blank upstream, or an intentional override. Since it's
+tracked, run `git update-index --skip-worktree src/test/resources/config/resident.properties`
+locally after filling in real values, so they never show up in `git status`/`git diff` or get
+committed by accident.
 
 `ConfigManager.init()` (apitest-commons) derives `eSignetbaseurl`/`signupBaseUrl`/
 `injiCertifyBaseURL` from the JVM system property `env.endpoint` whenever those keys are blank —

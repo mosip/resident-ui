@@ -8,14 +8,12 @@ Maven artifactId stays `uitest-resident` (the folder is `ui-test`).
 
 ## Setup
 
-1. Copy the sample config and fill in your environment's values:
-   ```
-   cp src/test/resources/config/resident.properties.sample src/test/resources/config/resident.properties
-   ```
-   `resident.properties` is gitignored — it ends up holding real client secrets and test identity
-   data, and must never be committed.
-2. At minimum, set `baseUrl`, `apiInternalEndPoint`, `keycloak-external-url`, and the three
-   `*_client_secret` keys for your target environment.
+`resident.properties` ships tracked in git with blank/default values. At minimum, fill in
+`baseUrl`, `apiInternalEndPoint`, `keycloak-external-url`, and the three `*_client_secret` keys for
+your target environment before running the suite — **never commit real values back into this
+file**. Consider running `git update-index --skip-worktree src/test/resources/config/resident.properties`
+locally so your filled-in values never show up in `git status`/`git diff` or get swept into a
+commit by accident (`--no-skip-worktree` to undo).
 
 ## Run the full suite
 
@@ -56,12 +54,12 @@ Five-layer property loading (lowest → highest), done in `ResidentConfigManager
 1. `Kernel.properties` (apitest-commons JAR — MOSIP-wide defaults)
 2. `uitest.properties` (uitest-commons JAR — UI/browser defaults)
 3. `valueMapping.properties` (this module — default identity field values for dynamic UIN generation)
-4. `resident.properties` (this module — env-specific overrides; **never commit this file**, it holds
-   real secrets)
+4. `resident.properties` (this module — env-specific overrides; tracked with blank defaults, filled
+   in locally per environment — **never commit real secret/URL values back into it**)
 5. Environment variables
 
-`resident.properties.sample` documents the layering rules and every key this module declares — only
-add a key there if it's genuinely absent upstream, blank upstream, or an intentional override.
+`resident.properties` documents its own layering rules in its header comment — only add a key
+there if it's genuinely absent upstream, blank upstream, or an intentional override.
 
 ## Architecture
 
