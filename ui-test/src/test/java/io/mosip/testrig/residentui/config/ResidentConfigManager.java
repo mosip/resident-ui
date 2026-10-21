@@ -37,11 +37,28 @@ public class ResidentConfigManager extends UiConfigManager {
         // Layer 4: module-specific overrides
         moduleProps.putAll(loadProperties("config/resident.properties"));
         moduleProps.putAll(loadProperties("config/bioValue.properties"));
+
+        bridgeEnvEndpoint(moduleProps);
+
         // ConfigManager.init(): loads Kernel.properties first (layer 1), then putAll(moduleProps)
         // so layers 2-4 override Kernel; env vars (layer 5) override everything inside init().
         ConfigManager.init(moduleProps);
 
         bridgeScenarioToRun();
+    }
+
+    /** ConfigManager.init() derives eSignetbaseurl/signupBaseUrl/injiCertifyBaseURL from the JVM
+     *  system property "env.endpoint" (the apitest-rig -Denv.endpoint=... convention) whenever
+     *  those keys are blank — which they always are here, since this module uses its own
+     *  apiInternalEndPoint key instead and never sets env.endpoint. Without this bridge,
+     *  ConfigManager.init() NPEs calling .replace() on a null env.endpoint. A -Denv.endpoint=...
+     *  passed directly still wins over the derived value. */
+    private static void bridgeEnvEndpoint(Map<String, Object> moduleProps) {
+        if (System.getProperty("env.endpoint") != null) return;
+        Object apiInternalEndPoint = moduleProps.get("apiInternalEndPoint");
+        if (apiInternalEndPoint != null && !((String) apiInternalEndPoint).isBlank()) {
+            System.setProperty("env.endpoint", ((String) apiInternalEndPoint).trim());
+        }
     }
 
     /** Bridges resident.properties' scenarioToRun into the system property CucumberHooks reads.

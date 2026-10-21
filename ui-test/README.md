@@ -1,45 +1,85 @@
-# Admin Automation
+# Resident Portal UI Automation
 
-## Overview
-Selenium webdriver based Admin Portal Automation covers CRUD(create, read, update and delete) operation performed via UI with Chrome driver
+Playwright + Cucumber (BDD) UI automation suite for the MOSIP Resident Portal, run through JUnit5's
+Platform Suite engine. Tests cover end-to-end browser flows: login via UIN/VID, view history, manage
+VIDs, update data, share data, get a personalised card, verify email/phone, and track requests.
 
-## Build
-1. Build jar `mvn clean install`
-2. Place jar in one folder along with src/main/resources files and folder
-3. Run jar with vm args- ``` java  -Dpath=https://env.mosip.net/ -Duserid=user -Dpassword=pwd -jar nameofAdminJar.jar```
+Maven artifactId stays `uitest-resident` (the folder is `ui-test`).
 
-## Configurations
-1. Update below keys from `Config.properties`
-* langcode:eng -- Admin login page language selection description placed in `TestData.json`
-* bulkwait:10000 -- Bulk upload wait
+## Setup
 
-2. Update below keys from `TestData.json`
-* setExcludedGroups:"" -- To run all the scenario mentioned below
-* setExcludedGroups:"BL,CT" -- To exclude testcases execution based on below tags
+`resident.properties` ships tracked in git with blank/default values. At minimum, fill in
+`baseUrl`, `apiInternalEndPoint`, `keycloak-external-url`, and the three `*_client_secret` keys for
+your target environment before running the suite — **never commit real values back into this
+file**. Consider running `git update-index --skip-worktree src/test/resources/config/resident.properties`
+locally so your filled-in values never show up in `git status`/`git diff` or get swept into a
+commit by accident (`--no-skip-worktree` to undo).
 
-3. Chrome driver place under working directory inside folder name chromedriver
+## Run the full suite
 
-## Below tags with scenarios
-* blocklistedwordsCRUD: BL
-* bulkUploadCRUD: BU
-* centerCRUD: CTR
-* centerTypeCRUD: CT
-* deviceSpecCRUD: DS
-* deviceCRUD: D
-* deviceTypesCRUD: DT
-* documentCategoriesCRUD: DOC
-* documentTypesCRUD: DOCT
-* dynamicFieldCRUD: DF
-* holidaysCRUD: H
-* machineSpecCRUD: MS
-* machineCRUD: M
-* machineTypesCRUD: MT
-* templateCRUD: T
+```
+mvn test
+```
 
-## Execution result and logs
-1. Verify the failure in the logs file `\logs\AutomationLogs.log`
-1. Execution results present under test-output folder file `emailable-report.html`
+Surefire is configured to only pick up `ResidentTestRunner` (a `@Suite` class with no logic of its
+own — glue and the Cucumber plugin are configured via `junit-platform.properties`, not annotations),
+which runs every `.feature` file under `src/test/resources/features/` through the Cucumber JUnit5
+engine.
+
+## Run a scenario subset
+
+By exact scenario name, case-insensitive, comma-separated:
+```
+mvn test -DscenarioToRun="Login with VID,Login with UIN"
+```
+or set `scenarioToRun=` in `resident.properties`; the `-D` flag wins if both are set.
+
+## Run in Docker
+
+```
+docker build -t uitest-resident .
+docker run -e RESIDENT_CONFIG_PATH=/home/mosip/config/resident.properties \
+  -v /path/to/local/resident.properties:/home/mosip/config/resident.properties \
+  uitest-resident
+```
+
+The image has no fat jar or `main()` — it builds the test sources at image-build time
+(`mvn test-compile`) and runs `mvn -o test` at container start. `entrypoint.sh` copies the mounted
+config file into the source tree's expected location before running, so Rancher deployments inject
+config via a mounted ConfigMap/Secret rather than environment variables.
+
+## Configuration
+
+Five-layer property loading (lowest → highest), done in `ResidentConfigManager.init()`:
+1. `Kernel.properties` (apitest-commons JAR — MOSIP-wide defaults)
+2. `uitest.properties` (uitest-commons JAR — UI/browser defaults)
+3. `valueMapping.properties` (this module — default identity field values for dynamic UIN generation)
+4. `resident.properties` (this module — env-specific overrides; tracked with blank defaults, filled
+   in locally per environment — **never commit real secret/URL values back into it**)
+5. Environment variables
+
+`resident.properties` documents its own layering rules in its header comment — only add a key
+there if it's genuinely absent upstream, blank upstream, or an intentional override.
+
+## Architecture
+
+1. `ResidentTestRunner` (`runner/`) — JUnit5 `@Suite` entry point; no code, just annotations
+   selecting the Cucumber engine and the `features/` classpath resource.
+2. `ResidentHooks` (`hooks/`) — suite lifecycle: loads config, initializes test data, staggers each
+   parallel worker's first scenario, and delegates reporting/teardown to `uitest-commons`.
+3. Cucumber runs each `.feature` file's scenarios against step definitions in `steps/`, which drive
+   Playwright page objects in `pages/`.
+
+Everything browser-, OTP-, auth-, and reporting-related comes from `uitest-commons` (and
+transitively `apitest-commons`) — this module only holds Resident-Portal-specific config, page
+objects, and step definitions. See `AGENTS.md` for the full class-by-class breakdown and parallel
+execution model.
+
+## Reports
+
+Extent reporting output goes to `reportOutputDir` in `resident.properties` (default `test-output/`,
+kept outside the Maven-managed `target/` tree). Optionally pushed to S3/MinIO when
+`push-reports-to-s3=yes`.
 
 ## License
 This project is licensed under the terms of [Mozilla Public License 2.0](../LICENSE).
-

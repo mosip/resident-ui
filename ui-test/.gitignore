@@ -2,6 +2,3 @@
 /test-output/
 /logs/
 /src/logs/
-
-# Holds real secrets (client secrets, test identity data) — never commit this file.
-/src/test/resources/config/resident.properties
