@@ -5,9 +5,21 @@ FROM mcr.microsoft.com/playwright/java:v1.44.0-jammy
 
 USER root
 
-# Maven isn't bundled in the Playwright base image.
+ARG TARGETARCH
+# kubectl version pinned for reproducible builds — compatible with any server within the
+# standard +/-1 minor version skew; bump alongside the cluster's own upgrades.
+ARG KUBECTL_VERSION=v1.29.9
+
+# Maven isn't bundled in the Playwright base image. kubectl and jq are required because the
+# uitestrig Helm chart (mosip-functional-tests) overrides this container's entrypoint to run
+# fetch_docker_image_hash_ids.sh before ever invoking entrypoint.sh below — that script shells
+# out to kubectl to record this pod's own image hash (exiting 1 if missing, so the suite never
+# starts) and pipes a cluster-wide image inventory through jq.
 RUN apt-get update && \
-    apt-get install -y maven && \
+    apt-get install -y maven curl ca-certificates jq && \
+    curl -fLO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${TARGETARCH}/kubectl" && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+    rm kubectl && \
     rm -rf /var/lib/apt/lists/*
 
 # Define build-time arguments and labels
@@ -46,6 +58,12 @@ COPY --chown=${container_user_uid}:${container_user_group} entrypoint.sh ${work_
 # image's own .m2, and compiles the test sources, so a container start only has to run the
 # suite, not resolve the internet first. Requires uitest-commons to actually be published and
 # reachable at build time — see uitestrig-platform/pom.xml's distributionManagement.
-RUN mvn -B test-compile -Dgpg.skip=true
+#
+# Runs the actual `test` goal (not just `test-compile`) with skipTests so Surefire's own
+# test-framework provider (surefire-junit-platform) gets resolved into .m2 too — that provider is
+# looked up dynamically at execution time, outside normal dependency resolution, so neither
+# `test-compile` nor `dependency:go-offline` ever fetch it; skipTests=true means no real test
+# classes execute, so no resident.properties config is needed at build time.
+RUN mvn -B test -DskipTests=true -Dgpg.skip=true
 
 ENTRYPOINT ["/bin/bash", "./entrypoint.sh"]
