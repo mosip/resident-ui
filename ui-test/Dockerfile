@@ -5,9 +5,18 @@ FROM mcr.microsoft.com/playwright/java:v1.44.0-jammy
 
 USER root
 
-# Maven isn't bundled in the Playwright base image.
+ARG TARGETARCH
+# Pinned for reproducible builds; bump alongside the cluster's own upgrades.
+ARG KUBECTL_VERSION=v1.29.9
+
+# kubectl and jq: the uitestrig Helm chart overrides this container's entrypoint to run
+# fetch_docker_image_hash_ids.sh (records this pod's image hash via kubectl, piped through jq)
+# before entrypoint.sh ever runs.
 RUN apt-get update && \
-    apt-get install -y maven && \
+    apt-get install -y curl ca-certificates jq && \
+    curl -fLO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${TARGETARCH}/kubectl" && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+    rm kubectl && \
     rm -rf /var/lib/apt/lists/*
 
 # Define build-time arguments and labels
@@ -35,17 +44,8 @@ RUN groupadd -g ${container_user_gid} ${container_user_group} \
 USER ${container_user_uid}:${container_user_gid}
 WORKDIR ${work_dir}
 
-# Source only — no fat jar. The suite runs via `mvn test` (Surefire → JUnit5 Platform →
-# ResidentTestRunner → Cucumber), same as a local run; there's no standalone executable jar
-# for this suite the way the old Selenium TestRunner.main() used to provide.
-COPY --chown=${container_user_uid}:${container_user_group} pom.xml ${work_dir}
-COPY --chown=${container_user_uid}:${container_user_group} src/ ${work_dir}src/
+# Self-contained executable jar (see ResidentTestRunner.main()) — built once in CI, not here.
+COPY --chown=${container_user_uid}:${container_user_group} target/*-jar-with-dependencies.jar ${work_dir}target/
 COPY --chown=${container_user_uid}:${container_user_group} entrypoint.sh ${work_dir}
-
-# Resolves and caches all dependencies (including uitest-commons/apitest-commons) into this
-# image's own .m2, and compiles the test sources, so a container start only has to run the
-# suite, not resolve the internet first. Requires uitest-commons to actually be published and
-# reachable at build time — see uitestrig-platform/pom.xml's distributionManagement.
-RUN mvn -B test-compile -Dgpg.skip=true
 
 ENTRYPOINT ["/bin/bash", "./entrypoint.sh"]
